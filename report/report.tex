@@ -1,0 +1,120 @@
+\documentclass[a4paper,10pt]{article}
+
+% References
+\usepackage[utf8]{inputenc}
+\usepackage[style=bath]{biblatex}
+% \addbibresource{res/references.bib}
+
+% Allow URLs in biblatex entries to break at lowercase characters
+\setcounter{biburllcpenalty}{100}
+
+% Asked for by biblatex
+\usepackage{csquotes}
+
+% Language and date format for UK english
+\usepackage[british]{babel}
+\usepackage[british]{isodate}
+\cleanlookdateon
+
+% Customise margin size
+\usepackage[margin=1.4in]{geometry}
+
+% Insertion of images
+\usepackage{graphicx, float}
+\graphicspath{{img/}}
+
+% Tables that break over pages
+\usepackage{longtable}
+
+% Compact list environments
+\usepackage{paralist}
+
+% Add references to TOC
+\usepackage[nottoc,numbib]{tocbibind}
+
+% Strikethrough
+\usepackage[normalem]{ulem}
+
+% Allow insertion and numbering of appendices
+\usepackage{appendix}
+
+% Make links, section names, etc. clickable
+\usepackage{hyperref}
+% This must be the last package that is loaded!
+
+\title{%
+  CSED Group 11 Semester 2 Report \\
+  \vspace{0.5em}
+  \Large Computing as a Science and Engineering Discipline (CM10251)
+}
+
+\author{%
+  Allington, Mathew \\
+  \texttt{mma82@bath.ac.uk}
+  \and
+  Draper, Tom \\
+  \texttt{td544@bath.ac.uk}
+  \and
+  Foot, Aethan \\
+  \texttt{ajf75@bath.ac.uk}
+  \and
+  Ito-Low, Alexander \\
+  \texttt{ail24@bath.ac.uk}
+  \and
+  Millischer, Christophe \\
+  \texttt{cm2307@bath.ac.uk}
+  \and
+  Mortensen, Soren \\
+  \texttt{snm48@bath.ac.uk}
+  \and
+  Mortimer, Lloyd \\
+  \texttt{lm2062@bath.ac.uk}
+  \and
+  Sogbesan, Samuel \\
+  \texttt{ss3222@bath.ac.uk}
+  \and
+  Songthammakul, Ravit \\
+  \texttt{rs2347@bath.ac.uk}
+}
+
+\date{}
+
+% Show down to subsubsection level in the main TOC
+\setcounter{tocdepth}{3}
+
+\begin{document}
+
+\maketitle
+\begin{abstract}
+\end{abstract}
+
+\vfill
+
+\begin{center}
+  \large Supervised by: \\
+  \vspace{0.5em}
+  Hyde, Jo \\
+  \texttt{cssjkh@bath.ac.uk}
+\end{center}
+
+\newpage
+\tableofcontents
+
+\newpage
+% \include{tex/introduction}
+% \include{tex/requirements}
+% \include{tex/design}
+% \include{tex/conclusions}
+
+% \section{References}
+% \printbibliography[heading=none]
+
+% \include{tex/group-contribution-form}
+
+% \begin{appendices}
+%   \include{tex/draft-hlas}
+%   \include{tex/state-machine}
+%   \include{tex/meeting-minutes}
+% \end{appendices}
+
+\end{document}
