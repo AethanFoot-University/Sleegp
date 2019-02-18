@@ -74,3 +74,6 @@ $RECYCLE.BIN/
 /EEGTesting/nbproject/private/
 /EEGTesting/build/
 /EEGTesting/dist/
+/app/EEGApp/nbproject/private/
+/app/EEGApp/build/
+/app/EEGApp/dist/
