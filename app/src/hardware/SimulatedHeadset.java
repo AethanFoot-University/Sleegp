@@ -13,7 +13,7 @@ import data.EpochContainer;
 public abstract class SimulatedHeadset extends Headset {
     private EpochContainer data;
     private int current = 0;
-    private int epochPeriod = 1000;
+    private int epochPeriod = 200;
     private boolean loopData = false;
 
     /**
@@ -30,9 +30,18 @@ public abstract class SimulatedHeadset extends Headset {
             while (capturing) {
                 try {
                     if (data.size() > 0) {
-                        update(data.getEpoch(current++));
+
+                        if(data.getEpoch(current).timeElapsed() <= (System.currentTimeMillis()-systemStartTime)){
+                            update(data.getEpoch(current++));
+                        }
+
+
+
                         if (!(current < data.size()))
-                            if (loopData) current = 0;
+                            if (loopData) {
+                            current = 0;
+                                systemStartTime = System.currentTimeMillis();
+                            }
                             else capturing = false;
                     }
 
@@ -58,6 +67,7 @@ public abstract class SimulatedHeadset extends Headset {
     @Override
     public boolean capture() {
         capturing = true;
+        systemStartTime = System.currentTimeMillis();
         new Thread(networkSimulaionThread).start();
         return true;
     }
