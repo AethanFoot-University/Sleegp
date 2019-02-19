@@ -19,6 +19,10 @@ public abstract class SimulatedHeadset extends Headset{
     private int current = 0;
     private int epochPeriod = 1000;
     
+    /**
+     *
+     * @param data
+     */
     public SimulatedHeadset(EpochContainer data){
         super();
         this.data = data;
@@ -42,16 +46,27 @@ public abstract class SimulatedHeadset extends Headset{
         }
     };
      
+    /**
+     *
+     * @param periodMillis
+     */
     public void setEpochPeriod(int periodMillis){
         epochPeriod = periodMillis;
     }
      
+    /**
+     *
+     * @return
+     */
     @Override public boolean capture(){
         capturing = true;
         new Thread(networkSimulaionThread).start();
         return true;
     }
     
+    /**
+     *
+     */
     @Override public void disconnect(){
         capturing = false;
     }

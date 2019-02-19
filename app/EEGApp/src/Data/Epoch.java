@@ -40,6 +40,11 @@ public class Epoch {
     //Headset signal
     private int poorSignalLevel;
     
+    /**
+     *
+     * @param JSON
+     * @throws JSONException
+     */
     public Epoch(String JSON) throws JSONException{
        JSONObject obj = new JSONObject(JSON);
        Iterator it = obj.keys();
@@ -93,37 +98,90 @@ public class Epoch {
         return app;
     }
     
-    
+    /**
+     *
+     * @return
+     */
     public int getAttention(){
     return this.attention;
     }
+
+    /**
+     *
+     * @return
+     */
     public int getMeditation(){
     return this.meditation;
     }
+
+    /**
+     *
+     * @return
+     */
     public int getDelta(){
     return this.delta;
     }
+
+    /**
+     *
+     * @return
+     */
     public int getTheta(){
     return this.theta;
     }
+
+    /**
+     *
+     * @return
+     */
     public int getLowAlpha(){
     return this.lowAlpha;
     }
+
+    /**
+     *
+     * @return
+     */
     public int getHighAlpha(){
     return this.highAlpha;
     }
+
+    /**
+     *
+     * @return
+     */
     public int getLowBeta(){
     return this.lowBeta;
     }
+
+    /**
+     *
+     * @return
+     */
     public int getHighBeta(){
     return this.highBeta;
     }
+
+    /**
+     *
+     * @return
+     */
     public int getLowGamma(){
     return this.lowGamma;
     }
+
+    /**
+     *
+     * @return
+     */
     public int getHighGamma(){
     return this.highGamma;
     }
+
+    /**
+     *
+     * @return
+     */
     public int getPoorSignalLevel(){
     return this.poorSignalLevel;
     }

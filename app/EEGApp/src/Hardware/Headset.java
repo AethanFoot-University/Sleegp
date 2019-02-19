@@ -29,7 +29,14 @@ public abstract class Headset {
             + "\n3. Make sure the headset is connected and paired via Bluetooth"
             + "\n4. Contact mma82@bath.ac.uk or try Slack for more help.";
 
+    /**
+     *
+     */
     public final static String DEFAULT_HOST = "127.0.0.1";
+
+    /**
+     *
+     */
     public final static int DEFAULT_PORT = 13854;
 
     private String host;
@@ -42,25 +49,48 @@ public abstract class Headset {
     
     private Runnable blinkRunnable = null;
 
+    /**
+     *
+     */
     public Headset() {
         this(DEFAULT_HOST, DEFAULT_PORT);
     }
 
+    /**
+     *
+     * @param host
+     * @param port
+     */
     public Headset(String host, int port) {
         this.host = host;
         this.port = port;
     }
     
+    /**
+     *
+     * @param data
+     */
     public abstract void update(Epoch data);
     
+    /**
+     *
+     * @param run
+     */
     public void addBlinkListener(Runnable run){
         blinkRunnable = run;
     }
     
+    /**
+     *
+     */
     public void removeBlinkListener(){
         blinkRunnable = null;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean capture() {
         try {
             headSocket = new Socket(host, port);
@@ -114,6 +144,10 @@ public abstract class Headset {
         }
     };
 
+    /**
+     *
+     * @throws IOException
+     */
     public void disconnect() throws IOException {
         capturing = false;
         JSONStream.close();
