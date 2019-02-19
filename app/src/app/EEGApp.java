@@ -1,12 +1,12 @@
 /*
  * 
  */
-package eegapp;
+package app;
 
-import Data.Epoch;
-import Data.EpochContainer;
-import Hardware.Headset;
-import Hardware.SimulatedHeadset;
+import data.Epoch;
+import data.EpochContainer;
+import hardware.Headset;
+import hardware.SimulatedHeadset;
 import java.io.IOException;
 
 /** Credits:
@@ -37,7 +37,7 @@ public class EEGApp {
             public void update(Epoch data) {
                 System.out.println("Low Gamma level: "+data.getLowGamma());
                 ec.addEpoch(data);
-            } 
+            }
         };
             
           

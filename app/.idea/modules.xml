@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/EEG App.iml" filepath="$PROJECT_DIR$/EEG App.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/EEGApp.iml" filepath="$PROJECT_DIR$/.idea/EEGApp.iml" />
     </modules>
   </component>
 </project>
