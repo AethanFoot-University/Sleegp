@@ -46,11 +46,8 @@ public class EEGApp {
             }
         };
 
-        head.addBlinkListener(new Runnable() {
-            @Override
-            public void run() {
-                System.out.println("Stop blinking");
-            }
+        head.addBlinkListener(() -> {
+            System.out.println("Stop blinking");
         });
 
         head.capture();

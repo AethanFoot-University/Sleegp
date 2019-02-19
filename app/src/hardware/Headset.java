@@ -111,28 +111,24 @@ public abstract class Headset {
         return capturing;
     }
 
-    Runnable networkThread = new Runnable() {
-        @Override
-        public void run() {
-            String input;
-            try {
-                while ((input = JSONStream.readLine()) != null) {
+    Runnable networkThread = () -> {
+        String input;
+        try {
+            while ((input = JSONStream.readLine()) != null) {
 
-                    try {
-                        if (input.contains("eSense")) {
-                            update(new Epoch(input));
-                        } else if (input.contains("blink")) {
-                            new Thread(blinkRunnable).start();
-                        }
-                    } catch (Exception e) {
-                        System.out.println("Failed to serialise object.\n" + e.getMessage());
+                try {
+                    if (input.contains("eSense")) {
+                        update(new Epoch(input));
+                    } else if (input.contains("blink")) {
+                        new Thread(blinkRunnable).start();
                     }
-
+                } catch (Exception e) {
+                    System.out.println("Failed to serialise object.\n" + e.getMessage());
                 }
-            } catch (SocketException e) {
-            } catch (IOException ex) {
-            }
 
+            }
+        } catch (SocketException e) {
+        } catch (IOException ex) {
         }
     };
 
