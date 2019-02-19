@@ -8,69 +8,69 @@ package hardware;
 import data.EpochContainer;
 
 /**
- *
  * @author Mathew Allington
  */
-public abstract class SimulatedHeadset extends Headset{
+public abstract class SimulatedHeadset extends Headset {
     private EpochContainer data;
     private int current = 0;
     private int epochPeriod = 1000;
     private boolean loopData = false;
+
     /**
-     *
      * @param data
      */
-    public SimulatedHeadset(EpochContainer data){
+    public SimulatedHeadset(EpochContainer data) {
         super();
         this.data = data;
     }
-     
-     Runnable networkSimulaionThread = new Runnable() {
+
+    Runnable networkSimulaionThread = new Runnable() {
         @Override
         public void run() {
-            while(capturing){
+            while (capturing) {
                 try {
-                    if(data.size()>0){
+                    if (data.size() > 0) {
                         update(data.getEpoch(current++));
-                        if(!(current<data.size())) 
-                                if(loopData)current = 0; 
-                                    else capturing = false;
+                        if (!(current < data.size()))
+                            if (loopData) current = 0;
+                            else capturing = false;
                     }
-                    
+
                     Thread.sleep(epochPeriod);
-                    
-                } catch (InterruptedException ex) { }
-                
+
+                } catch (InterruptedException ex) {
+                }
+
             }
         }
     };
-     
+
     /**
-     *
      * @param periodMillis
      */
-    public void setEpochPeriod(int periodMillis){
+    public void setEpochPeriod(int periodMillis) {
         epochPeriod = periodMillis;
     }
-     
+
     /**
-     *
      * @return
      */
-    @Override public boolean capture(){
+    @Override
+    public boolean capture() {
         capturing = true;
         new Thread(networkSimulaionThread).start();
         return true;
     }
-    
+
     /**
      *
      */
-    @Override public void disconnect(){
+    @Override
+    public void disconnect() {
         capturing = false;
     }
-    
-    public void loopData(boolean loop){
+
+    public void loopData(boolean loop) {
         this.loopData = loop;
     }
 }

@@ -10,59 +10,53 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * @author Mathew Allington
  */
 public class EpochContainer {
     private List<Epoch> data;
-    
+
     /**
      * Creates an empty container instance
      */
-    public EpochContainer(){
+    public EpochContainer() {
         data = new ArrayList<Epoch>();
     }
-    
+
     /**
-     *
      * @param file
      */
-    public EpochContainer(File file){
-        
+    public EpochContainer(File file) {
+
     }
-    
+
     /**
-     *
      * @return
      */
-    public int size(){
+    public int size() {
         return data.size();
     }
-    
+
     /**
-     *
      * @param id
      * @return
      */
-    public Epoch getEpoch(int id){
+    public Epoch getEpoch(int id) {
         return data.get(id);
     }
-    
+
     /**
-     *
      * @param e
      */
-    public void addEpoch(Epoch e){
+    public void addEpoch(Epoch e) {
         data.add(e);
     }
-    
+
     /**
-     *
      * @param firectory
      * @return
      */
-    public boolean saveToFile(File firectory){
-        
+    public boolean saveToFile(File firectory) {
+
         return false;
     }
 }

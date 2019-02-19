@@ -6,6 +6,7 @@
 package hardware;
 
 import data.Epoch;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -15,7 +16,6 @@ import java.net.Socket;
 import java.net.SocketException;
 
 /**
- *
  * @author Mathew Allington
  */
 public abstract class Headset {
@@ -43,7 +43,7 @@ public abstract class Headset {
     private Socket headSocket;
     private BufferedReader JSONStream;
     private OutputStream outputStream = null;
-    
+
     private Runnable blinkRunnable = null;
 
     /**
@@ -54,7 +54,6 @@ public abstract class Headset {
     }
 
     /**
-     *
      * @param host
      * @param port
      */
@@ -62,30 +61,27 @@ public abstract class Headset {
         this.host = host;
         this.port = port;
     }
-    
+
     /**
-     *
      * @param data
      */
     public abstract void update(Epoch data);
-    
+
     /**
-     *
      * @param run
      */
-    public void addBlinkListener(Runnable run){
+    public void addBlinkListener(Runnable run) {
         blinkRunnable = run;
-    }
-    
-    /**
-     *
-     */
-    public void removeBlinkListener(){
-        blinkRunnable = null;
     }
 
     /**
      *
+     */
+    public void removeBlinkListener() {
+        blinkRunnable = null;
+    }
+
+    /**
      * @return
      */
     public boolean capture() {
@@ -123,10 +119,9 @@ public abstract class Headset {
                 while ((input = JSONStream.readLine()) != null) {
 
                     try {
-                        if(input.contains("eSense")){
-                        update(new Epoch(input));
-                        }
-                        else if(input.contains("blink")){
+                        if (input.contains("eSense")) {
+                            update(new Epoch(input));
+                        } else if (input.contains("blink")) {
                             new Thread(blinkRunnable).start();
                         }
                     } catch (Exception e) {
@@ -142,7 +137,6 @@ public abstract class Headset {
     };
 
     /**
-     *
      * @throws IOException
      */
     public void disconnect() throws IOException {
