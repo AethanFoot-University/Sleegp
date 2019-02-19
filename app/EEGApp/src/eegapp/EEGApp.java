@@ -7,6 +7,7 @@ import Data.Epoch;
 import Data.EpochContainer;
 import Hardware.Headset;
 import Hardware.SimulatedHeadset;
+import java.io.IOException;
 
 /** Credits:
  *  @author Allington, Mathew
@@ -27,32 +28,20 @@ public class EEGApp {
     /**Where the big bang happened.
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException, IOException {
         EpochContainer ec = new EpochContainer();
-        Headset head;
-        boolean simulation = false;
-        
-        if(simulation){
-         //Creates simulated headset
-         head = new SimulatedHeadset(new EpochContainer()) {
-            @Override
-            public void update(Epoch data) {
-                System.out.println("Simulated");
-            }
-        };
-         
-        }
-        else{
+       
             //Creates an actual connection to the headset
-            head = new Headset() {
+            Headset head = new Headset() {
             @Override
             public void update(Epoch data) {
                 System.out.println("Low Gamma level: "+data.getLowGamma());
+                ec.addEpoch(data);
             }
         };
             
           
-        }
+        
        
          head.addBlinkListener(new Runnable() {
             @Override
@@ -62,8 +51,23 @@ public class EEGApp {
         });
         
          head.capture();
-        
          
+         Thread.sleep(15000);
+         
+         head.disconnect();
+         
+         System.out.println("-------Playing back-------");
+         
+         SimulatedHeadset simHead = new SimulatedHeadset(ec) {
+            @Override
+            public void update(Epoch data) {
+                System.out.println(data.toString());
+            }
+        };
+         
+         simHead.setEpochPeriod(1000);
+        
+         simHead.capture();
         
     }
     

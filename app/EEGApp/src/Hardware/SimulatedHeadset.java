@@ -18,7 +18,7 @@ public abstract class SimulatedHeadset extends Headset{
     private EpochContainer data;
     private int current = 0;
     private int epochPeriod = 1000;
-    
+    private boolean loopData = false;
     /**
      *
      * @param data
@@ -35,7 +35,9 @@ public abstract class SimulatedHeadset extends Headset{
                 try {
                     if(data.size()>0){
                         update(data.getEpoch(current++));
-                        if(!(current<data.size())) current = 0;
+                        if(!(current<data.size())) 
+                                if(loopData)current = 0; 
+                                    else capturing = false;
                     }
                     
                     Thread.sleep(epochPeriod);
@@ -69,5 +71,9 @@ public abstract class SimulatedHeadset extends Headset{
      */
     @Override public void disconnect(){
         capturing = false;
+    }
+    
+    public void loopData(boolean loop){
+        this.loopData = loop;
     }
 }
