@@ -37,7 +37,7 @@ public class EEGApp {
             public void update(Epoch data) {
                 System.out.println("Low Gamma level: "+data.getLowGamma());
                 ec.addEpoch(data);
-            }
+            } 
         };
             
           
