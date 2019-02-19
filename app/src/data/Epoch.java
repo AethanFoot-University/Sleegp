@@ -5,6 +5,7 @@
  */
 package data;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -16,7 +17,7 @@ import org.json.JSONObject;
 /**
  * @author Mathew Allington
  */
-public class Epoch {
+public class Epoch implements Serializable {
     //Time
     private long timeElapsed;
     private String timeStamp;

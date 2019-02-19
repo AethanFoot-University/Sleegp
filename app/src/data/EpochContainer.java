@@ -5,15 +5,22 @@
  */
 package data;
 
+import Util.Load;
+import Util.Save;
+
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author Mathew Allington
  */
-public class EpochContainer {
+public class EpochContainer implements Serializable {
     private List<Epoch> data;
+    public final String EXTENSION = ".ec";
 
     /**
      * Creates an empty container instance
@@ -25,7 +32,16 @@ public class EpochContainer {
     /**
      * @param file
      */
-    public EpochContainer(File file) {
+    public static EpochContainer loadContainerFromFile(File file) throws IOException {
+        Load loader = new Load(file);
+        Object loaded = loader.load();
+
+        if(loaded.getClass().equals(EpochContainer.class)){
+            return (EpochContainer)loaded;
+        }
+        else{
+            return null;
+        }
 
     }
 
@@ -55,8 +71,14 @@ public class EpochContainer {
      * @param firectory
      * @return
      */
-    public boolean saveToFile(File firectory) {
-
+    public boolean saveToFile(File firectory) throws FileNotFoundException {
+        if(firectory.toString().contains(EXTENSION)) {
+            Save saver = new Save(firectory);
+            saver.write(this);
+        }
+        else{
+            System.out.println("Cannot save without proper extenson: "+EXTENSION);
+        }
         return false;
     }
 }

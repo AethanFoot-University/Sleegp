@@ -10,6 +10,7 @@ import hardware.SimulatedHeadset;
 
 import java.awt.*;
 import java.awt.event.InputEvent;
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -36,14 +37,16 @@ public class EEGApp {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws InterruptedException, IOException, AWTException {
+
+        File ecFile = new File("/Users/mathew/Documents/GitHub/project/testData/FirstRecording.ec");
+
+        boolean simulate = true;
+    if(!simulate) {
         EpochContainer ec = new EpochContainer();
-        Robot r = new Robot();
-
-
         Headset head = new Headset() {
             @Override
             public void update(Epoch data) {
-               ec.addEpoch(data);
+                ec.addEpoch(data);
             }
         };
         head.addBlinkListener(() -> {
@@ -64,22 +67,29 @@ public class EEGApp {
             System.out.println("Connection failed");
         }
 
-        Thread.sleep(60000);
-
+        Thread.sleep(300000);
+        ec.saveToFile(new File("/Users/mathew/Documents/GitHub/project/testData/FirstRecording.ec"));
         head.disconnect();
+
+    }
+        else {
+        System.out.println("Loading file: "+ecFile.toString());
+
+        EpochContainer ec = EpochContainer.loadContainerFromFile(ecFile);
+
         System.out.println("Starting simulation");
         SimulatedHeadset sim = new SimulatedHeadset(ec) {
             @Override
             public void update(Epoch data) {
-                System.out.println("Simulated:"+data);
+                System.out.println("Simulated:" + data);
             }
         };
 
-        sim.setEpochPeriod(500);
-
+        sim.setEpochPeriod(200);
         sim.loopData(true);
-
         sim.capture();
+
+    }
 
 
     }
