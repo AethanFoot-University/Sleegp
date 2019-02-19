@@ -24,23 +24,18 @@ public abstract class SimulatedHeadset extends Headset {
         this.data = data;
     }
 
-    Runnable networkSimulaionThread = new Runnable() {
-        @Override
-        public void run() {
-            while (capturing) {
-                try {
-                    if (data.size() > 0) {
-                        update(data.getEpoch(current++));
-                        if (!(current < data.size()))
-                            if (loopData) current = 0;
-                            else capturing = false;
-                    }
-
-                    Thread.sleep(epochPeriod);
-
-                } catch (InterruptedException ex) {
+    Runnable networkSimulationThread = () -> {
+        while (capturing) {
+            try {
+                if (data.size() > 0) {
+                    update(data.getEpoch(current++));
+                    if (!(current < data.size()))
+                        if (loopData) current = 0;
+                        else capturing = false;
                 }
 
+                Thread.sleep(epochPeriod);
+            } catch (InterruptedException ex) {
             }
         }
     };
@@ -58,7 +53,7 @@ public abstract class SimulatedHeadset extends Headset {
     @Override
     public boolean capture() {
         capturing = true;
-        new Thread(networkSimulaionThread).start();
+        new Thread(networkSimulationThread).start();
         return true;
     }
 
