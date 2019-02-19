@@ -11,7 +11,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,65 +22,123 @@ import java.util.logging.Logger;
  * @author Mathew Allington
  */
 public abstract class Headset {
+
+    private static final String TROUBLE_SHOOTING_MSG = "\nTrouble Shooting:"
+            + "\n1. Make sure ThinkGearConnector app is running."
+            + "\n2. Make sure this is the only EEGApp instance running."
+            + "\n3. Make sure the headset is connected and paired via Bluetooth"
+            + "\n4. Contact mma82@bath.ac.uk or try Slack for more help.";
+
     public final static String DEFAULT_HOST = "127.0.0.1";
     public final static int DEFAULT_PORT = 13854;
-    
+
     private String host;
     private int port;
     boolean capturing = false;
-    int latencyMillis = 20;
-    
+
     private Socket headSocket;
     private BufferedReader JSONStream;
-    public Headset(){
-       this(DEFAULT_HOST, DEFAULT_PORT);
+    private OutputStream outputStream = null;
+    
+    private Runnable blinkRunnable = null;
+
+    public Headset() {
+        this(DEFAULT_HOST, DEFAULT_PORT);
     }
 
-    public Headset(String host, int port){
+    public Headset(String host, int port) {
         this.host = host;
         this.port = port;
     }
     
-    public boolean capture(){
+    public abstract void update(Epoch data);
+    
+    public void addBlinkListener(Runnable run){
+        blinkRunnable = run;
+    }
+    
+    public void removeBlinkListener(){
+        blinkRunnable = null;
+    }
+
+    public boolean capture() {
         try {
             headSocket = new Socket(host, port);
-            if(!headSocket.isConnected()) return (capturing = false);
-            
-            JSONStream =  new BufferedReader(new InputStreamReader(headSocket.getInputStream()));
-            
+
+            if (!headSocket.isConnected()) {
+                return (capturing = false);
+            }
+
+            JSONStream = new BufferedReader(new InputStreamReader(headSocket.getInputStream()));
+            outputStream = headSocket.getOutputStream();
+
+            if (!initStream()) {
+                return false;
+            }
+
             //Run the network thread
+            capturing = headSocket.isConnected();
             new Thread(networkThread).start();
-            capturing = true;
-            
+
         } catch (IOException ex) {
-            System.out.println("Have you got another program running? :"+ex.getMessage());
+            System.out.println(ex.getMessage() + TROUBLE_SHOOTING_MSG);
             capturing = false;
         }
-        
+
         return capturing;
     }
-    
-     Runnable networkThread = new Runnable() {
+
+    Runnable networkThread = new Runnable() {
         @Override
         public void run() {
-            while(capturing){
-                Epoch ep = new Epoch();
-                
-                
-                update(ep);
+            String input;
+            try {
+                while ((input = JSONStream.readLine()) != null) {
+
+                    try {
+                        if(input.contains("eSense")){
+                        update(new Epoch(input));
+                        }
+                        else if(input.contains("blink")){
+                            new Thread(blinkRunnable).start();
+                        }
+                    } catch (Exception e) {
+                        System.out.println("Failed to serialise object.\n" + e.getMessage());
+                    }
+
+                }
+            } catch (SocketException e) {
+            } catch (IOException ex) {
             }
+
         }
     };
-    
-    public void setArtificialLatency(int latencyMillis){
-        this.latencyMillis = latencyMillis;
-    }
-    
-    public void disconnect() throws IOException{
+
+    public void disconnect() throws IOException {
         capturing = false;
         JSONStream.close();
         headSocket.close();
     }
-    
-    public abstract void update(Epoch data);
+
+    private void writeMessage(String message) {
+        PrintWriter out = new PrintWriter(outputStream, true);
+        System.out.println("Writing: " + message);
+        out.println(message);
+    }
+
+    private boolean initStream() {
+        if (outputStream != null) {
+            try {
+
+                writeMessage("{\"enableRawOutput\":false,\"format\":\"Json\"}");
+
+                return true;
+            } catch (Exception e) {
+                System.out.println(e.getMessage() + TROUBLE_SHOOTING_MSG);
+            }
+
+        }
+
+        return false;
+    }
 }

@@ -34,7 +34,7 @@ public abstract class SimulatedHeadset extends Headset{
                         if(!(current<data.size())) current = 0;
                     }
                     
-                    Thread.sleep(latencyMillis+epochPeriod);
+                    Thread.sleep(epochPeriod);
                     
                 } catch (InterruptedException ex) { }
                 

@@ -30,14 +30,14 @@ public class EEGApp {
     public static void main(String[] args) {
         EpochContainer ec = new EpochContainer();
         Headset head;
-        boolean simulation = true;
+        boolean simulation = false;
         
         if(simulation){
          //Creates simulated headset
          head = new SimulatedHeadset(new EpochContainer()) {
             @Override
             public void update(Epoch data) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                System.out.println("Simulated");
             }
         };
          
@@ -47,13 +47,23 @@ public class EEGApp {
             head = new Headset() {
             @Override
             public void update(Epoch data) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                System.out.println("Low Gamma level: "+data.getLowGamma());
             }
         };
             
-            
+          
         }
        
+         head.addBlinkListener(new Runnable() {
+            @Override
+            public void run() {
+               System.out.println("Stop blinking");
+            }
+        });
+        
+         head.capture();
+        
+         
         
     }
     
