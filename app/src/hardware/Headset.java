@@ -36,15 +36,20 @@ public abstract class Headset {
      */
     public final static int DEFAULT_PORT = 13854;
 
+    long systemStartTime;
+
     private String host;
     private int port;
     boolean capturing = false;
+    boolean headsetOn = true;
 
     private Socket headSocket;
     private BufferedReader JSONStream;
     private OutputStream outputStream = null;
 
     private Runnable blinkRunnable = null;
+    private Runnable removedHeadsetRunnable = null;
+    private Runnable putOnHeadsetRunnable = null;
 
     /**
      *
@@ -73,18 +78,22 @@ public abstract class Headset {
     public void addBlinkListener(Runnable run) {
         blinkRunnable = run;
     }
-
-    /**
-     *
-     */
     public void removeBlinkListener() {
         blinkRunnable = null;
     }
+
+    public void addRemovedHeadsetListener(Runnable run) { removedHeadsetRunnable = run;}
+    public void removeRemovedHeadsetListener(Runnable run) { removedHeadsetRunnable = null;}
+
+    public void addPutOnHeadsetListener(Runnable run) { putOnHeadsetRunnable = run;}
+    public void removePutOnHeadsetListener(Runnable run) { putOnHeadsetRunnable = null;}
 
     /**
      * @return
      */
     public boolean capture() {
+        systemStartTime = System.currentTimeMillis();
+
         try {
             headSocket = new Socket(host, port);
 
@@ -111,24 +120,34 @@ public abstract class Headset {
         return capturing;
     }
 
-    Runnable networkThread = () -> {
-        String input;
-        try {
-            while ((input = JSONStream.readLine()) != null) {
+    public long getTimeElapsed(){
+        return System.currentTimeMillis()-this.systemStartTime;
+    }
 
-                try {
-                    if (input.contains("eSense")) {
-                        update(new Epoch(input));
-                    } else if (input.contains("blink")) {
-                        new Thread(blinkRunnable).start();
+    Runnable networkThread = new Runnable() {
+        @Override
+        public void run() {
+            String input;
+            try {
+                while ((input = JSONStream.readLine()) != null) {
+
+                    try {
+                        if (input.contains("eSense")) {
+                            Epoch e = new Epoch(input, System.currentTimeMillis() - systemStartTime);
+                            checkHeadset(e.getPoorSignalLevel());
+                            update(e);
+                        } else if (input.contains("blink")) {
+                            new Thread(blinkRunnable).start();
+                        }
+                    } catch (Exception e) {
+                        System.out.println("Failed to serialise object.\n" + e.getMessage());
                     }
-                } catch (Exception e) {
-                    System.out.println("Failed to serialise object.\n" + e.getMessage());
-                }
 
+                }
+            } catch (SocketException e) {
+            } catch (IOException ex) {
             }
-        } catch (SocketException e) {
-        } catch (IOException ex) {
+
         }
     };
 
@@ -161,5 +180,23 @@ public abstract class Headset {
         }
 
         return false;
+    }
+
+    private void checkHeadset(int poorSignalLevel){
+        if(poorSignalLevel>50){
+            if(headsetOn) {
+                runListener(this.removedHeadsetRunnable);
+                headsetOn = false;
+            }
+        }
+        else if(!headsetOn){
+            runListener(this.putOnHeadsetRunnable);
+            headsetOn = true;
+        }
+
+    }
+
+    private void runListener(Runnable r){
+        if(r!=null) new Thread(r).start();
     }
 }

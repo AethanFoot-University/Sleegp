@@ -13,7 +13,7 @@ import data.EpochContainer;
 public abstract class SimulatedHeadset extends Headset {
     private EpochContainer data;
     private int current = 0;
-    private int epochPeriod = 1000;
+    private int epochPeriod = 200;
     private boolean loopData = false;
 
     /**
@@ -24,18 +24,32 @@ public abstract class SimulatedHeadset extends Headset {
         this.data = data;
     }
 
-    Runnable networkSimulationThread = () -> {
-        while (capturing) {
-            try {
-                if (data.size() > 0) {
-                    update(data.getEpoch(current++));
-                    if (!(current < data.size()))
-                        if (loopData) current = 0;
-                        else capturing = false;
+    Runnable networkSimulaionThread = new Runnable() {
+        @Override
+        public void run() {
+            while (capturing) {
+                try {
+                    if (data.size() > 0) {
+
+                        if(data.getEpoch(current).timeElapsed() <= (System.currentTimeMillis()-systemStartTime)){
+                            update(data.getEpoch(current++));
+                        }
+
+
+
+                        if (!(current < data.size()))
+                            if (loopData) {
+                            current = 0;
+                                systemStartTime = System.currentTimeMillis();
+                            }
+                            else capturing = false;
+                    }
+
+                    Thread.sleep(epochPeriod);
+
+                } catch (InterruptedException ex) {
                 }
 
-                Thread.sleep(epochPeriod);
-            } catch (InterruptedException ex) {
             }
         }
     };
@@ -53,7 +67,8 @@ public abstract class SimulatedHeadset extends Headset {
     @Override
     public boolean capture() {
         capturing = true;
-        new Thread(networkSimulationThread).start();
+        systemStartTime = System.currentTimeMillis();
+        new Thread(networkSimulaionThread).start();
         return true;
     }
 

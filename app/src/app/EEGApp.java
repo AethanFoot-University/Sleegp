@@ -8,6 +8,8 @@ import data.EpochContainer;
 import hardware.Headset;
 import hardware.SimulatedHeadset;
 
+import java.awt.*;
+import java.awt.event.InputEvent;
 import java.io.IOException;
 
 /**
@@ -33,40 +35,52 @@ public class EEGApp {
      *
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws InterruptedException, IOException {
+    public static void main(String[] args) throws InterruptedException, IOException, AWTException {
         EpochContainer ec = new EpochContainer();
+        Robot r = new Robot();
 
-        //Creates an actual connection to the headset
+
         Headset head = new Headset() {
             @Override
             public void update(Epoch data) {
-                System.out.println("Low Gamma level: " + data.getLowGamma());
-                ec.addEpoch(data);
-                System.out.println("Change");
+               ec.addEpoch(data);
             }
         };
-
         head.addBlinkListener(() -> {
             System.out.println("Stop blinking");
         });
 
-        head.capture();
+        head.addRemovedHeadsetListener(() -> {
+            System.out.println("Headset removed");
+        });
 
-        Thread.sleep(15000);
+        head.addPutOnHeadsetListener(() -> {
+            System.out.println("Headset put on");
+        });
+
+        if (head.capture()) {
+            System.out.println("Connected");
+        } else {
+            System.out.println("Connection failed");
+        }
+
+        Thread.sleep(60000);
 
         head.disconnect();
-
-        System.out.println("-------Playing back-------");
-
-        SimulatedHeadset simHead = new SimulatedHeadset(ec) {
+        System.out.println("Starting simulation");
+        SimulatedHeadset sim = new SimulatedHeadset(ec) {
             @Override
             public void update(Epoch data) {
-                System.out.println(data.toString());
+                System.out.println("Simulated:"+data);
             }
         };
 
-        simHead.setEpochPeriod(1000);
+        sim.setEpochPeriod(500);
 
-        simHead.capture();
+        sim.loopData(true);
+
+        sim.capture();
+
+
     }
 }

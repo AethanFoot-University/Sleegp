@@ -6,6 +6,8 @@
 package data;
 
 import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
 
 import org.json.JSONException;
@@ -15,7 +17,9 @@ import org.json.JSONObject;
  * @author Mathew Allington
  */
 public class Epoch {
-
+    //Time
+    private long timeElapsed;
+    private String timeStamp;
     //eSense
     private int attention;
     private int meditation;
@@ -37,7 +41,10 @@ public class Epoch {
      * @param JSON
      * @throws JSONException
      */
-    public Epoch(String JSON) throws JSONException {
+    public Epoch(String JSON, long timeElapsedMillis) throws JSONException {
+        this.timeElapsed = timeElapsedMillis;
+        timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss.SSS").format(new Date());
+
         JSONObject obj = new JSONObject(JSON);
         Iterator it = obj.keys();
 
@@ -51,15 +58,10 @@ public class Epoch {
 
     }
 
-    private void parseJson(JSONObject obj) {
-
-    }
-
     private void addData(JSONObject obj) throws JSONException {
         Iterator it = obj.keys();
         while (it.hasNext()) {
             String key = it.next().toString();
-
             try {
                 setIntField(key.toString(), obj.getInt(key));
             } catch (Exception e) {
@@ -87,7 +89,7 @@ public class Epoch {
 
             } catch (Exception ex) {
             }
-
+        app+="timeElapse: "+timeElapsed;
         app += "]";
         return app;
     }
@@ -165,7 +167,10 @@ public class Epoch {
     /**
      * @return
      */
-    public int getPoorSignalLevel() {
-        return this.poorSignalLevel;
-    }
+    public int getPoorSignalLevel() {return this.poorSignalLevel;}
+
+    /**
+     * @return
+     */
+    public long timeElapsed() {return this.timeElapsed;}
 }
