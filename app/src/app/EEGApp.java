@@ -38,9 +38,9 @@ public class EEGApp {
      */
     public static void main(String[] args) throws InterruptedException, IOException, AWTException {
 
-        File ecFile = new File("/Users/mathew/Documents/GitHub/project/testData/FirstRecording.ec");
+        File ecFile = new File("/Users/mathew/Documents/GitHub/project/testData/MathewSample2.ec");
 
-        boolean simulate = true;
+        boolean simulate = false;
     if(!simulate) {
         EpochContainer ec = new EpochContainer();
         Headset head = new Headset() {
@@ -68,7 +68,7 @@ public class EEGApp {
         }
 
         Thread.sleep(300000);
-        ec.saveToFile(new File("/Users/mathew/Documents/GitHub/project/testData/FirstRecording.ec"));
+        ec.saveToFile(ecFile);
         head.disconnect();
 
     }
