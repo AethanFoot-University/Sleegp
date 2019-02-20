@@ -21,7 +21,11 @@ import java.util.List;
 public class EpochContainer implements Serializable {
     private List<Epoch> data;
     public final String EXTENSION = ".ec";
+    static final long serialVersionUID = -529434607952910606L;
 
+    private transient File autoSaveLocation = null;
+    private transient long lastSave = 0;
+    private transient long savePeriod =0;
     /**
      * Creates an empty container instance
      */
@@ -65,6 +69,26 @@ public class EpochContainer implements Serializable {
      */
     public void addEpoch(Epoch e) {
         data.add(e);
+        new Thread(()->{autoSave();}).start();
+    }
+
+    private void autoSave(){
+
+        if(autoSaveLocation !=null && (System.currentTimeMillis()-lastSave) >= savePeriod){
+            try {
+                saveToFile(this.autoSaveLocation);
+                lastSave = System.currentTimeMillis();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                System.out.println("AutoSave Failed");
+            }
+        }
+    }
+
+    public void setAutoSave(File file, long timePeriod){
+        this.autoSaveLocation = file;
+        this.lastSave = System.currentTimeMillis();
+        this.savePeriod = timePeriod;
     }
 
     /**

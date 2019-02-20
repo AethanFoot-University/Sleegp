@@ -18,6 +18,7 @@ import org.json.JSONObject;
  * @author Mathew Allington
  */
 public class Epoch implements Serializable {
+    static final long serialVersionUID = -8619870403385249300L;
     //Time
     private long timeElapsed;
     private String timeStamp;
@@ -174,4 +175,6 @@ public class Epoch implements Serializable {
      * @return
      */
     public long timeElapsed() {return this.timeElapsed;}
+
+    public String getTimeStamp(){return this.timeStamp;}
 }

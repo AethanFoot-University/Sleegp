@@ -1,13 +1,7 @@
 package Util;
 
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
+import java.io.*;
 
 /**
  * This static methods are used to convert and object to a byte array and back
@@ -42,6 +36,10 @@ public class ObjectConverter {
             return null;
         }
 
+    }
+
+    public static long getSerialVersionID(Object obj){
+        return ObjectStreamClass.lookup(obj.getClass()).getSerialVersionUID();
     }
 
     /**
