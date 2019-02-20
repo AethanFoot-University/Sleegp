@@ -1,4 +1,4 @@
-package Util;
+package util;
 
 
 import java.io.*;
@@ -38,7 +38,7 @@ public class ObjectConverter {
 
     }
 
-    public static long getSerialVersionID(Object obj){
+    public static long getSerialVersionID(Object obj) {
         return ObjectStreamClass.lookup(obj.getClass()).getSerialVersionUID();
     }
 
@@ -50,7 +50,7 @@ public class ObjectConverter {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    public static Object deserialize(byte[] bytes) throws IOException, ClassNotFoundException {
+    public static Object deserialize(byte[] bytes) throws ClassNotFoundException, IOException {
         ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
         ObjectInput in = null;
         try {

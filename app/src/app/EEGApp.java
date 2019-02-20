@@ -1,16 +1,12 @@
-/*
- *
- */
 package app;
 
-import Util.ObjectConverter;
+import util.ObjectConverter;
 import data.Epoch;
 import data.EpochContainer;
 import hardware.Headset;
 import hardware.SimulatedHeadset;
 
 import java.awt.*;
-import java.awt.event.InputEvent;
 import java.io.File;
 import java.io.IOException;
 

@@ -1,18 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package Util;
+package util;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
-import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * This class is used for writing objects straight to a specified directory
@@ -45,7 +36,7 @@ public class Save {
      */
     public boolean write(Object toWrite){
         try {
-            Files.write(FILE.toPath(), Util.ObjectConverter.serialize(toWrite));
+            Files.write(FILE.toPath(), util.ObjectConverter.serialize(toWrite));
 
             return true;
         } catch (Exception e) {

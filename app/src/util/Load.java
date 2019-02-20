@@ -1,9 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package Util;
+package util;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -20,10 +15,10 @@ public class Load {
     /**
      * Directory of file/object to be read
      */
-    private File FILE;
+    private File file;
 
     public Load(File loc) throws FileNotFoundException {
-        FILE = loc;
+        file = loc;
 
     }
 
@@ -31,15 +26,12 @@ public class Load {
      * Loads an object based on the predefined directory
      *
      * @return
-     * @throws IOException
      */
-    public Object load() throws IOException {
+    public Object load(){
         try {
+            byte[] array = Files.readAllBytes(file.toPath());
 
-            byte[] array = Files.readAllBytes(FILE.toPath());
-            System.out.println("Arr " + array.length);
-
-            return Util.ObjectConverter.deserialize(array);
+            return util.ObjectConverter.deserialize(array);
         } catch (Exception e) {
 
             return null;
