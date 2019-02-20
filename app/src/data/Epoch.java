@@ -1,10 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package data;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -16,7 +13,8 @@ import org.json.JSONObject;
 /**
  * @author Mathew Allington
  */
-public class Epoch {
+public class Epoch implements Serializable {
+    static final long serialVersionUID = -8619870403385249300L;
     //Time
     private long timeElapsed;
     private String timeStamp;
@@ -173,4 +171,6 @@ public class Epoch {
      * @return
      */
     public long timeElapsed() {return this.timeElapsed;}
+
+    public String getTimeStamp(){return this.timeStamp;}
 }

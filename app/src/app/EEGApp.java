@@ -1,15 +1,13 @@
-/*
- *
- */
 package app;
 
+import util.ObjectConverter;
 import data.Epoch;
 import data.EpochContainer;
 import hardware.Headset;
 import hardware.SimulatedHeadset;
 
 import java.awt.*;
-import java.awt.event.InputEvent;
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -36,16 +34,28 @@ public class EEGApp {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws InterruptedException, IOException, AWTException {
-        EpochContainer ec = new EpochContainer();
-        Robot r = new Robot();
 
+        File ecFile = new File("/Users/mathew/Documents/GitHub/project/testData/MathewSample4.ec");
+        File auto = new File("/Users/mathew/Documents/GitHub/project/testData/MathewSleepSample.ec");
 
-        Headset head = new Headset() {
-            @Override
-            public void update(Epoch data) {
-               ec.addEpoch(data);
-            }
-        };
+        boolean simulate = true;
+        if(!simulate) {
+            EpochContainer ec = new EpochContainer();
+
+            ec.setAutoSave(auto,10000);
+
+            Headset head = new Headset() {
+                @Override
+                public void update(Epoch data) {
+                    if(data.getPoorSignalLevel()<100) {
+                        ec.addEpoch(data);
+                        System.out.println(data);
+                    }
+                    else{
+                        System.out.println("Headset not on.");
+                    }
+                }
+            };
         head.addBlinkListener(() -> {
             System.out.println("Stop blinking");
         });
@@ -64,22 +74,29 @@ public class EEGApp {
             System.out.println("Connection failed");
         }
 
-        Thread.sleep(60000);
-
+        Thread.sleep(60*60*10*1000);
+        ec.saveToFile(ecFile);
         head.disconnect();
+
+    }
+        else {
+        System.out.println("Loading file: "+ecFile.toString());
+
+        EpochContainer ec = EpochContainer.loadContainerFromFile(auto);
+        System.out.println("Serial version ID: "+ObjectConverter.getSerialVersionID(ec));
         System.out.println("Starting simulation");
         SimulatedHeadset sim = new SimulatedHeadset(ec) {
             @Override
             public void update(Epoch data) {
-                System.out.println("Simulated:"+data);
+                System.out.println("Simulated ["+data.getTimeStamp()+"]:" + data);
             }
         };
 
-        sim.setEpochPeriod(500);
-
-        sim.loopData(true);
-
+        sim.setEpochPeriod(200);
+        sim.loopData(false);
         sim.capture();
+
+    }
 
 
     }
