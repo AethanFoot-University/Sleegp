@@ -39,23 +39,23 @@ public class EEGApp {
         File auto = new File("/Users/mathew/Documents/GitHub/project/testData/MathewSleepSample.ec");
 
         boolean simulate = true;
-    if(!simulate) {
-        EpochContainer ec = new EpochContainer();
+        if(!simulate) {
+            EpochContainer ec = new EpochContainer();
 
-        ec.setAutoSave(auto,10000);
+            ec.setAutoSave(auto,10000);
 
-        Headset head = new Headset() {
-            @Override
-            public void update(Epoch data) {
-                if(data.getPoorSignalLevel()<100) {
-                    ec.addEpoch(data);
-                    System.out.println(data);
+            Headset head = new Headset() {
+                @Override
+                public void update(Epoch data) {
+                    if(data.getPoorSignalLevel()<100) {
+                        ec.addEpoch(data);
+                        System.out.println(data);
+                    }
+                    else{
+                        System.out.println("Headset not on.");
+                    }
                 }
-                else{
-                    System.out.println("Headset not on.");
-                }
-            }
-        };
+            };
         head.addBlinkListener(() -> {
             System.out.println("Stop blinking");
         });
