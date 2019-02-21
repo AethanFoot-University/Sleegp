@@ -79,7 +79,6 @@ public class Epoch implements Serializable {
         String app = "[";
         Field[] fields = getClass().getDeclaredFields();
 
-
         for (Field f : fields)
             try {
 
@@ -89,6 +88,35 @@ public class Epoch implements Serializable {
             }
         app+="timeElapse: "+timeElapsed;
         app += "]";
+        return app;
+    }
+
+    public String getCSV(){
+        String app = "";
+        Field[] fields = getClass().getDeclaredFields();
+        for (Field f : fields)
+            try {
+                app += f.getInt(this) + ", ";
+
+            } catch (Exception ex) {
+            }
+            app+=timeElapsed+","+timeStamp;
+
+        return app;
+    }
+    public String getCSVHeader(){
+        String app = "";
+        Field[] fields = getClass().getDeclaredFields();
+
+        for (Field f : fields)
+            try {
+                f.getInt(this);
+                app += f.getName()+ ", ";
+
+            } catch (Exception ex) {
+            }
+        app+="timeElapsed,timeStamp";
+
         return app;
     }
 
