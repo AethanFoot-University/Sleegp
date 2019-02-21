@@ -44,6 +44,14 @@ public class EpochContainer implements Serializable {
 
     }
 
+    public String genCSV(){
+        String app = data.get(0).getCSVHeader()+"\n";
+        for(Epoch e : data){
+            app+=e.getCSV()+"\n";
+        }
+        return app;
+    }
+
     /**
      * @return
      */

@@ -1,5 +1,6 @@
 package app;
 
+import util.FileTools;
 import util.ObjectConverter;
 import data.Epoch;
 import data.EpochContainer;
@@ -35,8 +36,8 @@ public class EEGApp {
      */
     public static void main(String[] args) throws InterruptedException, IOException, AWTException {
 
-        File ecFile = new File("/Users/mathew/Documents/GitHub/project/testData/MathewSample4.ec");
-        File auto = new File("/Users/mathew/Documents/GitHub/project/testData/MathewSleepSample.ec");
+        File ecFile = new File("/Users/mathew/Documents/GitHub/project/testData/Sleep20012019autoSave.ec");
+        File auto = new File("/Users/mathew/Documents/GitHub/project/testData/Sleep20012019autoSave.ec");
 
         boolean simulate = true;
         if(!simulate) {
@@ -44,15 +45,19 @@ public class EEGApp {
 
             ec.setAutoSave(auto,10000);
 
+            int epochLost =0;
             Headset head = new Headset() {
                 @Override
                 public void update(Epoch data) {
                     if(data.getPoorSignalLevel()<100) {
+                        System.out.println("Recording [Poor Signal Level: "+data.getPoorSignalLevel()+"]");
                         ec.addEpoch(data);
                         System.out.println(data);
+
                     }
                     else{
-                        System.out.println("Headset not on.");
+
+                        System.out.println("Headset not on at: "+data.getTimeStamp());
                     }
                 }
             };
@@ -83,6 +88,10 @@ public class EEGApp {
         System.out.println("Loading file: "+ecFile.toString());
 
         EpochContainer ec = EpochContainer.loadContainerFromFile(auto);
+        String csv = ec.genCSV();
+            FileTools.write("/Users/mathew/Desktop/3hoursleep.csv", csv);
+            System.out.println(ec.genCSV());
+
         System.out.println("Serial version ID: "+ObjectConverter.getSerialVersionID(ec));
         System.out.println("Starting simulation");
         SimulatedHeadset sim = new SimulatedHeadset(ec) {
