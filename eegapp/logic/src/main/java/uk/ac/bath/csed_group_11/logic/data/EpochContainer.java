@@ -14,13 +14,13 @@ import java.util.List;
  * @author Mathew Allington
  */
 public class EpochContainer implements Serializable {
-    private List<Epoch> data;
-    public final String EXTENSION = ".ec";
     static final long serialVersionUID = -529434607952910606L;
-
+    public final String EXTENSION = ".ec";
+    private List<Epoch> data;
     private transient File autoSaveLocation = null;
     private transient long lastSave = 0;
-    private transient long savePeriod =0;
+    private transient long savePeriod = 0;
+
     /**
      * Creates an empty container instance
      */
@@ -35,19 +35,18 @@ public class EpochContainer implements Serializable {
         Load loader = new Load(file);
         Object loaded = loader.load();
 
-        if(loaded.getClass().equals(EpochContainer.class)){
-            return (EpochContainer)loaded;
-        }
-        else{
+        if (loaded.getClass().equals(EpochContainer.class)) {
+            return (EpochContainer) loaded;
+        } else {
             return null;
         }
 
     }
 
-    public String genCSV(){
-        String app = data.get(0).getCSVHeader()+"\n";
-        for(Epoch e : data){
-            app+=e.getCSV()+"\n";
+    public String genCSV() {
+        String app = data.get(0).getCSVHeader() + "\n";
+        for (Epoch e : data) {
+            app += e.getCSV() + "\n";
         }
         return app;
     }
@@ -72,12 +71,14 @@ public class EpochContainer implements Serializable {
      */
     public void addEpoch(Epoch e) {
         data.add(e);
-        new Thread(()->{autoSave();}).start();
+        new Thread(() -> {
+            autoSave();
+        }).start();
     }
 
-    private void autoSave(){
+    private void autoSave() {
 
-        if(autoSaveLocation !=null && (System.currentTimeMillis()-lastSave) >= savePeriod){
+        if (autoSaveLocation != null && (System.currentTimeMillis() - lastSave) >= savePeriod) {
             try {
                 saveToFile(this.autoSaveLocation);
                 lastSave = System.currentTimeMillis();
@@ -88,7 +89,7 @@ public class EpochContainer implements Serializable {
         }
     }
 
-    public void setAutoSave(File file, long timePeriod){
+    public void setAutoSave(File file, long timePeriod) {
         this.autoSaveLocation = file;
         this.lastSave = System.currentTimeMillis();
         this.savePeriod = timePeriod;
@@ -99,12 +100,11 @@ public class EpochContainer implements Serializable {
      * @return
      */
     public boolean saveToFile(File firectory) throws FileNotFoundException {
-        if(firectory.toString().contains(EXTENSION)) {
+        if (firectory.toString().contains(EXTENSION)) {
             Save saver = new Save(firectory);
             saver.write(this);
-        }
-        else{
-            System.out.println("Cannot save without proper extenson: "+EXTENSION);
+        } else {
+            System.out.println("Cannot save without proper extenson: " + EXTENSION);
         }
         return false;
     }

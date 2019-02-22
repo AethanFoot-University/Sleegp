@@ -26,7 +26,7 @@ public class Load {
      *
      * @return
      */
-    public Object load(){
+    public Object load() {
         try {
             byte[] array = Files.readAllBytes(file.toPath());
 

@@ -34,7 +34,7 @@ public class Save {
      * @return true - Successfully Written, false - failed to write
      * @throws IOException Throws exception when file could not be written
      */
-    public boolean write(Object toWrite){
+    public boolean write(Object toWrite) {
         try {
             Files.write(FILE.toPath(), ObjectConverter.serialize(toWrite));
 

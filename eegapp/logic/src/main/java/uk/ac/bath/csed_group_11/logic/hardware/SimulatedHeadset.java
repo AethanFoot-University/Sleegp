@@ -10,15 +10,6 @@ public abstract class SimulatedHeadset extends Headset {
     private int current = 0;
     private int epochPeriod = 200;
     private boolean loopData = false;
-
-    /**
-     * @param data
-     */
-    public SimulatedHeadset(EpochContainer data) {
-        super();
-        this.data = data;
-    }
-
     Runnable networkSimulaionThread = new Runnable() {
         @Override
         public void run() {
@@ -26,18 +17,16 @@ public abstract class SimulatedHeadset extends Headset {
                 try {
                     if (data.size() > 0) {
 
-                        if(data.getEpoch(current).timeElapsed() <= (System.currentTimeMillis()-systemStartTime)){
+                        if (data.getEpoch(current).timeElapsed() <= (System.currentTimeMillis() - systemStartTime)) {
                             update(data.getEpoch(current++));
                         }
-
 
 
                         if (!(current < data.size()))
                             if (loopData) {
                                 current = 0;
                                 systemStartTime = System.currentTimeMillis();
-                            }
-                            else capturing = false;
+                            } else capturing = false;
                     }
 
                     Thread.sleep(epochPeriod);
@@ -48,6 +37,14 @@ public abstract class SimulatedHeadset extends Headset {
             }
         }
     };
+
+    /**
+     * @param data
+     */
+    public SimulatedHeadset(EpochContainer data) {
+        super();
+        this.data = data;
+    }
 
     /**
      * @param periodMillis

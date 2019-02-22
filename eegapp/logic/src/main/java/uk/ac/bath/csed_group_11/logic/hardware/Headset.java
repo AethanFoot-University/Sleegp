@@ -2,11 +2,7 @@ package uk.ac.bath.csed_group_11.logic.hardware;
 
 import uk.ac.bath.csed_group_11.logic.data.Epoch;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
 
@@ -15,29 +11,24 @@ import java.net.SocketException;
  */
 public abstract class Headset {
 
+    /**
+     *
+     */
+    public final static String DEFAULT_HOST = "127.0.0.1";
+    /**
+     *
+     */
+    public final static int DEFAULT_PORT = 13854;
     private static final String TROUBLE_SHOOTING_MSG = "\nTrouble Shooting:"
             + "\n1. Make sure ThinkGearConnector app is running."
             + "\n2. Make sure this is the only EEGApp instance running."
             + "\n3. Make sure the headset is connected and paired via Bluetooth"
             + "\n4. Contact mma82@bath.ac.uk or try Slack for more help.";
-
-    /**
-     *
-     */
-    public final static String DEFAULT_HOST = "127.0.0.1";
-
-    /**
-     *
-     */
-    public final static int DEFAULT_PORT = 13854;
-
     long systemStartTime;
-
-    private String host;
-    private int port;
     boolean capturing = false;
     boolean headsetOn = true;
-
+    private String host;
+    private int port;
     private Socket headSocket;
     private BufferedReader JSONStream;
     private OutputStream outputStream = null;
@@ -45,6 +36,32 @@ public abstract class Headset {
     private Runnable blinkRunnable = null;
     private Runnable removedHeadsetRunnable = null;
     private Runnable putOnHeadsetRunnable = null;
+    Runnable networkThread = new Runnable() {
+        @Override
+        public void run() {
+            String input;
+            try {
+                while ((input = JSONStream.readLine()) != null) {
+
+                    try {
+                        if (input.contains("eSense")) {
+                            Epoch e = new Epoch(input, System.currentTimeMillis() - systemStartTime);
+                            checkHeadset(e.getPoorSignalLevel());
+                            update(e);
+                        } else if (input.contains("blink")) {
+                            new Thread(blinkRunnable).start();
+                        }
+                    } catch (Exception e) {
+                        System.out.println("Failed to serialise object.\n" + e.getMessage());
+                    }
+
+                }
+            } catch (SocketException e) {
+            } catch (IOException ex) {
+            }
+
+        }
+    };
 
     /**
      *
@@ -73,15 +90,26 @@ public abstract class Headset {
     public void addBlinkListener(Runnable run) {
         blinkRunnable = run;
     }
+
     public void removeBlinkListener() {
         blinkRunnable = null;
     }
 
-    public void addRemovedHeadsetListener(Runnable run) { removedHeadsetRunnable = run;}
-    public void removeRemovedHeadsetListener(Runnable run) { removedHeadsetRunnable = null;}
+    public void addRemovedHeadsetListener(Runnable run) {
+        removedHeadsetRunnable = run;
+    }
 
-    public void addPutOnHeadsetListener(Runnable run) { putOnHeadsetRunnable = run;}
-    public void removePutOnHeadsetListener(Runnable run) { putOnHeadsetRunnable = null;}
+    public void removeRemovedHeadsetListener(Runnable run) {
+        removedHeadsetRunnable = null;
+    }
+
+    public void addPutOnHeadsetListener(Runnable run) {
+        putOnHeadsetRunnable = run;
+    }
+
+    public void removePutOnHeadsetListener(Runnable run) {
+        putOnHeadsetRunnable = null;
+    }
 
     /**
      * @return
@@ -115,36 +143,9 @@ public abstract class Headset {
         return capturing;
     }
 
-    public long getTimeElapsed(){
-        return System.currentTimeMillis()-this.systemStartTime;
+    public long getTimeElapsed() {
+        return System.currentTimeMillis() - this.systemStartTime;
     }
-
-    Runnable networkThread = new Runnable() {
-        @Override
-        public void run() {
-            String input;
-            try {
-                while ((input = JSONStream.readLine()) != null) {
-
-                    try {
-                        if (input.contains("eSense")) {
-                            Epoch e = new Epoch(input, System.currentTimeMillis() - systemStartTime);
-                            checkHeadset(e.getPoorSignalLevel());
-                            update(e);
-                        } else if (input.contains("blink")) {
-                            new Thread(blinkRunnable).start();
-                        }
-                    } catch (Exception e) {
-                        System.out.println("Failed to serialise object.\n" + e.getMessage());
-                    }
-
-                }
-            } catch (SocketException e) {
-            } catch (IOException ex) {
-            }
-
-        }
-    };
 
     /**
      * @throws IOException
@@ -177,21 +178,20 @@ public abstract class Headset {
         return false;
     }
 
-    private void checkHeadset(int poorSignalLevel){
-        if(poorSignalLevel>50){
-            if(headsetOn) {
+    private void checkHeadset(int poorSignalLevel) {
+        if (poorSignalLevel > 50) {
+            if (headsetOn) {
                 runListener(this.removedHeadsetRunnable);
                 headsetOn = false;
             }
-        }
-        else if(!headsetOn){
+        } else if (!headsetOn) {
             runListener(this.putOnHeadsetRunnable);
             headsetOn = true;
         }
 
     }
 
-    private void runListener(Runnable r){
-        if(r!=null) new Thread(r).start();
+    private void runListener(Runnable r) {
+        if (r != null) new Thread(r).start();
     }
 }

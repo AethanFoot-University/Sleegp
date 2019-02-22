@@ -1,13 +1,13 @@
 package uk.ac.bath.csed_group_11.logic.data;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  * @author Mathew Allington
@@ -85,12 +85,12 @@ public class Epoch implements Serializable {
 
             } catch (Exception ex) {
             }
-        app+="timeElapse: "+timeElapsed;
+        app += "timeElapse: " + timeElapsed;
         app += "]";
         return app;
     }
 
-    public String getCSV(){
+    public String getCSV() {
         String app = "";
         Field[] fields = getClass().getDeclaredFields();
         for (Field f : fields)
@@ -99,22 +99,23 @@ public class Epoch implements Serializable {
 
             } catch (Exception ex) {
             }
-        app+=timeElapsed+","+timeStamp;
+        app += timeElapsed + "," + timeStamp;
 
         return app;
     }
-    public String getCSVHeader(){
+
+    public String getCSVHeader() {
         String app = "";
         Field[] fields = getClass().getDeclaredFields();
 
         for (Field f : fields)
             try {
                 f.getInt(this);
-                app += f.getName()+ ", ";
+                app += f.getName() + ", ";
 
             } catch (Exception ex) {
             }
-        app+="timeElapsed,timeStamp";
+        app += "timeElapsed,timeStamp";
 
         return app;
     }
@@ -192,12 +193,18 @@ public class Epoch implements Serializable {
     /**
      * @return
      */
-    public int getPoorSignalLevel() {return this.poorSignalLevel;}
+    public int getPoorSignalLevel() {
+        return this.poorSignalLevel;
+    }
 
     /**
      * @return
      */
-    public long timeElapsed() {return this.timeElapsed;}
+    public long timeElapsed() {
+        return this.timeElapsed;
+    }
 
-    public String getTimeStamp(){return this.timeStamp;}
+    public String getTimeStamp() {
+        return this.timeStamp;
+    }
 }

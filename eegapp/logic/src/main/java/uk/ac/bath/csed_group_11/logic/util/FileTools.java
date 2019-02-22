@@ -17,7 +17,7 @@ public class FileTools {
     /**
      * Writes a new entry to a new or existing text file
      *
-     * @param dir Directory to be written to
+     * @param dir     Directory to be written to
      * @param toWrite Text to be written on a new line
      * @throws IOException
      */
@@ -25,6 +25,24 @@ public class FileTools {
         FileWriter fw = new FileWriter(dir, true);
         fw.write(toWrite + "\n");
         fw.close();
+    }
+
+    /**
+     * Reads the contents of a text file
+     *
+     * @param dir Directory of the text file
+     * @return returns the text written
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
+    public static String read(String dir) throws FileNotFoundException, IOException {
+        FileInputStream inputStream = new FileInputStream(dir);
+        String append = "";
+        while (inputStream.available() > 0) {
+            append += (char) inputStream.read();
+        }
+        inputStream.close();
+        return append;
     }
 
     /**
@@ -47,23 +65,5 @@ public class FileTools {
 
         }
         return ret;
-    }
-
-    /**
-     * Reads the contents of a text file
-     *
-     * @param dir Directory of the text file
-     * @return returns the text written
-     * @throws FileNotFoundException
-     * @throws IOException
-     */
-    public static String read(String dir) throws FileNotFoundException, IOException {
-        FileInputStream inputStream = new FileInputStream(dir);
-        String append = "";
-        while (inputStream.available() > 0) {
-            append += (char) inputStream.read();
-        }
-        inputStream.close();
-        return append;
     }
 }
