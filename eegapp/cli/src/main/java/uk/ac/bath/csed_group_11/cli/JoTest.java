@@ -4,10 +4,10 @@ import uk.ac.bath.csed_group_11.logic.data.Epoch;
 import uk.ac.bath.csed_group_11.logic.hardware.Headset;
 import uk.ac.bath.csed_group_11.logic.data.EpochContainer;
 import uk.ac.bath.csed_group_11.logic.hardware.Headset;
+import uk.ac.bath.csed_group_11.logic.hardware.SimulatedHeadset;
+import uk.ac.bath.csed_group_11.logic.util.Load;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.Buffer;
 import java.util.Scanner;
 
@@ -23,12 +23,11 @@ public class JoTest {
 
         while(!exit) {
             System.out.println("Please select one of the following tests:" +
-                    "\n1.Test headset connection" +
-                    "\n2.Get data from headset" +
-                    "\n3.Test play back function" +
-                    "\n4.Test data save function" +
-                    "\n5.Test blink function+" +
-                    "\n6. Exit");
+                    "\n1. Test headset connection" +
+                    "\n2. Get data from headset" +
+                    "\n3. Test play back function" +
+                    "\n4. Test blink function" +
+                    "\n5. Exit");
             System.out.println("Enter your choice:");
             try {
                 int choice = in.nextInt();
@@ -47,14 +46,10 @@ public class JoTest {
                         break;
 
                     case 4:
-                        testDataSave();
-                        break;
-
-                    case 5:
                         testBlinkDetection();
                         break;
 
-                    case 6:
+                    case 5:
                         System.out.println("Exiting");
                         exit = true;
                         break;
@@ -72,7 +67,7 @@ public class JoTest {
     }
 
 
-    public void testHeadsetConnection(){
+    public static void testHeadsetConnection(){
         Headset head = new Headset() {
             @Override
             public void update(Epoch data) {}
@@ -84,22 +79,15 @@ public class JoTest {
         }
     }
 
-    public void testDataComingBackFromHeadset(){
-        String input = "";
+    public static void testDataComingBackFromHeadset(){
         int seconds;
-        InputStreamReader isr = new InputStreamReader(System.in);
-        BufferedReader r = new BufferedReader(isr);
 
         System.out.println("How many seconds of data do you want to record?");
-        try {
-            input = r.readLine();
-        } catch (IOException e) {
-            System.out.println("Error");
-        }
-        seconds = Integer.valueOf(input) * 1000;
 
+        seconds = in.nextInt() * 1000;
+        EpochContainer ec = new EpochContainer();
         Headset head = new Headset() {
-            EpochContainer ec = new EpochContainer();
+
 
             @Override
             public void update(Epoch data) {
@@ -113,32 +101,91 @@ public class JoTest {
             }
         };
 
+        head.capture();
+        try {
+            System.out.println("Waiting...");
+            Thread.sleep(seconds);
+        } catch (InterruptedException e) {
+            System.out.println("Error");
+        }
+        try {
+            System.out.println("Finished");
+            head.disconnect();
+        } catch (IOException e) {
+            System.out.println("Error");
+        }
+        try {
+            Thread.sleep(2);
+        } catch (InterruptedException e) {
+            System.out.println("Error");
+        }
+
+        System.out.println("Enter file directory to save (.ec format):");
+        Scanner scan = new Scanner(System.in);
+        String file = scan.nextLine();
+
+        File f = new File(file);
+        try {
+            ec.saveToFile(f);
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found");
+            System.out.println("Stop testing the CLI, this isn't going to be part of the typical release. Typical Jo.");
+        }
+    }
+
+    public static void testPlayBackFunction(){
+        System.out.println("Enter file directory to load and play back (.ec format):");
+        Scanner scan = new Scanner(System.in);
+        String file = scan.nextLine();
+
+        File f = new File(file);
+
+        try {
+            Load load = new Load(f);
+            EpochContainer ep = (EpochContainer)load.load();
+
+            SimulatedHeadset head = new SimulatedHeadset(ep) {
+                @Override
+                public void update(Epoch data) {
+                    System.out.println(data);
+                }
+            };
+
+            head.capture();
+
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found");
+        }
+
+    }
+
+    public static void testBlinkDetection(){
+        Headset head = new Headset() {
+            @Override
+            public void update(Epoch data) {
+                System.out.println("Signal: "+data.getPoorSignalLevel());
+            }
+        };
+        System.out.println("How many seconds do you want to test for?");
+        int seconds = in.nextInt() * 1000;
+
+        head.addBlinkListener(()->{
+            System.out.println("Stop blinking");
+        });
+
+        head.capture();
         try {
             Thread.sleep(seconds);
         } catch (InterruptedException e) {
             System.out.println("Error");
         }
+        try {
+            head.disconnect();
+        } catch (IOException e) {
+            System.out.println("Error");
+        }
 
     }
-
-    public static void testPlayBackFunction(){
-
-    }
-
-    public static void testDataSave(){
-
-    }
-    public static void testBlinkDetection(){
-        Headset headset = new Headset() {
-            @Override
-            public void update(Epoch data) {
-
-            }
-        };
-
-
-    }
-
 
 
     public static void getUserWait(){
