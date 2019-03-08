@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class JoTest {
-
     public static Scanner scann;
 
     public static void main(String[] main) {
@@ -21,7 +20,7 @@ public class JoTest {
 
         boolean exit = false;
 
-        System.out.println("This is a pre-alpha release for increment testing (v0.1.1)");
+        System.out.println("This is a pre-alpha release for increment testing (v0.2.1)");
 
         while (!exit) {
             System.out.println("Please select one of the following tests:" +

@@ -6,14 +6,16 @@ plugins {
 group 'uk.ac.bath.csed-group-11'
 version '0.2.1'
 
-sourceCompatibility = 10
+sourceCompatibility = 11
+
 repositories {
     mavenCentral()
 }
 
 dependencies {
     compile group: 'org.json', name: 'json', version: '20180813'
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.4.0'
+    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.4.0'
 }
 
 javafx {
@@ -29,4 +31,8 @@ jar {
     from {
         configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
     }
+}
+
+test {
+    useJUnitPlatform()
 }
