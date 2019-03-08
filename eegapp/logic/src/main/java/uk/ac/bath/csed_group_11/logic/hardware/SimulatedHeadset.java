@@ -13,7 +13,7 @@ public abstract class SimulatedHeadset extends Headset {
     Runnable networkSimulaionThread = new Runnable() {
         @Override
         public void run() {
-            while (capturing) {
+            while (capturing && data!=null) {
                 try {
                     if (data.size() > 0) {
 
@@ -32,9 +32,11 @@ public abstract class SimulatedHeadset extends Headset {
                     Thread.sleep(epochPeriod);
 
                 } catch (InterruptedException ex) {
+                    System.out.println("File is invalid");
                 }
 
             }
+
         }
     };
 

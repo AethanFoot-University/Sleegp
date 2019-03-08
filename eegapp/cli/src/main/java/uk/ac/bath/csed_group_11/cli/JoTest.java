@@ -1,36 +1,36 @@
-package uk.ac.bath.csed_group_11.cli;
 
+package uk.ac.bath.csed_group_11.cli;
 import uk.ac.bath.csed_group_11.logic.data.Epoch;
 import uk.ac.bath.csed_group_11.logic.hardware.Headset;
 import uk.ac.bath.csed_group_11.logic.data.EpochContainer;
-import uk.ac.bath.csed_group_11.logic.hardware.Headset;
 import uk.ac.bath.csed_group_11.logic.hardware.SimulatedHeadset;
+import uk.ac.bath.csed_group_11.logic.util.FileTools;
 import uk.ac.bath.csed_group_11.logic.util.Load;
 
 import java.io.*;
-import java.nio.Buffer;
 import java.util.Scanner;
 
 public class JoTest {
 
-    public static Scanner in;
+    public static Scanner scann;
     public static void main(String[] main){
-        in = new Scanner(System.in);
+        scann = new Scanner(System.in);
 
         boolean exit = false;
 
-        System.out.println("This is a pre-alpha release for increment testing (v0.1)");
+        System.out.println("This is a pre-alpha release for increment testing (v0.1.1)");
 
         while(!exit) {
             System.out.println("Please select one of the following tests:" +
-                    "\n1. Test headset connection" +
+                    "\n1. Test API headset connection" +
                     "\n2. Get data from headset" +
                     "\n3. Test play back function" +
                     "\n4. Test blink function" +
-                    "\n5. Exit");
+                    "\n5. Test CSV export function" +
+                    "\n6. Exit");
             System.out.println("Enter your choice:");
             try {
-                int choice = in.nextInt();
+                int choice = scann.nextInt();
 
                 switch (choice) {
                     case 1:
@@ -50,6 +50,10 @@ public class JoTest {
                         break;
 
                     case 5:
+                        testCSVFunction();
+                        break;
+
+                    case 6:
                         System.out.println("Exiting");
                         exit = true;
                         break;
@@ -61,7 +65,7 @@ public class JoTest {
             }
             catch(Exception e){
                 System.out.println("Very funny, now get back to the real test.\n");
-                in = new Scanner(System.in);
+                scann = new Scanner(System.in);
             }
         }
     }
@@ -81,10 +85,10 @@ public class JoTest {
 
     public static void testDataComingBackFromHeadset(){
         int seconds;
-
+        scann = new Scanner(System.in);
         System.out.println("How many seconds of data do you want to record?");
 
-        seconds = in.nextInt() * 1000;
+        seconds = scann.nextInt() * 1000;
         EpochContainer ec = new EpochContainer();
         Headset head = new Headset() {
 
@@ -119,10 +123,9 @@ public class JoTest {
         } catch (InterruptedException e) {
             System.out.println("Error");
         }
-
+        scann = new Scanner(System.in);
         System.out.println("Enter file directory to save (.ec format):");
-        Scanner scan = new Scanner(System.in);
-        String file = scan.nextLine();
+        String file = scann.nextLine();
 
         File f = new File(file);
         try {
@@ -135,12 +138,12 @@ public class JoTest {
 
     public static void testPlayBackFunction(){
         System.out.println("Enter file directory to load and play back (.ec format):");
-        Scanner scan = new Scanner(System.in);
-        String file = scan.nextLine();
+        scann = new Scanner(System.in);
+        String file = scann.nextLine();
 
-        File f = new File(file);
 
         try {
+            File f = new File(file);
             Load load = new Load(f);
             EpochContainer ep = (EpochContainer)load.load();
 
@@ -153,21 +156,22 @@ public class JoTest {
 
             head.capture();
 
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
             System.out.println("File not found");
         }
 
     }
 
     public static void testBlinkDetection(){
+        scann = new Scanner(System.in);
         Headset head = new Headset() {
             @Override
             public void update(Epoch data) {
-                System.out.println("Signal: "+data.getPoorSignalLevel());
+                System.out.println("Poor Signal: "+data.getPoorSignalLevel());
             }
         };
         System.out.println("How many seconds do you want to test for?");
-        int seconds = in.nextInt() * 1000;
+        int seconds = scann.nextInt() * 1000;
 
         head.addBlinkListener(()->{
             System.out.println("Stop blinking");
@@ -190,8 +194,8 @@ public class JoTest {
 
     public static void getUserWait(){
         System.out.println("How many milli-seconds would you like to test for? :");
-        while(!in.hasNextInt());
-        int millis = in.nextInt();
+        while(!scann.hasNextInt());
+        int millis = scann.nextInt();
 
         try {
             Thread.sleep(millis);
@@ -199,5 +203,28 @@ public class JoTest {
             e.printStackTrace();
         }
 
+    }
+
+    public static void testCSVFunction(){
+
+        try {
+
+            scann = new Scanner(System.in);
+
+            System.out.println("Please input your Epoch Container file (*.ec format): ");
+            String loadDocument = scann.nextLine();
+
+
+
+            System.out.println("Please input your destination (*.csv):");
+            String destination = scann.nextLine();
+            System.out.println("Loading from "+loadDocument+" -> Saving to : "+destination);
+            EpochContainer ec = EpochContainer.loadContainerFromFile(new File(loadDocument));
+            FileTools.write(destination, ec.genCSV());
+            System.out.println("Written to "+destination);
+        }
+        catch(Exception e){
+            System.out.println("You maniac! Stop this at once!\n Please Check your file.\n"+e.getMessage());
+        }
     }
 }

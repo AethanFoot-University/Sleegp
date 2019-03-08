@@ -7,6 +7,7 @@
 //
 
 module cli {
+    requires gui;
     requires logic;
     requires java.desktop;
 }

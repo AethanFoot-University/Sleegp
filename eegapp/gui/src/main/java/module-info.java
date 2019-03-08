@@ -11,4 +11,5 @@ module gui {
     requires javafx.controls;
 
     opens uk.ac.bath.csed_group_11.gui to javafx.graphics;
+    exports uk.ac.bath.csed_group_11.gui;
 }

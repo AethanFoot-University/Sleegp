@@ -3,7 +3,7 @@
     <output-path>$PROJECT_DIR$/out/artifacts/eegapp_jar</output-path>
     <root id="archive" name="eegapp.jar">
       <element id="directory" name="META-INF">
-        <element id="file-copy" path="$USER_HOME$/Downloads/META-INF/MANIFEST.MF" />
+        <element id="file-copy" path="$PROJECT_DIR$/logic/src/main/resources/META-INF/MANIFEST.MF" />
       </element>
       <element id="module-output" name="gui" />
       <element id="module-output" name="logic" />
