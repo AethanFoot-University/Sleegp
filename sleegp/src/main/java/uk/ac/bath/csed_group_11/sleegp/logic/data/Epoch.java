@@ -60,7 +60,7 @@ public class Epoch implements Serializable {
         while (it.hasNext()) {
             String key = it.next().toString();
             try {
-                setIntField(key.toString(), obj.getInt(key));
+                setIntField(key, obj.getInt(key));
             } catch (Exception e) {
             }
 

@@ -1,15 +1,13 @@
 package uk.ac.bath.csed_group_11.sleegp.gui;
 
-import java.io.File;
-import java.util.List;
-
-import javafx.application.Platform;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.util.List;
+
 /**
- *
  * @author mathew
  * Source from one of my previous projects: https://github.com/Mallington/OHR/blob/master/src/GUI/FilePicker.java
  */
@@ -31,10 +29,9 @@ public class FilePicker {
     private String FILE_TYPE;
 
     /**
-     *
-     * @param fileType eg .nns, .fs, .png
-     * @param descriptor This is the syntax used to describe the file type for
-     * example .txt would be Text File
+     * @param fileType    eg .nns, .fs, .png
+     * @param descriptor  This is the syntax used to describe the file type for
+     *                    example .txt would be Text File
      * @param defaultName For example untitled
      */
     public FilePicker(String fileType, String descriptor, String defaultName) {
@@ -55,9 +52,12 @@ public class FilePicker {
 
     }
 
+    public static void main(String[] args) {
+        FilePicker fp = new FilePicker(".nns", "neural net struct", "Unitled");
+    }
+
     /**
-     *
-     * @param s The current GUI it is being opened from
+     * @param s      The current GUI it is being opened from
      * @param option Specifies the either LOAD or SAVE on the file picker UI
      * @return Returns the file
      */
@@ -77,9 +77,5 @@ public class FilePicker {
 
         return f;
 
-    }
-
-    public static void main(String[] args) {
-        FilePicker fp = new FilePicker(".nns", "neural net struct", "Unitled");
     }
 }

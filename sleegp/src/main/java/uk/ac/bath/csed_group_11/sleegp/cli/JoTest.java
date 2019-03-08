@@ -1,26 +1,29 @@
 package uk.ac.bath.csed_group_11.sleegp.cli;
 
 import uk.ac.bath.csed_group_11.sleegp.logic.data.Epoch;
-import uk.ac.bath.csed_group_11.sleegp.logic.hardware.Headset;
 import uk.ac.bath.csed_group_11.sleegp.logic.data.EpochContainer;
+import uk.ac.bath.csed_group_11.sleegp.logic.hardware.Headset;
 import uk.ac.bath.csed_group_11.sleegp.logic.hardware.SimulatedHeadset;
 import uk.ac.bath.csed_group_11.sleegp.logic.util.FileTools;
 import uk.ac.bath.csed_group_11.sleegp.logic.util.Load;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class JoTest {
 
     public static Scanner scann;
-    public static void main(String[] main){
+
+    public static void main(String[] main) {
         scann = new Scanner(System.in);
 
         boolean exit = false;
 
         System.out.println("This is a pre-alpha release for increment testing (v0.1.1)");
 
-        while(!exit) {
+        while (!exit) {
             System.out.println("Please select one of the following tests:" +
                     "\n1. Test API headset connection" +
                     "\n2. Get data from headset" +
@@ -62,8 +65,7 @@ public class JoTest {
                         break;
 
                 }
-            }
-            catch(Exception e){
+            } catch (Exception e) {
                 System.out.println("Very funny, now get back to the real test.\n");
                 scann = new Scanner(System.in);
             }
@@ -71,19 +73,20 @@ public class JoTest {
     }
 
 
-    public static void testHeadsetConnection(){
+    public static void testHeadsetConnection() {
         Headset head = new Headset() {
             @Override
-            public void update(Epoch data) {}
+            public void update(Epoch data) {
+            }
         };
-        if(head.capture()) {
+        if (head.capture()) {
             System.out.println("Connected");
         } else {
             System.out.println("Connection failed");
         }
     }
 
-    public static void testDataComingBackFromHeadset(){
+    public static void testDataComingBackFromHeadset() {
         int seconds;
         scann = new Scanner(System.in);
         System.out.println("How many seconds of data do you want to record?");
@@ -136,7 +139,7 @@ public class JoTest {
         }
     }
 
-    public static void testPlayBackFunction(){
+    public static void testPlayBackFunction() {
         System.out.println("Enter file directory to load and play back (.ec format):");
         scann = new Scanner(System.in);
         String file = scann.nextLine();
@@ -145,7 +148,7 @@ public class JoTest {
         try {
             File f = new File(file);
             Load load = new Load(f);
-            EpochContainer ep = (EpochContainer)load.load();
+            EpochContainer ep = (EpochContainer) load.load();
 
             SimulatedHeadset head = new SimulatedHeadset(ep) {
                 @Override
@@ -162,18 +165,18 @@ public class JoTest {
 
     }
 
-    public static void testBlinkDetection(){
+    public static void testBlinkDetection() {
         scann = new Scanner(System.in);
         Headset head = new Headset() {
             @Override
             public void update(Epoch data) {
-                System.out.println("Poor Signal: "+data.getPoorSignalLevel());
+                System.out.println("Poor Signal: " + data.getPoorSignalLevel());
             }
         };
         System.out.println("How many seconds do you want to test for?");
         int seconds = scann.nextInt() * 1000;
 
-        head.addBlinkListener(()->{
+        head.addBlinkListener(() -> {
             System.out.println("Stop blinking");
         });
 
@@ -192,9 +195,9 @@ public class JoTest {
     }
 
 
-    public static void getUserWait(){
+    public static void getUserWait() {
         System.out.println("How many milli-seconds would you like to test for? :");
-        while(!scann.hasNextInt());
+        while (!scann.hasNextInt()) ;
         int millis = scann.nextInt();
 
         try {
@@ -205,7 +208,7 @@ public class JoTest {
 
     }
 
-    public static void testCSVFunction(){
+    public static void testCSVFunction() {
 
         try {
 
@@ -215,16 +218,14 @@ public class JoTest {
             String loadDocument = scann.nextLine();
 
 
-
             System.out.println("Please input your destination (*.csv):");
             String destination = scann.nextLine();
-            System.out.println("Loading from "+loadDocument+" -> Saving to : "+destination);
+            System.out.println("Loading from " + loadDocument + " -> Saving to : " + destination);
             EpochContainer ec = EpochContainer.loadContainerFromFile(new File(loadDocument));
             FileTools.write(destination, ec.genCSV());
-            System.out.println("Written to "+destination);
-        }
-        catch(Exception e){
-            System.out.println("You maniac! Stop this at once!\n Please Check your file.\n"+e.getMessage());
+            System.out.println("Written to " + destination);
+        } catch (Exception e) {
+            System.out.println("You maniac! Stop this at once!\n Please Check your file.\n" + e.getMessage());
         }
     }
 }

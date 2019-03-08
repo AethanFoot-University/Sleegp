@@ -13,7 +13,7 @@ public abstract class SimulatedHeadset extends Headset {
     Runnable networkSimulaionThread = new Runnable() {
         @Override
         public void run() {
-            while (capturing && data!=null) {
+            while (capturing && data != null) {
                 try {
                     if (data.size() > 0) {
 
