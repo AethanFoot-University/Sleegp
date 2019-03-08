@@ -32,7 +32,6 @@ public class Save {
      *
      * @param toWrite Object to write
      * @return true - Successfully Written, false - failed to write
-     * @throws IOException Throws exception when file could not be written
      */
     public boolean write(Object toWrite) {
         try {

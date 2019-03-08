@@ -31,16 +31,11 @@ public class EpochContainer implements Serializable {
     /**
      * @param file
      */
-    public static EpochContainer loadContainerFromFile(File file) throws IOException {
+    public static EpochContainer loadContainerFromFile(File file) throws IOException, ClassNotFoundException {
         Load loader = new Load(file);
         Object loaded = loader.load();
 
-        if (loaded.getClass().equals(EpochContainer.class)) {
-            return (EpochContainer) loaded;
-        } else {
-            return null;
-        }
-
+        return (EpochContainer)loaded;
     }
 
     public String genCSV() {

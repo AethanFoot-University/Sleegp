@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'uk.ac.bath.csed-group-11'
-version '0.2.1'
+version '0.3.0'
 
 sourceCompatibility = 11
 
@@ -25,7 +25,7 @@ javafx {
 
 jar {
     manifest {
-        attributes 'Main-Class': 'uk.ac.bath.csed_group_11.sleegp.cli.JoTest'
+        attributes 'Main-Class': 'uk.ac.bath.csed_group_11.sleegp.cli.CLIMain'
     }
 
     from {

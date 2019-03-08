@@ -58,6 +58,10 @@ public class EpochContainerTests {
             fail("IOException while loading container from file \"" + baseName + ".csv\": " +
                     e.toString());
             return;
+        } catch (ClassNotFoundException e) {
+            fail("ClassNotFoundException while loading container from file \"" + baseName + ".csv" +
+                    "\": " + e.toString());
+            return;
         }
 
         // Load the contents of the `.csv` file.

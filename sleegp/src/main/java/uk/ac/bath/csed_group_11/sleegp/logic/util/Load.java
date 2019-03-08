@@ -2,6 +2,7 @@ package uk.ac.bath.csed_group_11.sleegp.logic.util;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.Files;
 
 /**
@@ -16,7 +17,7 @@ public class Load {
      */
     private File file;
 
-    public Load(File loc) throws FileNotFoundException {
+    public Load(File loc) {
         file = loc;
 
     }
@@ -26,16 +27,9 @@ public class Load {
      *
      * @return
      */
-    public Object load() {
-        try {
-            byte[] array = Files.readAllBytes(file.toPath());
-
-            return ObjectConverter.deserialize(array);
-        } catch (Exception e) {
-
-            return null;
-        }
-
+    public Object load() throws IOException, ClassNotFoundException {
+        byte[] array = Files.readAllBytes(file.toPath());
+        return ObjectConverter.deserialize(array);
     }
 
 }
