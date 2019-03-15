@@ -24,12 +24,10 @@ public class JoTest {
 
         while (!exit) {
             System.out.println("Please select one of the following tests:" +
-                    "\n1. Test API headset connection" +
-                    "\n2. Get data from headset" +
-                    "\n3. Test play back function" +
-                    "\n4. Test blink function" +
-                    "\n5. Test CSV export function" +
-                    "\n6. Exit");
+                    "\n1. Connect to headset" +
+                    "\n2. Read and store brainwave data from headset" +
+                    "\n3. Test CSV convert function" +
+                    "\n4. Exit");
             System.out.println("Enter your choice:");
             try {
                 int choice = scann.nextInt();
@@ -44,18 +42,10 @@ public class JoTest {
                         break;
 
                     case 3:
-                        testPlayBackFunction();
-                        break;
-
-                    case 4:
-                        testBlinkDetection();
-                        break;
-
-                    case 5:
                         testCSVFunction();
                         break;
 
-                    case 6:
+                    case 4:
                         System.out.println("Exiting");
                         exit = true;
                         break;
@@ -78,6 +68,7 @@ public class JoTest {
             public void update(Epoch data) {
             }
         };
+
         if (head.capture()) {
             System.out.println("Connected");
         } else {
@@ -93,8 +84,6 @@ public class JoTest {
         seconds = scann.nextInt() * 1000;
         EpochContainer ec = new EpochContainer();
         Headset head = new Headset() {
-
-
             @Override
             public void update(Epoch data) {
                 if (data.getPoorSignalLevel() < 100) {
