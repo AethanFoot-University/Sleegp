@@ -24,9 +24,9 @@ public class JoTest {
 
         while (!exit) {
             System.out.println("Please select one of the following tests:" +
-                    "\n1. Connect to headset" +
-                    "\n2. Read and store brainwave data from headset" +
-                    "\n3. Test CSV convert function" +
+                    "\n1. Connect to headset (6.1.1)" +
+                    "\n2. Read and store brainwave data from headset (6.1.3, 6.2.1)" +
+                    "\n3. Test CSV convert function (6.2.2)" +
                     "\n4. Exit");
             System.out.println("Enter your choice:");
             try {
