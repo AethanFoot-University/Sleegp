@@ -50,12 +50,12 @@ public class JoTest {
                         exit = true;
                         break;
                     default:
-                        System.out.println("Jo, there is no need to test the CLI, it's not going to be part of the final release XD.");
+                        System.out.println("Wrong input");
                         break;
 
                 }
             } catch (Exception e) {
-                System.out.println("Very funny, now get back to the real test.\n");
+                System.out.println("Invalid Input\n");
                 scann = new Scanner(System.in);
             }
         }
@@ -123,7 +123,6 @@ public class JoTest {
             ec.saveToFile(f);
         } catch (FileNotFoundException e) {
             System.out.println("File not found");
-            System.out.println("Stop testing the CLI, this isn't going to be part of the typical release. Typical Jo.");
         }
     }
 
@@ -213,7 +212,7 @@ public class JoTest {
             FileTools.write(destination, ec.genCSV());
             System.out.println("Written to " + destination);
         } catch (Exception e) {
-            System.out.println("You maniac! Stop this at once!\n Please Check your file.\n" + e.getMessage());
+            System.out.println("Please try a different directory");
         }
     }
 }
