@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.net.SocketException;
 
 /**
+ * The purpose of this class is to save 
  * @author Mathew Allington
  */
 public abstract class Headset {

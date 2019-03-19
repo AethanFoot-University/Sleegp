@@ -11,15 +11,39 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * The purpose if this class is to provide a serializable container
  * @author Mathew Allington
  */
 public class EpochContainer implements Serializable {
+    /**
+     * This is serializable ID, set to static so that there is not an ID mis-match error when saving files
+     */
     static final long serialVersionUID = -529434607952910606L;
+
+    /**
+     * Default file extension
+     */
     public final String EXTENSION = ".ec";
+
+    /**
+     * List of all data frames
+     */
     private List<Epoch> data;
+
+    /**
+     * Directory that file should be temporarily saved to
+     */
     private transient File autoSaveLocation = null;
+
+    /**
+     * Last system time in millis that file was saved
+     */
     private transient long lastSave = 0;
-    private transient long savePeriod = 0;
+
+    /**
+     * Period at which the class should wait to re-save temporary backup file
+     */
+    private transient long savePeriod = 5000;
 
     /**
      * Creates an empty container instance
@@ -29,7 +53,8 @@ public class EpochContainer implements Serializable {
     }
 
     /**
-     * @param file
+     * Loads EpochContainer instance from specified file location
+     * @param file Location of binary container file
      */
     public static EpochContainer loadContainerFromFile(File file) throws IOException {
         Load loader = new Load(file);
@@ -43,6 +68,10 @@ public class EpochContainer implements Serializable {
 
     }
 
+    /**
+     * Converts the container into the form of a CSV file
+     * @return csv format
+     */
     public String genCSV() {
         String app = data.get(0).getCSVHeader() + "\n";
         for (Epoch e : data) {
@@ -51,22 +80,29 @@ public class EpochContainer implements Serializable {
         return app;
     }
 
+
     /**
-     * @return
+     * The amount of epochs in the container
+     *
+     * @return Amount of epochs
      */
     public int size() {
         return data.size();
     }
 
+
     /**
-     * @param id
-     * @return
+     * Gets epoch object by ID
+     *
+     * @param id the point in the list
+     * @return the epoch
      */
     public Epoch getEpoch(int id) {
         return data.get(id);
     }
 
     /**
+     * Adds an epoch to the container and auto saves the .ec file if needed
      * @param e
      */
     public void addEpoch(Epoch e) {
@@ -76,6 +112,9 @@ public class EpochContainer implements Serializable {
         }).start();
     }
 
+    /**
+     * Auto saves the file if autoSaveLocation has been set and save period has been exceeded
+     */
     private void autoSave() {
 
         if (autoSaveLocation != null && (System.currentTimeMillis() - lastSave) >= savePeriod) {
@@ -89,6 +128,11 @@ public class EpochContainer implements Serializable {
         }
     }
 
+    /**
+     * Sets auto save period and directory
+     * @param file file to be saved to
+     * @param timePeriod Time in millis to wait before saving again
+     */
     public void setAutoSave(File file, long timePeriod) {
         this.autoSaveLocation = file;
         this.lastSave = System.currentTimeMillis();
@@ -96,8 +140,9 @@ public class EpochContainer implements Serializable {
     }
 
     /**
-     * @param firectory
-     * @return
+     * Saves the container to a file
+     * @param firectory The File Directory (Firectory) to be saved to
+     * @return Whether or not the save was successful
      */
     public boolean saveToFile(File firectory) throws FileNotFoundException {
         if (firectory.toString().contains(EXTENSION)) {

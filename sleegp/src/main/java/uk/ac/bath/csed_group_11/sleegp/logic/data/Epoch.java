@@ -10,14 +10,26 @@ import java.util.Date;
 import java.util.Iterator;
 
 /**
+ * This class is a serializable container for a data frame at a specific point in time
+ *
  * @author Mathew Allington
  */
 public class Epoch implements Serializable {
+    /**
+     * This is serializable ID, set to static so that there is not an ID mis-match error when saving files
+     */
     static final long serialVersionUID = -8619870403385249300L;
-    //Time
+    //Time Variables
+    /**
+     * Time since data recording first begun
+     */
     private long timeElapsed;
+    /**
+     * Specific date and time of epoch: yyyy.MM.dd.HH.mm.ss.SSS
+     */
     private String timeStamp;
     //eSense
+
     private int attention;
     private int meditation;
 
@@ -32,11 +44,17 @@ public class Epoch implements Serializable {
     private int highGamma;
 
     //Headset signal
+    /**
+     * Range 0-200, 200 = highest poor signal, 0 = Great signal
+     */
     private int poorSignalLevel;
 
     /**
-     * @param JSON
-     * @throws JSONException
+     * Instantiates a new Epoch.
+     *
+     * @param JSON              the json
+     * @param timeElapsedMillis the time elapsed millis
+     * @throws JSONException the json exception
      */
     public Epoch(String JSON, long timeElapsedMillis) throws JSONException {
         this.timeElapsed = timeElapsedMillis;
@@ -55,6 +73,11 @@ public class Epoch implements Serializable {
 
     }
 
+    /**
+     * Processes JSON frame and extracts its values
+     * @param obj Object to be processed
+     * @throws JSONException
+     */
     private void addData(JSONObject obj) throws JSONException {
         Iterator it = obj.keys();
         while (it.hasNext()) {
@@ -68,11 +91,22 @@ public class Epoch implements Serializable {
         }
     }
 
+    /**
+     * Sets a specific data field by its variable name
+     * @param reference variable name
+     * @param data Integer value to be set
+     * @throws IllegalAccessException
+     * @throws NoSuchFieldException
+     */
     private void setIntField(String reference, int data) throws IllegalAccessException, NoSuchFieldException {
         Field field = getClass().getDeclaredField(reference);
         field.setInt(this, data);
     }
 
+    /**
+     * Converts the object to string form
+     * @return String form of epoch
+     */
     @Override
     public String toString() {
         String app = "[";
@@ -90,6 +124,11 @@ public class Epoch implements Serializable {
         return app;
     }
 
+    /**
+     * Gets epoch data in the form of a CSV
+     *
+     * @return the csv
+     */
     public String getCSV() {
         String app = "";
         Field[] fields = getClass().getDeclaredFields();
@@ -104,6 +143,11 @@ public class Epoch implements Serializable {
         return app;
     }
 
+    /**
+     * Gets csv header to be written to the top of a CSV file
+     *
+     * @return the csv header
+     */
     public String getCSVHeader() {
         String app = "";
         Field[] fields = getClass().getDeclaredFields();
@@ -121,89 +165,118 @@ public class Epoch implements Serializable {
     }
 
     /**
-     * @return
+     * Gets attention.
+     *
+     * @return the attention
      */
     public int getAttention() {
         return this.attention;
     }
 
     /**
-     * @return
+     * Gets meditation.
+     *
+     * @return the meditation
      */
     public int getMeditation() {
         return this.meditation;
     }
 
     /**
-     * @return
+     * Gets delta.
+     *
+     * @return the delta
      */
     public int getDelta() {
         return this.delta;
     }
 
     /**
-     * @return
+     * Gets theta.
+     *
+     * @return the theta
      */
     public int getTheta() {
         return this.theta;
     }
 
     /**
-     * @return
+     * Gets low alpha.
+     *
+     * @return the low alpha
      */
     public int getLowAlpha() {
         return this.lowAlpha;
     }
 
     /**
-     * @return
+     * Gets high alpha.
+     *
+     * @return the high alpha
      */
     public int getHighAlpha() {
         return this.highAlpha;
     }
 
     /**
-     * @return
+     * Gets low beta.
+     *
+     * @return the low beta
      */
     public int getLowBeta() {
         return this.lowBeta;
     }
 
     /**
-     * @return
+     * Gets high beta.
+     *
+     * @return the high beta
      */
     public int getHighBeta() {
         return this.highBeta;
     }
 
     /**
-     * @return
+     * Gets low gamma.
+     *
+     * @return the low gamma
      */
     public int getLowGamma() {
         return this.lowGamma;
     }
 
     /**
-     * @return
+     * Gets high gamma.
+     *
+     * @return the high gamma
      */
     public int getHighGamma() {
         return this.highGamma;
     }
 
     /**
-     * @return
+     * Gets poor signal level.
+     *
+     * @return the poor signal level
      */
     public int getPoorSignalLevel() {
         return this.poorSignalLevel;
     }
 
     /**
-     * @return
+     * Time elapsed long.
+     *
+     * @return the long
      */
     public long timeElapsed() {
         return this.timeElapsed;
     }
 
+    /**
+     * Gets time stamp.
+     *
+     * @return the time stamp
+     */
     public String getTimeStamp() {
         return this.timeStamp;
     }
