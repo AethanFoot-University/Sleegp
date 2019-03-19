@@ -37,6 +37,11 @@ public class ObjectConverter {
 
     }
 
+    /**
+     * Gets a number which converts the state of an object to a unique ID
+     * @param obj to evaluate
+     * @return serial ID
+     */
     public static long getSerialVersionID(Object obj) {
         return ObjectStreamClass.lookup(obj.getClass()).getSerialVersionUID();
     }

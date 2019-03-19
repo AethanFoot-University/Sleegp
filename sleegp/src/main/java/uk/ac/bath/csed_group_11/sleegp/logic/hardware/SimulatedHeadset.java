@@ -13,7 +13,7 @@ public abstract class SimulatedHeadset extends Headset {
     Runnable networkSimulaionThread = new Runnable() {
         @Override
         public void run() {
-            while (capturing && data != null) {
+            while (isCapturing() && data != null) {
                 try {
                     if (data.size() > 0) {
 
@@ -26,7 +26,7 @@ public abstract class SimulatedHeadset extends Headset {
                             if (loopData) {
                                 current = 0;
                                 systemStartTime = System.currentTimeMillis();
-                            } else capturing = false;
+                            } else setCapturing(false);
                     }
 
                     Thread.sleep(epochPeriod);
@@ -60,18 +60,16 @@ public abstract class SimulatedHeadset extends Headset {
      */
     @Override
     public boolean capture() {
-        capturing = true;
+        setCapturing(true);
         systemStartTime = System.currentTimeMillis();
         new Thread(networkSimulaionThread).start();
         return true;
     }
 
-    /**
-     *
-     */
+
     @Override
     public void disconnect() {
-        capturing = false;
+        setCapturing(false);
     }
 
     public void loopData(boolean loop) {
