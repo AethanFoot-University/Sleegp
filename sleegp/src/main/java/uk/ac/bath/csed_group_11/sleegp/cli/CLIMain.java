@@ -51,56 +51,44 @@ public class CLIMain {
      */
     public static void main(String[] args) {
         Map<String, Object> opts = new Docopt(doc).withVersion("sleegp 0.3.0").parse(args);
-        System.out.println(opts);
 
         if (opts.get("record").equals(true)) {
             EpochContainer ec = new EpochContainer();
 
-//            ec.setAutoSave(auto, 10000);
-
-            final PrintWriter out;
-
             var maybeOutputFile = (String)opts.get("--output");
-            if (maybeOutputFile != null) {
-                try {
-                    out = new PrintWriter(new FileOutputStream(maybeOutputFile), true);
-                } catch (FileNotFoundException e) {
-                    System.err.println("Unable to write to specified output file: " +
-                            e.getMessage());
-                    return;
-                }
-            } else {
-                out = new PrintWriter(System.out, true);
-            }
+            if (maybeOutputFile != null)
+                ec.setAutoSave(new File(maybeOutputFile + ".auto"), 10000);
 
-            int epochLost = 0;
             Headset head = new Headset() {
                 @Override
                 public void update(Epoch data) {
                     if (data.getPoorSignalLevel() < 100) {
-                        out.println("Recording [Poor Signal Level: "
+                        System.out.println("Recording [Poor Signal Level: "
                                 + data.getPoorSignalLevel() + "]");
                         ec.addEpoch(data);
-                        out.println(data);
+                        System.out.println(data);
                     } else {
-                        out.println("Headset not on at: " + data.getTimeStamp());
+                        System.out.println("Headset not on at: " + data.getTimeStamp());
                     }
                 }
             };
 
-            head.addBlinkListener(() -> out.println("Stop blinking"));
-            head.addRemovedHeadsetListener(() -> out.println("Headset removed"));
-            head.addPutOnHeadsetListener(() -> out.println("Headset put on"));
+            head.addBlinkListener(() -> System.out.println("Stop blinking"));
+            head.addRemovedHeadsetListener(() -> System.out.println("Headset removed"));
+            head.addPutOnHeadsetListener(() -> System.out.println("Headset put on"));
 
             if (head.capture()) {
-                out.println("Connected");
+                System.out.println("Connected");
             } else {
-                out.println("Connection failed");
+                System.out.println("Connection failed");
             }
 
             try {
                 Thread.sleep(60 * 60 * 10 * 1000);
-//                ec.saveToFile(ecFile);
+
+                if (maybeOutputFile != null)
+                    ec.saveToFile(new File(maybeOutputFile));
+
                 head.disconnect();
             } catch (IOException e) {
                 e.printStackTrace();
