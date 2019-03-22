@@ -1,52 +1,64 @@
 package uk.ac.bath.csed_group_11.sleegp.cli;
 
+//
+//  CLIMain
+//  slEEGp
+//
+//  Created by Mathew Allington on 2019-02-18.
+//  Copyright © 2019 CSED Group 11 Developers. All rights reserved.
+//
+
+import org.docopt.Docopt;
 import uk.ac.bath.csed_group_11.sleegp.logic.data.Epoch;
 import uk.ac.bath.csed_group_11.sleegp.logic.data.EpochContainer;
 import uk.ac.bath.csed_group_11.sleegp.logic.hardware.Headset;
 import uk.ac.bath.csed_group_11.sleegp.logic.hardware.SimulatedHeadset;
-import uk.ac.bath.csed_group_11.sleegp.logic.util.FileTools;
 import uk.ac.bath.csed_group_11.sleegp.logic.util.ObjectConverter;
 
-import java.awt.*;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.util.Map;
 
 /**
- * Credits:
- *
- * @author Allington, Mathew
- * @author Draper, Tom
- * @author Foot, Aethan
- * @author Ito-Low, Alexander
- * @author Millischer, Christophe
- * @author Mortensen, Soren
- * @author Mortimer, Lloyd
- * @author Sogbesan, Samuel
- * @author Songthammakul, Ravit
- * <p>
- * Created: 18-02-2019
- * Copyright © 2019 CSED Group 11. All rights reserved.
+ * Contains the main entry point for command-line execution of slEEGp.
  */
 public class CLIMain {
+    /**
+     * Usage message for the CLI; also defines the format for acceptable arguments using Docopt.
+     *
+     * @see org.docopt.Docopt
+     * @since 0.3.0
+     */
+    public static final String doc =
+        "Usage:\n" +
+        "  sleegp record [-o <output-file>]\n" +
+//        "  sleegp simulate <data-file>\n" +
+        "  sleegp convert [-o <output-file>] <input-file>\n" +
+        "  sleegp -h | --help | --version\n" +
+        "\n" +
+        "Arguments:\n" +
+//        "  <data-file>   recorded data file to simulate from\n" +
+        "  <input-file>  file to convert, in .ec or .csv format\n" +
+        "\n" +
+        "Options:\n" +
+        "  -o, --output <output-file>  output file location\n" +
+        "  -h, --help                  show this help message and exit\n" +
+        "  --version                   show version and exit\n";
 
     /**
-     * Where the big bang happened.
+     * Main command-line entry point for slEEGp.
      *
-     * @param args the command line arguments
+     * @param args The command line arguments.
      */
-    public static void main(String[] args) throws InterruptedException, IOException, AWTException {
-        File ecFile = new File("/Users/mathew/Documents/GitHub/project/testData" +
-                "/Sleep20012019autoSave.ec");
-        File auto = new File("/Users/mathew/Documents/GitHub/project/testData" +
-                "/Sleep20012019autoSave.ec");
+    public static void main(String[] args) {
+        Map<String, Object> opts = new Docopt(doc).withVersion("sleegp 0.3.0").parse(args);
 
-        boolean simulate = false;
-        if (!simulate) {
+        if (opts.get("record").equals(true)) {
             EpochContainer ec = new EpochContainer();
 
-            ec.setAutoSave(auto, 10000);
+            var maybeOutputFile = (String)opts.get("--output");
+            if (maybeOutputFile != null)
+                ec.setAutoSave(new File(maybeOutputFile + ".auto"), 10000);
 
-            int epochLost = 0;
             Headset head = new Headset() {
                 @Override
                 public void update(Epoch data) {
@@ -55,24 +67,15 @@ public class CLIMain {
                                 + data.getPoorSignalLevel() + "]");
                         ec.addEpoch(data);
                         System.out.println(data);
-
                     } else {
-
                         System.out.println("Headset not on at: " + data.getTimeStamp());
                     }
                 }
             };
-            head.addBlinkListener(() -> {
-                System.out.println("Stop blinking");
-            });
 
-            head.addRemovedHeadsetListener(() -> {
-                System.out.println("Headset removed");
-            });
-
-            head.addPutOnHeadsetListener(() -> {
-                System.out.println("Headset put on");
-            });
+            head.addBlinkListener(() -> System.out.println("Stop blinking"));
+            head.addRemovedHeadsetListener(() -> System.out.println("Headset removed"));
+            head.addPutOnHeadsetListener(() -> System.out.println("Headset put on"));
 
             if (head.capture()) {
                 System.out.println("Connected");
@@ -80,29 +83,95 @@ public class CLIMain {
                 System.out.println("Connection failed");
             }
 
-            Thread.sleep(60 * 60 * 10 * 1000);
-            ec.saveToFile(ecFile);
-            head.disconnect();
-        } else {
-            System.out.println("Loading file: " + ecFile.toString());
+            try {
+                Thread.sleep(60 * 60 * 10 * 1000);
 
-            EpochContainer ec = EpochContainer.loadContainerFromFile(auto);
-            String csv = ec.genCSV();
-            FileTools.write("/Users/mathew/Desktop/3hoursleep.csv", csv);
-            System.out.println(ec.genCSV());
+                if (maybeOutputFile != null)
+                    ec.saveToFile(new File(maybeOutputFile));
 
-            System.out.println("Serial version ID: " + ObjectConverter.getSerialVersionID(ec));
-            System.out.println("Starting simulation");
-            SimulatedHeadset sim = new SimulatedHeadset(ec) {
-                @Override
-                public void update(Epoch data) {
-                    System.out.println("Simulated [" + data.getTimeStamp() + "]:" + data);
+                head.disconnect();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                System.err.println("Thread interrupted: " + e.toString());
+                Thread.currentThread().interrupt();
+            }
+//        } else if (opts.get("simulate").equals(true)) {
+//            var fileName = (String)opts.get("<data-file>");
+//
+//            try {
+//                CLIMain.simulateHeadset(fileName);
+//            } catch (NoSuchFileException e) {
+//                System.err.println("Unable to simulate headset from file \"" + fileName +
+//                        "\": File does not exist.");
+//                System.exit(1);
+//            } catch (IOException e) {
+//                System.err.println("Unable to simulate headset from file \"" + fileName +
+//                        "\": " + e.toString());
+//                System.exit(1);
+//            } catch (ClassNotFoundException e) {
+//                System.err.println("File \"" + fileName + "\" tries to load class that was not " +
+//                        "found: " + e.toString());
+//                System.exit(1);
+//            }
+        } else if (opts.get("convert").equals(true)) {
+            var ecPath = (String)opts.get("<input-file>");
+            EpochContainer ec;
+
+            try {
+                ec = EpochContainer.loadContainerFromFile(new File(ecPath));
+            } catch (IOException | ClassNotFoundException e) {
+                System.err.println("Unable to load container from file: " + e.toString());
+                return;
+            }
+
+            String converted = ec.genCSV();
+
+            var maybeOutputFile = (String)opts.get("--output");
+            if (maybeOutputFile != null) {
+                var file = new File(maybeOutputFile);
+
+                try (var fop = new FileOutputStream(file)) {
+                    if (!file.exists()) file.createNewFile();
+
+                    byte[] content = converted.getBytes();
+
+                    fop.write(content);
+                    fop.flush();
+                } catch (FileNotFoundException e) {
+                    System.err.println("Output file not found: " + e.toString());
+                } catch (IOException e) {
+                    System.err.println("Could not write converted data to file: " + e.toString());
                 }
-            };
-
-            sim.setEpochPeriod(200);
-            sim.loopData(false);
-            sim.capture();
+            } else {
+                System.out.println(converted);
+            }
         }
+    }
+
+    private static void simulateHeadset(String dataFilePath) throws IOException, ClassNotFoundException {
+        var ecFile = new File(dataFilePath);
+
+        System.out.println("Loading file: " + ecFile.toString());
+
+        EpochContainer ec = EpochContainer.loadContainerFromFile(ecFile);
+
+//        String csv = ec.genCSV();
+//        FileTools.write("/Users/mathew/Desktop/3hoursleep.csv", csv);
+//        System.out.println(ec.genCSV());
+
+        System.out.println("Serial version ID: " + ObjectConverter.getSerialVersionID(ec));
+        System.out.println("Starting simulation");
+
+        SimulatedHeadset sim = new SimulatedHeadset(ec) {
+            @Override
+            public void update(Epoch data) {
+                System.out.println("Simulated [" + data.getTimeStamp() + "]:" + data);
+            }
+        };
+
+        sim.setEpochPeriod(200);
+        sim.loopData(false);
+        sim.capture();
     }
 }
