@@ -167,10 +167,14 @@ public class CLIMain {
             List<Double> meditation = ec.getTransformedData(
                     MathUtils.movingAverage("meditation", avgWindow));
 
-            System.out.println("Processed data (moving average):");
-            for (int i = 0; i < attention.size(); i++) {
-                System.out.println("attention: " + attention.get(i) +
-                        ", meditation: " + meditation.get(i));
+            System.out.println("Data (raw & moving average):");
+            for (int i = 0; i < ec.size(); i++) {
+                System.out.println(
+                        "attention: " + ec.getEpoch(i).getAttention() + " [raw] " +
+                        attention.get(i) + " [avg], " +
+                        "meditation: " + ec.getEpoch(i).getMeditation() + " [raw] " +
+                        meditation.get(i) + " [avg]"
+                );
             }
         }
     }
