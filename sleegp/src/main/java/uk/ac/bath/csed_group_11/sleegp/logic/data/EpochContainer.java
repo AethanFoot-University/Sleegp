@@ -1,14 +1,15 @@
 package uk.ac.bath.csed_group_11.sleegp.logic.data;
 
 import uk.ac.bath.csed_group_11.sleegp.logic.util.Load;
+import uk.ac.bath.csed_group_11.sleegp.logic.util.MathUtils;
 import uk.ac.bath.csed_group_11.sleegp.logic.util.Save;
+import uk.ac.bath.csed_group_11.sleegp.logic.util.Transformation;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * The purpose if this class is to provide a serializable container
@@ -153,4 +154,45 @@ public class EpochContainer implements Serializable {
         }
         return false;
     }
+
+
+    /**
+     * Gets a transformed list of data
+     *
+     * @param transform the transformation to be done on the data set
+     * @return the transformed data
+     */
+    public  List<Double> getTransformedData(Transformation<Epoch, Double> transform){
+        List<Double> newList = new ArrayList<Double>();
+
+        for(int i=0; i< data.size(); i++){
+            transform.transform(data, i, newList);
+        }
+
+        return newList;
+    }
+
+    public static void main(String[] args){
+
+
+        //Example implementation of calculating a moving average for a specific attribute
+
+        EpochContainer ec = new EpochContainer();
+
+        for(int i=0; i< 30; i++){
+            Epoch e = new Epoch(null, 0);
+            e.setAttention((int)(Math.random()*500));
+            e.setMeditation((int)(Math.random()*500));
+            ec.addEpoch(e);
+        }
+
+
+        int avgWindow = 10;
+        List<Double> attention = ec.getTransformedData(MathUtils.movingAverage("attention", avgWindow));
+        List<Double> meditation = ec.getTransformedData(MathUtils.movingAverage("meditation", avgWindow));
+
+
+    }
+
+
 }

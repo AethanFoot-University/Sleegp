@@ -60,15 +60,20 @@ public class Epoch implements Serializable {
         this.timeElapsed = timeElapsedMillis;
         timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss.SSS").format(new Date());
 
-        JSONObject obj = new JSONObject(JSON);
-        Iterator it = obj.keys();
+        try {
+            JSONObject obj = new JSONObject(JSON);
+            Iterator it = obj.keys();
 
-        while (it.hasNext()) {
-            String key = it.next().toString();
+            while (it.hasNext()) {
+                String key = it.next().toString();
 
-            if (key.matches("eSense")) addData(obj.getJSONObject("eSense"));
-            if (key.matches("eegPower")) addData(obj.getJSONObject("eegPower"));
-            if (key.matches("poorSignalLevel")) addData(obj);
+                if (key.matches("eSense")) addData(obj.getJSONObject("eSense"));
+                if (key.matches("eegPower")) addData(obj.getJSONObject("eegPower"));
+                if (key.matches("poorSignalLevel")) addData(obj);
+            }
+        }
+        catch (Exception e){
+            System.out.println("JSON Parser Failed");
         }
 
     }
@@ -279,5 +284,70 @@ public class Epoch implements Serializable {
      */
     public String getTimeStamp() {
         return this.timeStamp;
+    }
+    public int getByReference(String reference){
+        try {
+            Field field = getClass().getDeclaredField(reference);
+            return field.getInt(this);
+        }
+        catch(Exception e){
+            return -1;
+        }
+    }
+
+
+    //Complete bodge
+
+
+    public void setTimeElapsed(long timeElapsed) {
+        this.timeElapsed = timeElapsed;
+    }
+
+    public void setTimeStamp(String timeStamp) {
+        this.timeStamp = timeStamp;
+    }
+
+    public void setAttention(int attention) {
+        this.attention = attention;
+    }
+
+    public void setMeditation(int meditation) {
+        this.meditation = meditation;
+    }
+
+    public void setDelta(int delta) {
+        this.delta = delta;
+    }
+
+    public void setTheta(int theta) {
+        this.theta = theta;
+    }
+
+    public void setLowAlpha(int lowAlpha) {
+        this.lowAlpha = lowAlpha;
+    }
+
+    public void setHighAlpha(int highAlpha) {
+        this.highAlpha = highAlpha;
+    }
+
+    public void setLowBeta(int lowBeta) {
+        this.lowBeta = lowBeta;
+    }
+
+    public void setHighBeta(int highBeta) {
+        this.highBeta = highBeta;
+    }
+
+    public void setLowGamma(int lowGamma) {
+        this.lowGamma = lowGamma;
+    }
+
+    public void setHighGamma(int highGamma) {
+        this.highGamma = highGamma;
+    }
+
+    public void setPoorSignalLevel(int poorSignalLevel) {
+        this.poorSignalLevel = poorSignalLevel;
     }
 }
