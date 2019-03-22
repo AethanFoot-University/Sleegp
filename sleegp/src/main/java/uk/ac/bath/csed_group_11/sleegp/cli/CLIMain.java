@@ -13,9 +13,11 @@ import uk.ac.bath.csed_group_11.sleegp.logic.data.Epoch;
 import uk.ac.bath.csed_group_11.sleegp.logic.data.EpochContainer;
 import uk.ac.bath.csed_group_11.sleegp.logic.hardware.Headset;
 import uk.ac.bath.csed_group_11.sleegp.logic.hardware.SimulatedHeadset;
+import uk.ac.bath.csed_group_11.sleegp.logic.util.MathUtils;
 import uk.ac.bath.csed_group_11.sleegp.logic.util.ObjectConverter;
 
 import java.io.*;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,11 +35,13 @@ public class CLIMain {
         "  sleegp record [-o <output-file>]\n" +
 //        "  sleegp simulate <data-file>\n" +
         "  sleegp convert [-o <output-file>] <input-file>\n" +
+        "  sleegp process <raw-data-file>\n" +
         "  sleegp -h | --help | --version\n" +
         "\n" +
         "Arguments:\n" +
-//        "  <data-file>   recorded data file to simulate from\n" +
-        "  <input-file>  file to convert, in .ec or .csv format\n" +
+//        "  <data-file>      recorded data file to simulate from\n" +
+        "  <input-file>     file to convert, in .ec or .csv format\n" +
+        "  <raw-data-file>  file to process, in .ec format\n" +
         "\n" +
         "Options:\n" +
         "  -o, --output <output-file>  output file location\n" +
@@ -145,6 +149,28 @@ public class CLIMain {
                 }
             } else {
                 System.out.println(converted);
+            }
+        } else if (opts.get("process").equals(true)) {
+            var ecPath = (String)opts.get("<raw-data-file>");
+            EpochContainer ec;
+
+            try {
+                ec = EpochContainer.loadContainerFromFile(new File(ecPath));
+            } catch (IOException | ClassNotFoundException e) {
+                System.err.println("Unable to load container from file: " + e.toString());
+                return;
+            }
+
+            int avgWindow = 10;
+            List<Double> attention = ec.getTransformedData(
+                    MathUtils.movingAverage("attention", avgWindow));
+            List<Double> meditation = ec.getTransformedData(
+                    MathUtils.movingAverage("meditation", avgWindow));
+
+            System.out.println("Processed data (moving average):");
+            for (int i = 0; i < attention.size(); i++) {
+                System.out.println("attention: " + attention.get(i) +
+                        ", meditation: " + meditation.get(i));
             }
         }
     }
