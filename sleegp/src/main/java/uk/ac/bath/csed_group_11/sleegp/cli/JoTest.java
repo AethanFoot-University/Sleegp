@@ -24,12 +24,10 @@ public class JoTest {
 
         while (!exit) {
             System.out.println("Please select one of the following tests:" +
-                    "\n1. Test API headset connection" +
-                    "\n2. Get data from headset" +
-                    "\n3. Test play back function" +
-                    "\n4. Test blink function" +
-                    "\n5. Test CSV export function" +
-                    "\n6. Exit");
+                    "\n1. Connect to headset (6.1.1)" +
+                    "\n2. Read and store brainwave data from headset (6.1.3, 6.2.1)" +
+                    "\n3. Test CSV convert function (6.2.2)" +
+                    "\n4. Exit");
             System.out.println("Enter your choice:");
             try {
                 int choice = scann.nextInt();
@@ -44,28 +42,20 @@ public class JoTest {
                         break;
 
                     case 3:
-                        testPlayBackFunction();
-                        break;
-
-                    case 4:
-                        testBlinkDetection();
-                        break;
-
-                    case 5:
                         testCSVFunction();
                         break;
 
-                    case 6:
+                    case 4:
                         System.out.println("Exiting");
                         exit = true;
                         break;
                     default:
-                        System.out.println("Jo, there is no need to test the CLI, it's not going to be part of the final release XD.");
+                        System.out.println("Wrong input");
                         break;
 
                 }
             } catch (Exception e) {
-                System.out.println("Very funny, now get back to the real test.\n");
+                System.out.println("Invalid Input\n");
                 scann = new Scanner(System.in);
             }
         }
@@ -78,6 +68,7 @@ public class JoTest {
             public void update(Epoch data) {
             }
         };
+
         if (head.capture()) {
             System.out.println("Connected");
         } else {
@@ -93,8 +84,6 @@ public class JoTest {
         seconds = scann.nextInt() * 1000;
         EpochContainer ec = new EpochContainer();
         Headset head = new Headset() {
-
-
             @Override
             public void update(Epoch data) {
                 if (data.getPoorSignalLevel() < 100) {
@@ -134,7 +123,6 @@ public class JoTest {
             ec.saveToFile(f);
         } catch (FileNotFoundException e) {
             System.out.println("File not found");
-            System.out.println("Stop testing the CLI, this isn't going to be part of the typical release. Typical Jo.");
         }
     }
 
@@ -224,7 +212,7 @@ public class JoTest {
             FileTools.write(destination, ec.genCSV());
             System.out.println("Written to " + destination);
         } catch (Exception e) {
-            System.out.println("You maniac! Stop this at once!\n Please Check your file.\n" + e.getMessage());
+            System.out.println("Please try a different directory");
         }
     }
 }
