@@ -55,9 +55,6 @@ public abstract class SimulatedHeadset extends Headset {
         epochPeriod = periodMillis;
     }
 
-    /**
-     * @return
-     */
     @Override
     public boolean capture() {
         setCapturing(true);

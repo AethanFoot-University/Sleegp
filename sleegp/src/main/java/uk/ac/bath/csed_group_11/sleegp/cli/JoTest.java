@@ -204,7 +204,6 @@ public class JoTest {
             System.out.println("Please input your Epoch Container file (*.ec format): ");
             String loadDocument = scann.nextLine();
 
-
             System.out.println("Please input your destination (*.csv):");
             String destination = scann.nextLine();
             System.out.println("Loading from " + loadDocument + " -> Saving to : " + destination);
