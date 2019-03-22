@@ -1,4 +1,4 @@
-package uk.ac.bath.csed_group_11.sleegp.logic.data;
+package uk.ac.bath.csed_group_11.sleegp.logic.util;
 
 import java.util.List;
 
