@@ -10,7 +10,7 @@
   \requirement{req:agile-scrum}
   {The system must adhere to the Agile/Scrum methodology.}
   \phigh\deps{None}\sspec
-  
+
   \requirement{req:3-sprints}
   {Software development should include at least 3 sprints.}
   \pmed
@@ -126,16 +126,161 @@
   \deps{\ref{sreq:connect-headset}}
   \smin{7}
 
+  \requirement{req:store-Data}
+  {The system must store raw brainwave data}
+  \phigh
+  \deps{\ref{sreq:facilitate-saving},\ref{sreq:facilitate-conversion}}
+  \source{Coursework specification, Meeting minutes\#7}
+
+  \subrequirement{sreq:facilitate-saving}
+  {The system must facilitate the saving of converted brainwave data to a binary file (.ec)}
+  \phigh
+  \deps{\ref{sreq:read-data-headset}}
+  \smin{12}
+
+  \subrequirement{sreq:facilitate-conversion}
+  {The system must facilitate the conversion of brainwave data from binary (.ec) to CSV format}
+  \phigh
+  \deps{\ref{sreq:facilitate-saving}}
+  \smin{12}
+
+  \requirement{req:extract-Data}
+  {The system should be able to extract information about sleep cycles from recorded raw data}
+  \phigh
+  \deps{\ref{sreq:extract-attention-mediation},\ref{sreq:calcutate-moving-average}}
+  \smin{13}
+
+  \subrequirement{sreq:extract-attention-mediation}
+  {The system should extract the attention and meditation data points from the raw brainwave data}
+  \phigh
+  \deps{\ref{req:store-Data}}
+  \smin{16}
+
+  \subrequirement{sreq:calcutate-moving-average}
+  {The system should calculate a moving average of the attention and mediation values for the whole data set}
+  \phigh
+  \deps{\ref{sreq:extract-attention-mediation}}
+  \smin{16}
+
+  \requirement{req:present-Data}
+  {The system should be able to present sleep cycle data to the user}
+  \phigh
+  \deps{\ref{sreq:present-data-table},\ref{sreq:present-hypnogram}}
+  \source{Coursework specification, Meeting minutes\# 7, Sleep app questionnaire}
+
+  \subrequirement{sreq:present-data-table}
+  {The system should be able to present sleep cycle data in the form of a data table}
+  \phigh
+  \deps{\ref{req:extract-Data}}
+  \smin{17}
+
+  \subrequirement{sreq:present-hypnogram}
+  {The system should be able to present sleep cycle data in the form of a hypnogram}
+  \phigh
+  \deps{\ref{req:extract-Data}}
+  \source{Sleep app questionnaire}
+
   \requirement{req:manual-entry}
   {The system should permit the manual entering of relevant user data from the last 24 hours.}
   \pmed
-  \deps{\ref{sreq:manual-entry-bed-woke}}
+  \deps{\ref{req:manual-entry-bed-woke}}
   \source{Coursework specification, \textcite{BMA:2018aa}, sleep app questionnaire.}
 
-  \requirement{sreq:manual-entry-bed-woke}
+  \subrequirement{req:manual-entry-bed-woke}
   {The system must permit the manual entry of information that corresponds to the times when the
     user went to bed and woke up.}
   \pmed
   \deps{None}
   \source{\textcite{BMA:2018aa}, sleep app questionnaire.}
+
+  \requirement{req:apply-sorting-algorithm}
+  {The system should apply a “known” sorting algorithm which allows users to sort tracking data}
+  \pmed
+  \deps{\ref{req:store-Data}}
+  \source{Coursework specification}
+
+  \requirement{req:implement-command-line-interface}
+  {The system should implement a command-line interface allowing the user to perform all functions of the system}
+  \phigh
+  \deps{\ref{sreq:allow-user-record-data},\ref{sreq:allow-user-change-format},\ref{sreq:allow-user-extract-calculate}}
+  \smin{13}
+
+  \subrequirement{sreq:allow-user-record-data}
+  {The command-line interface should allow the user to record data from the headset and choose where to store it}
+  \phigh
+  \deps{\ref{sreq:read-data-headset},\ref{sreq:facilitate-saving}}
+  \smin{13}
+
+  \subrequirement{sreq:allow-user-change-format}
+  {The command-line interface should allow the user to convert a binary (.ec) file to CSV format, and choose where to save the converted file}
+  \phigh
+  \deps{\ref{sreq:facilitate-conversion}}
+  \smin{13}
+
+  \subrequirement{sreq:allow-user-extract-calculate}
+  {The command-line interface should allow the user to extract and calculate a moving average of the attention and meditation data}
+  \pmed
+  \deps{\ref{req:extract-Data}}
+  \smin{16}
+
+\end{reqtable}
+
+\begin{reqtable}
+  \reqsection{reqs:Identifying-Trends-in-data}{Identifying Trends in Data}
+  \reqheader
+
+  \requirement{req:compare-sleep-data}
+  {The system must allow the user to compare sleep data over a week}
+  \phigh
+  \deps{\ref{req:store-Data}, \ref{req:manual-entry}}
+  \source{\textcite{BMA:2018aa},Sleep app questionnaire}
+
+  \requirement{req:Automation-of-data}
+  {The system should permit the creation of automated data based on the user’s sleep cycle}
+  \pmed
+  \deps{\ref{req:store-Data}}
+  \smin{12}
+\end{reqtable}
+
+\begin{reqtable}
+
+\reqsection{reqs:Goals-and-achievemnts}{Goals and achievements}
+\reqheader
+
+\requirement{req:allow-manage-goals}
+{Allow users to manage targets (goals) for time going to bed.}
+\pmed
+\deps{\ref{req:store-Data},\ref{req:manual-entry}}
+\source{Coursework specification, Sleep app questionnaire}
+
+\requirement{req:permit-set-goal}
+{The system must allow the user to compare sleep data over a week}
+\pmed
+\deps{None}
+\source{Meeting minutes\#7,Coursework specification}
+
+\requirement{req:update-change-goal}
+{Should permit user to update or change goal.}
+\pmed
+\deps{None}
+\source{Coursework specification}
+
+\requirement{req:motivate-user}
+{Should motivate user to achieve their goals via a point system}
+\pmed
+\deps{\ref{req:allow-manage-goals}, \ref{req:permit-set-goal}}
+\source{Coursework specification, Sleep app questionnaire}
+
+\end{reqtable}
+
+\begin{reqtable}
+
+\reqsection{reqs:Manage-data-periodically}{Manage data periodically}
+\reqheader
+
+\requirement{req:file-manager}
+{Users should be given the option to delete their sleep cycle data}
+\plow
+\deps{\ref{req:store-Data},\ref{req:extract-Data}}
+\source{Sleep app questionnaire, Meeting minutes \#13}
 \end{reqtable}
