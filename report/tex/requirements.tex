@@ -212,6 +212,13 @@
   \deps{\ref{sreq:extract-attention-meditation}}
   \smin{16}
 
+  \subrequirement{sreq:extract-sleep-percentage}
+  {The system must extract the percentage of time during a recording when the user was asleep vs.\
+    awake.}
+  \phigh
+  \deps{\ref{sreq:calculate-moving-average}}
+  \smin{16}
+
   \requirement{req:present-data}
   {The system should be able to present sleep cycle data to the user.}
   \phigh
@@ -254,8 +261,9 @@
   {The system should implement a command-line interface allowing the user to perform all functions
     of the system.}
   \phigh
-  \deps{\ref{sreq:allow-user-record-data}, \ref{sreq:allow-user-change-format},
-    \ref{sreq:allow-user-extract-calculate}}
+  \deps{\ref{sreq:allow-user-record-data}, \ref{sreq:specify-time-record},
+    \ref{sreq:allow-user-change-format}, \ref{sreq:allow-user-extract-calculate},
+    \ref{sreq:cli-sort-display}}
   \smin{13}
 
   \subrequirement{sreq:allow-user-record-data}
@@ -263,6 +271,13 @@
     to store it.}
   \phigh
   \deps{\ref{sreq:read-data-headset}, \ref{sreq:facilitate-saving}}
+  \smin{13}
+
+  \subrequirement{sreq:specify-time-record}
+  {The command-line interface should allow the user to specify an amount of time to record for, in
+    minutes or in seconds.}
+  \phigh
+  \deps{\ref{sreq:allow-user-record-data}}
   \smin{13}
 
   \subrequirement{sreq:allow-user-change-format}
@@ -278,6 +293,12 @@
   \phigh
   \deps{\ref{req:extract-data}}
   \smin{16}
+
+  \subrequirement{sreq:cli-sort-display}
+  {The command line interface must sort and display sleep cycle data in the form of a table.}
+  \phigh
+  \deps{\ref{req:extract-data}, \ref{req:apply-sorting-algorithm}}
+  \smin{13}
 
   % Identifying Trends in Data
   
