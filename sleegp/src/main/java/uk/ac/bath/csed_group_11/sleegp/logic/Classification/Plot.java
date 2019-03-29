@@ -27,4 +27,9 @@ public class Plot{
     public void setLevel(double level) {
         this.level = level;
     }
+
+    @Override
+    public String toString(){
+        return timeElapsed+", "+level;
+    }
 }

@@ -177,6 +177,20 @@ public class EpochContainer implements Serializable {
         return newList;
     }
 
+
+    /**
+     * Gets a copy of epoch lists
+     *
+     * @return the list
+     */
+    public List<Epoch> getEpochListCopy(){
+
+        List<Epoch> epochReturns = new ArrayList<Epoch>();
+        Collections.copy(epochReturns , data);
+
+        return epochReturns;
+    }
+
     public static void main(String[] args){
 
 

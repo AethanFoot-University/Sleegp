@@ -78,6 +78,10 @@ public class Epoch implements Serializable, Comparable<Epoch>{
 
     }
 
+    public Epoch(int timeElapsed){
+        this.timeElapsed = timeElapsed;
+    }
+
     public Epoch(String csvRow){
 
     }
