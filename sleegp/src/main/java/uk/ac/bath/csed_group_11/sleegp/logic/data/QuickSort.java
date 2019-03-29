@@ -1,9 +1,16 @@
 package uk.ac.bath.csed_group_11.sleegp.logic.data;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Creates a new sorter for a certain type of variable.
+ * Sorts Dates, Integers, Floats etc. Must implement Comparable interface
+ *
+ * @param <t> the type of object to be compared (has to implement Comparable)
+ */
 public class QuickSort <t extends Comparable<t>>{
     private List<t> toSort;
 
@@ -62,6 +69,5 @@ public class QuickSort <t extends Comparable<t>>{
         QuickSort<Date> sorter = new QuickSort<>(list);
 
         System.out.println(sorter.quickSort().toString());
-
     }
 }

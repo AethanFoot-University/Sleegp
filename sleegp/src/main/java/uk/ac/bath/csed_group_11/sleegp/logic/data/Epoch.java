@@ -14,7 +14,7 @@ import java.util.Iterator;
  *
  * @author Mathew Allington
  */
-public class Epoch implements Serializable {
+public class Epoch implements Serializable, Comparable<Epoch>{
     /**
      * This is serializable ID, set to static so that there is not an ID mis-match error when saving files
      */
@@ -349,5 +349,10 @@ public class Epoch implements Serializable {
 
     public void setPoorSignalLevel(int poorSignalLevel) {
         this.poorSignalLevel = poorSignalLevel;
+    }
+
+    @Override
+    public int compareTo(Epoch o) {
+        return 0;
     }
 }
