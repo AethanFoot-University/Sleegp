@@ -16,7 +16,11 @@ import uk.ac.bath.csed_group_11.sleegp.logic.hardware.SimulatedHeadset;
 import uk.ac.bath.csed_group_11.sleegp.logic.util.MathUtils;
 import uk.ac.bath.csed_group_11.sleegp.logic.util.ObjectConverter;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 import java.util.List;
 import java.util.Map;
 
@@ -30,18 +34,17 @@ public class CLIMain {
      * @see org.docopt.Docopt
      * @since 0.3.0
      */
-    public static final String doc =
-        "Usage:\n" +
+    public static final String doc = "Usage:\n" +
         "  sleegp record [-o <output-file>]\n" +
 //        "  sleegp simulate <data-file>\n" +
-        "  sleegp convert [-o <output-file>] <input-file>\n" +
-        "  sleegp process <raw-data-file>\n" +
+        "  sleegp convert [-o <output-file>] <data-file>\n" +
+        "  sleegp process <data-file>\n" +
+        "  sleegp display <sleep-data-file>\n" +
         "  sleegp -h | --help | --version\n" +
         "\n" +
         "Arguments:\n" +
-//        "  <data-file>      recorded data file to simulate from\n" +
-        "  <input-file>     file to convert, in .ec or .csv format\n" +
-        "  <raw-data-file>  file to process, in .ec format\n" +
+        "  <data-file>        recorded data file, in .ec format\n" +
+        "  <sleep-data-file>  processed sleep data file\n" +
         "\n" +
         "Options:\n" +
         "  -o, --output <output-file>  output file location\n" +
@@ -56,10 +59,12 @@ public class CLIMain {
     public static void main(String[] args) {
         Map<String, Object> opts = new Docopt(doc).withVersion("sleegp 0.3.0").parse(args);
 
-        if (opts.get("record").equals(true)) {
+        Object subcommand;
+
+        if (((subcommand = opts.get("record")) != null) && subcommand.equals(true)) {
             EpochContainer ec = new EpochContainer();
 
-            var maybeOutputFile = (String)opts.get("--output");
+            var maybeOutputFile = (String) opts.get("--output");
             if (maybeOutputFile != null)
                 ec.setAutoSave(new File(maybeOutputFile + ".auto"), 10000);
 
@@ -68,7 +73,7 @@ public class CLIMain {
                 public void update(Epoch data) {
                     if (data.getPoorSignalLevel() < 100) {
                         System.out.println("Recording [Poor Signal Level: "
-                                + data.getPoorSignalLevel() + "]");
+                            + data.getPoorSignalLevel() + "]");
                         ec.addEpoch(data);
                         System.out.println(data);
                     } else {
@@ -100,26 +105,26 @@ public class CLIMain {
                 System.err.println("Thread interrupted: " + e.toString());
                 Thread.currentThread().interrupt();
             }
-//        } else if (opts.get("simulate").equals(true)) {
-//            var fileName = (String)opts.get("<data-file>");
-//
-//            try {
-//                CLIMain.simulateHeadset(fileName);
-//            } catch (NoSuchFileException e) {
-//                System.err.println("Unable to simulate headset from file \"" + fileName +
-//                        "\": File does not exist.");
-//                System.exit(1);
-//            } catch (IOException e) {
-//                System.err.println("Unable to simulate headset from file \"" + fileName +
-//                        "\": " + e.toString());
-//                System.exit(1);
-//            } catch (ClassNotFoundException e) {
-//                System.err.println("File \"" + fileName + "\" tries to load class that was not " +
-//                        "found: " + e.toString());
-//                System.exit(1);
-//            }
-        } else if (opts.get("convert").equals(true)) {
-            var ecPath = (String)opts.get("<input-file>");
+        } else if (((subcommand = opts.get("simulate")) != null) && subcommand.equals(true)) {
+            var fileName = (String) opts.get("<data-file>");
+
+            try {
+                CLIMain.simulateHeadset(fileName);
+            } catch (NoSuchFileException e) {
+                System.err.println("Unable to simulate headset from file \"" + fileName +
+                    "\": File does not exist.");
+                System.exit(1);
+            } catch (IOException e) {
+                System.err.println("Unable to simulate headset from file \"" + fileName +
+                    "\": " + e.toString());
+                System.exit(1);
+            } catch (ClassNotFoundException e) {
+                System.err.println("File \"" + fileName + "\" tries to load class that was not " +
+                    "found: " + e.toString());
+                System.exit(1);
+            }
+        } else if (((subcommand = opts.get("convert")) != null) && subcommand.equals(true)) {
+            var ecPath = (String) opts.get("<data-file>");
             EpochContainer ec;
 
             try {
@@ -131,7 +136,7 @@ public class CLIMain {
 
             String converted = ec.genCSV();
 
-            var maybeOutputFile = (String)opts.get("--output");
+            var maybeOutputFile = (String) opts.get("--output");
             if (maybeOutputFile != null) {
                 var file = new File(maybeOutputFile);
 
@@ -150,8 +155,8 @@ public class CLIMain {
             } else {
                 System.out.println(converted);
             }
-        } else if (opts.get("process").equals(true)) {
-            var ecPath = (String)opts.get("<raw-data-file>");
+        } else if (((subcommand = opts.get("process")) != null) && subcommand.equals(true)) {
+            var ecPath = (String) opts.get("<data-file>");
             EpochContainer ec;
 
             try {
@@ -163,23 +168,25 @@ public class CLIMain {
 
             int avgWindow = 10;
             List<Double> attention = ec.getTransformedData(
-                    MathUtils.movingAverage("attention", avgWindow));
+                MathUtils.movingAverage("attention", avgWindow));
             List<Double> meditation = ec.getTransformedData(
-                    MathUtils.movingAverage("meditation", avgWindow));
+                MathUtils.movingAverage("meditation", avgWindow));
 
             System.out.println("Data (raw & moving average):");
             for (int i = 0; i < ec.size(); i++) {
-                System.out.println(
-                        "attention: " + ec.getEpoch(i).getAttention() + " [raw] " +
-                        attention.get(i) + " [avg], " +
-                        "meditation: " + ec.getEpoch(i).getMeditation() + " [raw] " +
-                        meditation.get(i) + " [avg]"
+                System.out.println("attention: " + ec.getEpoch(i).getAttention() + " [raw] " +
+                    attention.get(i) + " [avg], " +
+                    "meditation: " + ec.getEpoch(i).getMeditation() + " [raw] " +
+                    meditation.get(i) + " [avg]"
                 );
             }
+        } else if (((subcommand = opts.get("display")) != null) && subcommand.equals(true)) {
+            System.err.println("Subcommand `display` not yet implemented.");
         }
     }
 
-    private static void simulateHeadset(String dataFilePath) throws IOException, ClassNotFoundException {
+    private static void simulateHeadset(String dataFilePath) throws IOException,
+        ClassNotFoundException {
         var ecFile = new File(dataFilePath);
 
         System.out.println("Loading file: " + ecFile.toString());
