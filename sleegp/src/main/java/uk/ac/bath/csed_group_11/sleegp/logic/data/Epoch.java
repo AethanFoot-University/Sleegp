@@ -78,6 +78,10 @@ public class Epoch implements Serializable, Comparable<Epoch>{
 
     }
 
+    public Epoch(String csvRow){
+
+    }
+
     /**
      * Processes JSON frame and extracts its values
      * @param obj Object to be processed
@@ -294,7 +298,6 @@ public class Epoch implements Serializable, Comparable<Epoch>{
             return -1;
         }
     }
-
 
     //Complete bodge
 

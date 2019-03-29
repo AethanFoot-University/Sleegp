@@ -64,6 +64,16 @@ public class EpochContainer implements Serializable {
         return (EpochContainer)loaded;
     }
 
+    public EpochContainer(List<String> CSVRows){
+        data = new ArrayList<Epoch>();
+
+        for(String row : CSVRows){
+            Epoch e = new Epoch(row);
+            data.add(e);
+        }
+
+    }
+
     /**
      * Converts the container into the form of a CSV file
      * @return csv format

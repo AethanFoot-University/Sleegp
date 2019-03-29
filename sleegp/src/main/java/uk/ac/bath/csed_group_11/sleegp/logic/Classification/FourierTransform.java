@@ -30,6 +30,7 @@ public class FourierTransform {
     }
     private static List<Double> transform(List<Double> values)
     {
+
         int size = nearestPow2(values.size());
         double[] input = new double[size];
 
