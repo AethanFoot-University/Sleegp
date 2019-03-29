@@ -9,10 +9,15 @@ package uk.ac.bath.csed_group_11.sleegp.cli;
 //
 
 import org.docopt.Docopt;
+import uk.ac.bath.csed_group_11.sleegp.logic.Classification.ClassificationUtils;
+import uk.ac.bath.csed_group_11.sleegp.logic.Classification.Plot;
 import uk.ac.bath.csed_group_11.sleegp.logic.data.Epoch;
 import uk.ac.bath.csed_group_11.sleegp.logic.data.EpochContainer;
+import uk.ac.bath.csed_group_11.sleegp.logic.data.ProcessedDataContainer;
 import uk.ac.bath.csed_group_11.sleegp.logic.hardware.Headset;
 import uk.ac.bath.csed_group_11.sleegp.logic.hardware.SimulatedHeadset;
+import uk.ac.bath.csed_group_11.sleegp.logic.util.ConsoleUtils;
+import uk.ac.bath.csed_group_11.sleegp.logic.util.Load;
 import uk.ac.bath.csed_group_11.sleegp.logic.util.MathUtils;
 import uk.ac.bath.csed_group_11.sleegp.logic.util.ObjectConverter;
 
@@ -38,7 +43,7 @@ public class CLIMain {
         "  sleegp record [-s <seconds> | -m <minutes>] [-o <output-file>]\n" +
 //        "  sleegp simulate <data-file>\n" +
         "  sleegp convert [-o <output-file>] <data-file>\n" +
-        "  sleegp process <data-file>\n" +
+        "  sleegp process [-o <output-file>] <data-file>\n" +
         "  sleegp display <sleep-data-file>\n" +
         "  sleegp -h | --help | --version\n" +
         "\n" +
@@ -171,16 +176,26 @@ public class CLIMain {
             }
         } else if (((subcommand = opts.get("process")) != null) && subcommand.equals(true)) {
             var ecPath = (String) opts.get("<data-file>");
-            EpochContainer ec;
+
 
             try {
+                EpochContainer ec;
                 ec = EpochContainer.loadContainerFromFile(new File(ecPath));
+
+                ProcessedDataContainer processedDataContainer = ClassificationUtils.convertData(ec);
+
+                //Saving to file
+                processedDataContainer.saveToFile(new File((String) opts.get("--output")));
+
+
             } catch (IOException | ClassNotFoundException e) {
                 System.err.println("Unable to load container from file: " + e.toString());
                 return;
             }
 
-            int avgWindow = 10;
+
+
+            /*int avgWindow = 10;
             List<Double> attention = ec.getTransformedData(
                 MathUtils.movingAverage("attention", avgWindow));
             List<Double> meditation = ec.getTransformedData(
@@ -193,9 +208,37 @@ public class CLIMain {
                     "meditation: " + ec.getEpoch(i).getMeditation() + " [raw] " +
                     meditation.get(i) + " [avg]"
                 );
-            }
+            }  */
+
+
+
         } else if (((subcommand = opts.get("display")) != null) && subcommand.equals(true)) {
-            System.err.println("Subcommand `display` not yet implemented.");
+            String dataToDisplay = (String) opts.get("<sleep-data-file>");
+
+            String toFormat = "";
+
+            try {
+                ProcessedDataContainer container =
+                    (ProcessedDataContainer)(new Load(new File(dataToDisplay)).load());
+
+                for(Plot p : container) toFormat += p.getTimeElapsed()+" | "+p.getLevel()+"%\n";
+
+                String outputFormat = ConsoleUtils.printMessageBox(toFormat,
+                    35);
+
+                System.out.println(outputFormat);
+
+
+            } catch (IOException e) {
+                System.err.println("Please check file");
+            } catch (ClassNotFoundException e) {
+                System.err.println("Invalid Data");
+            }
+
+
+
+
+            //System.err.println("Subcommand `display` not yet implemented.");
         }
     }
 

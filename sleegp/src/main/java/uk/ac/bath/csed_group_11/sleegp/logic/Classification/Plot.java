@@ -1,8 +1,9 @@
 package uk.ac.bath.csed_group_11.sleegp.logic.Classification;
 
 import java.awt.*;
+import java.io.Serializable;
 
-public class Plot{
+public class Plot implements Serializable {
 
     private double timeElapsed;
     private double level;

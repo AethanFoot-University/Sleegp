@@ -58,7 +58,7 @@ public class DataSmoother {
         ProcessedDataContainer proc = ClassificationUtils.convertData(ec);
 
         for(Plot p : proc){
-            System.out.println("Mapped Value: "+p);
+            System.out.println(p);
         }
 
 

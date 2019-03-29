@@ -153,13 +153,7 @@ public class EpochContainer implements Serializable {
      * @return Whether or not the save was successful
      */
     public boolean saveToFile(File firectory) throws FileNotFoundException {
-        if (firectory.toString().contains(EXTENSION)) {
-            Save saver = new Save(firectory);
-            saver.write(this);
-        } else {
-            System.out.println("Cannot save without proper extenson: " + EXTENSION);
-        }
-        return false;
+        return FileTools.saveObject(this, firectory, EXTENSION);
     }
 
 
