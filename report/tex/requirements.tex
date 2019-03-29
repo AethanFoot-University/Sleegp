@@ -4,12 +4,16 @@
 
 \renewcommand*{\arraystretch}{1.4}
 \begin{reqtable}
+  % Software Development Process
+  
   \reqsection{reqs:soft-devel}{Software Development Process}
   \reqheader
 
   \requirement{req:agile-scrum}
   {The system must adhere to the Agile/Scrum methodology.}
-  \phigh\deps{None}\sspec
+  \phigh
+  \dnone
+  \sspec
 
   \requirement{req:3-sprints}
   {Software development should include at least 3 sprints.}
@@ -34,47 +38,47 @@
   \phigh
   \deps{\ref{req:agile-scrum}}
   \sspec
-\end{reqtable}
 
-\begin{reqtable}
+  % Expanding Initial Requirements
+  
   \reqsection{reqs:expanding-initial}{Expanding Initial Requirements}
   \reqheader
 
   \requirement{req:expand-non-func}
   {The system must expand upon the initial non-functional requirements.}
   \phigh
-  \deps{None}
+  \dnone
   \sspec
 
   \requirement{req:expand-func}
   {The system must expand upon the initial functional requirements and add additional functionality
     to the system.}
   \phigh
-  \deps{None}
+  \dnone
   \sspec
 
   \requirement{req:additional-reqs}
   {Additional requirements should be established by conducting interviews on potential users,
-    reading articles on Personal informatics and examining existing personal informatics systems.}
+    reading articles on personal informatics and examining existing personal informatics systems.}
   \phigh
   \deps{\ref{req:expand-non-func}, \ref{req:expand-func}}
   \sspec
-\end{reqtable}
 
-\begin{reqtable}
+  % Background Research
+
   \reqsection{reqs:background-research}{Background Research}
   \reqheader
 
   \requirement{req:4-articles}
   {Must read and cite 4 articles in the field of personal informatics.}
   \phigh
-  \deps{None}
+  \dnone
   \sspec
 
   \requirement{req:8-articles}
   {Should read and cite at least eight articles.}
   \pmed
-  \deps{None}
+  \dnone
   \sspec
 
   \requirement{req:core-peer-reviewed}
@@ -86,19 +90,64 @@
   \requirement{req:additional-web}
   {Additional citations may be made to web articles of unknown quality.}
   \plow
-  \deps{None}
+  \dnone
   \sspec
 
   \requirement{req:classify-rem-cycles}
   {Must classify measurements of stages of sleep (REM cycles).}
   \phigh
-  \deps{None}
-  \source{\textcite{Tuck:2018aa}, \textcite{Feinberg:1988aa}}
+  \dnone
+  \source{\textcite{Tuck:2018aa}, \textcite{Feinberg:1988aa}, \textcite[p.291]{Carlson:2012aa}}
+
+  % Ethical Issues
+
+  \reqsection{reqs:ethical-issues}{Ethical Issues}
+  \reqheader
+
+  \requirement{req:ethical-issues}
+  {Must account for ethical issues in the specification, design, development and testing of the
+    system.}
+  \phigh
+  \dnone
+  \sspec
+
+  % Testing
+
+  \reqsection{reqs:testing}{Testing}
+  \reqheader
+
+  \requirement{req:test-driven-approach}
+  {Must adopt a test-driven development approach with production of test plans.}
+  \phigh
+  \dnone
+  \sspec
+
+  \requirement{req:evidence-testing}
+  {Must provide evidence of testing.}
+  \phigh
+  \dnone
+  \sspec
+
+  \requirement{req:state-hypothesis}
+  {Must state hypothesis which clearly link claims to observable behaviours of your system in
+    operation.}
+  \phigh
+  \dnone
+  \sspec
+
+  \requirement{req:valid-analysis}
+  {Must conduct a valid analysis of empirical data generated from an experiment (should include
+    Student's t-test).}
+  \phigh
+  \dnone
+  \sspec
 \end{reqtable}
 
 \subsection{Functional Requirements}\label{ssec:functional-requirements}
 
 \begin{reqtable}
+  % Viewing and Collecting Sleep Data
+  
   \reqsection{reqs:viewing-collecting-data}{Viewing and Collecting Sleep Data}
   \reqheader
 
@@ -111,7 +160,7 @@
   \subrequirement{sreq:connect-headset}
   {The system must be able to connect to the Neurosky headset.}
   \phigh
-  \deps{None}
+  \dnone
   \smin{9}
 
   \subrequirement{sreq:disconnect-headset}
@@ -126,161 +175,164 @@
   \deps{\ref{sreq:connect-headset}}
   \smin{7}
 
-  \requirement{req:store-Data}
-  {The system must store raw brainwave data}
+  \requirement{req:store-data}
+  {The system must store raw brainwave data.}
   \phigh
-  \deps{\ref{sreq:facilitate-saving},\ref{sreq:facilitate-conversion}}
-  \source{Coursework specification, Meeting minutes\#7}
+  \deps{\ref{sreq:facilitate-saving}, \ref{sreq:facilitate-conversion}}
+  \source{Coursework specification, meeting minutes \#7}
 
   \subrequirement{sreq:facilitate-saving}
-  {The system must facilitate the saving of converted brainwave data to a binary file (.ec)}
+  {The system must facilitate the saving of converted brainwave data to a binary file (.ec).}
   \phigh
   \deps{\ref{sreq:read-data-headset}}
   \smin{12}
 
   \subrequirement{sreq:facilitate-conversion}
-  {The system must facilitate the conversion of brainwave data from binary (.ec) to CSV format}
+  {The system must facilitate the conversion of brainwave data from binary (.ec) to CSV format.}
   \phigh
   \deps{\ref{sreq:facilitate-saving}}
   \smin{12}
 
-  \requirement{req:extract-Data}
-  {The system should be able to extract information about sleep cycles from recorded raw data}
+  \requirement{req:extract-data}
+  {The system should be able to extract information about sleep cycles from recorded raw data.}
   \phigh
-  \deps{\ref{sreq:extract-attention-mediation},\ref{sreq:calcutate-moving-average}}
+  \deps{\ref{sreq:extract-attention-meditation}, \ref{sreq:calculate-moving-average}}
   \smin{13}
 
-  \subrequirement{sreq:extract-attention-mediation}
-  {The system should extract the attention and meditation data points from the raw brainwave data}
+  \subrequirement{sreq:extract-attention-meditation}
+  {The system should extract the attention and meditation data points from the raw brainwave data.}
   \phigh
-  \deps{\ref{req:store-Data}}
+  \deps{\ref{req:store-data}}
   \smin{16}
 
-  \subrequirement{sreq:calcutate-moving-average}
-  {The system should calculate a moving average of the attention and mediation values for the whole data set}
+  \subrequirement{sreq:calculate-moving-average}
+  {The system should calculate a moving average of the attention and meditation values for the whole
+    data set.}
   \phigh
-  \deps{\ref{sreq:extract-attention-mediation}}
+  \deps{\ref{sreq:extract-attention-meditation}}
   \smin{16}
 
-  \requirement{req:present-Data}
-  {The system should be able to present sleep cycle data to the user}
+  \requirement{req:present-data}
+  {The system should be able to present sleep cycle data to the user.}
   \phigh
   \deps{\ref{sreq:present-data-table},\ref{sreq:present-hypnogram}}
-  \source{Coursework specification, Meeting minutes\# 7, Sleep app questionnaire}
+  \source{Coursework specification, meeting minutes \#7, sleep app questionnaire}
 
   \subrequirement{sreq:present-data-table}
-  {The system should be able to present sleep cycle data in the form of a data table}
+  {The system should be able to present sleep cycle data in the form of a data table.}
   \phigh
-  \deps{\ref{req:extract-Data}}
+  \deps{\ref{req:extract-data}}
   \smin{17}
 
   \subrequirement{sreq:present-hypnogram}
-  {The system should be able to present sleep cycle data in the form of a hypnogram}
+  {The system should be able to present sleep cycle data in the form of a hypnogram.}
   \phigh
-  \deps{\ref{req:extract-Data}}
+  \deps{\ref{req:extract-data}}
   \source{Sleep app questionnaire}
 
   \requirement{req:manual-entry}
   {The system should permit the manual entering of relevant user data from the last 24 hours.}
   \pmed
   \deps{\ref{req:manual-entry-bed-woke}}
-  \source{Coursework specification, \textcite{BMA:2018aa}, sleep app questionnaire.}
+  \source{Coursework specification, sleep app questionnaire,
+    \textcite{British-Medical-Association:2018aa}}
 
   \subrequirement{req:manual-entry-bed-woke}
   {The system must permit the manual entry of information that corresponds to the times when the
     user went to bed and woke up.}
   \pmed
-  \deps{None}
-  \source{\textcite{BMA:2018aa}, sleep app questionnaire.}
+  \dnone
+  \source{\textcite{British-Medical-Association:2018aa}, sleep app questionnaire}
 
   \requirement{req:apply-sorting-algorithm}
-  {The system should apply a “known” sorting algorithm which allows users to sort tracking data}
+  {The system should apply a ``known'' sorting algorithm which allows users to sort tracking data}
   \pmed
-  \deps{\ref{req:store-Data}}
-  \source{Coursework specification}
+  \deps{\ref{req:store-data}}
+  \sspec
 
-  \requirement{req:implement-command-line-interface}
-  {The system should implement a command-line interface allowing the user to perform all functions of the system}
+  \requirement{req:implement-cli}
+  {The system should implement a command-line interface allowing the user to perform all functions
+    of the system.}
   \phigh
-  \deps{\ref{sreq:allow-user-record-data},\ref{sreq:allow-user-change-format},\ref{sreq:allow-user-extract-calculate}}
+  \deps{\ref{sreq:allow-user-record-data}, \ref{sreq:allow-user-change-format},
+    \ref{sreq:allow-user-extract-calculate}}
   \smin{13}
 
   \subrequirement{sreq:allow-user-record-data}
-  {The command-line interface should allow the user to record data from the headset and choose where to store it}
+  {The command-line interface should allow the user to record data from the headset and choose where
+    to store it.}
   \phigh
-  \deps{\ref{sreq:read-data-headset},\ref{sreq:facilitate-saving}}
+  \deps{\ref{sreq:read-data-headset}, \ref{sreq:facilitate-saving}}
   \smin{13}
 
   \subrequirement{sreq:allow-user-change-format}
-  {The command-line interface should allow the user to convert a binary (.ec) file to CSV format, and choose where to save the converted file}
+  {The command-line interface should allow the user to convert a binary (.ec) file to CSV format,
+    and choose where to save the converted file.}
   \phigh
   \deps{\ref{sreq:facilitate-conversion}}
   \smin{13}
 
   \subrequirement{sreq:allow-user-extract-calculate}
-  {The command-line interface should allow the user to extract and calculate a moving average of the attention and meditation data}
-  \pmed
-  \deps{\ref{req:extract-Data}}
+  {The command-line interface should allow the user to extract and calculate a moving average of the
+    attention and meditation data.}
+  \phigh
+  \deps{\ref{req:extract-data}}
   \smin{16}
 
-\end{reqtable}
-
-\begin{reqtable}
-  \reqsection{reqs:Identifying-Trends-in-data}{Identifying Trends in Data}
+  % Identifying Trends in Data
+  
+  \reqsection{reqs:identifying-trends-data}{Identifying Trends in Data}
   \reqheader
 
   \requirement{req:compare-sleep-data}
-  {The system must allow the user to compare sleep data over a week}
+  {The system must allow the user to compare sleep data over a week.}
   \phigh
-  \deps{\ref{req:store-Data}, \ref{req:manual-entry}}
-  \source{\textcite{BMA:2018aa},Sleep app questionnaire}
+  \deps{\ref{req:store-data}, \ref{req:manual-entry}}
+  \source{\textcite{British-Medical-Association:2018aa}, sleep app questionnaire}
 
   \requirement{req:Automation-of-data}
-  {The system should permit the creation of automated data based on the user’s sleep cycle}
+  {The system should permit the creation of automated data based on the user's sleep cycle}
   \pmed
-  \deps{\ref{req:store-Data}}
+  \deps{\ref{req:store-data}}
   \smin{12}
-\end{reqtable}
 
-\begin{reqtable}
+  % Goals and Achievements
 
-\reqsection{reqs:Goals-and-achievemnts}{Goals and achievements}
-\reqheader
+  \reqsection{reqs:goals-achievements}{Goals and Achievements}
+  \reqheader
 
-\requirement{req:allow-manage-goals}
-{Allow users to manage targets (goals) for time going to bed.}
-\pmed
-\deps{\ref{req:store-Data},\ref{req:manual-entry}}
-\source{Coursework specification, Sleep app questionnaire}
+  \requirement{req:allow-manage-goals}
+  {Allow users to manage targets (goals) for time going to bed.}
+  \pmed
+  \deps{\ref{req:store-data}, \ref{req:manual-entry}}
+  \source{Coursework specification, sleep app questionnaire}
 
-\requirement{req:permit-set-goal}
-{The system must allow the user to compare sleep data over a week}
-\pmed
-\deps{None}
-\source{Meeting minutes\#7,Coursework specification}
+  \requirement{req:permit-set-goal}
+  {Should permit user to set a daily or weekly goal for time going to bed.}
+  \pmed
+  \dnone
+  \source{Coursework specification, meeting minutes \#7}
 
-\requirement{req:update-change-goal}
-{Should permit user to update or change goal.}
-\pmed
-\deps{None}
-\source{Coursework specification}
+  \requirement{req:update-change-goal}
+  {Should permit user to update or change goal.}
+  \pmed
+  \dnone
+  \sspec
 
-\requirement{req:motivate-user}
-{Should motivate user to achieve their goals via a point system}
-\pmed
-\deps{\ref{req:allow-manage-goals}, \ref{req:permit-set-goal}}
-\source{Coursework specification, Sleep app questionnaire}
+  \requirement{req:motivate-user}
+  {Should motivate user to achieve their goals via a point system.}
+  \pmed
+  \deps{\ref{req:allow-manage-goals}, \ref{req:permit-set-goal}}
+  \source{Coursework specification, sleep app questionnaire}
 
-\end{reqtable}
+  % Manage Data Periodically
+  
+  \reqsection{reqs:manage-data-periodically}{Manage Data Periodically}
+  \reqheader
 
-\begin{reqtable}
-
-\reqsection{reqs:Manage-data-periodically}{Manage data periodically}
-\reqheader
-
-\requirement{req:file-manager}
-{Users should be given the option to delete their sleep cycle data}
-\plow
-\deps{\ref{req:store-Data},\ref{req:extract-Data}}
-\source{Sleep app questionnaire, Meeting minutes \#13}
+  \requirement{req:delete-data}
+  {Users should be given the option to delete their sleep cycle data}
+  \plow
+  \deps{\ref{req:store-data}, \ref{req:extract-data}}
+  \source{Meeting minutes \#13, sleep app questionnaire}
 \end{reqtable}
