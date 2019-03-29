@@ -291,13 +291,20 @@
   {The command-line interface should allow the user to extract and calculate a moving average of the
     attention and meditation data.}
   \phigh
-  \deps{\ref{req:extract-data}}
+  \deps{\ref{sreq:calculate-moving-average}}
+  \smin{16}
+
+  \subrequirement{sreq:cli-process-sleep-data}
+  {The command line interface must allow the user to process sleep cycle data from a raw recorded
+    data file.}
+  \phigh
+  \deps{\ref{sreq:extract-sleep-percentage}}
   \smin{16}
 
   \subrequirement{sreq:cli-sort-display}
-  {The command line interface must sort and display sleep cycle data in the form of a table.}
+  {The command line interface must display processed sleep cycle data in the form of a table.}
   \phigh
-  \deps{\ref{req:extract-data}, \ref{req:apply-sorting-algorithm}}
+  \deps{\ref{req:apply-sorting-algorithm}}
   \smin{13}
 
   % Identifying Trends in Data
