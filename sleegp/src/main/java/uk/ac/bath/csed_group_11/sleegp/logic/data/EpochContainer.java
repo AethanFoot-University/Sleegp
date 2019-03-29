@@ -179,18 +179,29 @@ public class EpochContainer implements Serializable {
         return newList;
     }
 
+    /**
+     * Converts the current data
+     *
+     * @param transform the transformation to be done on the data set
+     * @return the transformed data
+     */
+    public void transformCurrentData(Transformation<Epoch, Epoch> transform){
+       for(int i=0; i< data.size(); i++){
+            transform.transform(data, i, data);
+        }
+    }
+
 
     /**
-     * Gets a copy of epoch lists
+     * Not a copy!
      *
      * @return the list
      */
-    public List<Epoch> getEpochListCopy(){
+    public List<Epoch> getEpochList(){
 
-        List<Epoch> epochReturns = new ArrayList<Epoch>();
-        Collections.copy(epochReturns , data);
 
-        return epochReturns;
+
+        return data;
     }
 
     public static void main(String[] args){

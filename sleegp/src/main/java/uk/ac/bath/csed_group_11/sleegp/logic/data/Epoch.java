@@ -131,7 +131,7 @@ public class Epoch implements Serializable, Comparable<Epoch>{
      * @throws IllegalAccessException
      * @throws NoSuchFieldException
      */
-    private void setIntField(String reference, int data) throws IllegalAccessException, NoSuchFieldException {
+    public void setIntField(String reference, int data) throws IllegalAccessException, NoSuchFieldException {
         Field field = getClass().getDeclaredField(reference);
         field.setInt(this, data);
     }
@@ -322,6 +322,8 @@ public class Epoch implements Serializable, Comparable<Epoch>{
             return -1;
         }
     }
+
+
 
     //Complete bodge
 

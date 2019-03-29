@@ -3,7 +3,12 @@ package uk.ac.bath.csed_group_11.sleegp.logic.Classification;
 import org.apache.commons.math3.analysis.interpolation.SplineInterpolator;
 import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
 import uk.ac.bath.csed_group_11.sleegp.logic.data.Epoch;
+import uk.ac.bath.csed_group_11.sleegp.logic.data.EpochContainer;
+import uk.ac.bath.csed_group_11.sleegp.logic.data.ProcessedDataContainer;
+import uk.ac.bath.csed_group_11.sleegp.logic.util.MathUtils;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,20 +50,28 @@ public class DataSmoother {
     }
 
 
-    public static void main(String[] args){
-       List<Epoch> epochs = new ArrayList<Epoch>();
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
+        EpochContainer ec = EpochContainer.loadContainerFromFile(new File("/Users/mathew/Documents/GitHub/project/testData/3 Hour (Fixed).ec"));
 
 
-       for(int i =0; i < 5000; i++){
-           Epoch e = new Epoch(i);
-           e.setLowAlpha((int)(Math.random()*1000000));
-           epochs.add(e);
-           System.out.println(e);
-       }
+
+       ec.transformCurrentData(MathUtils.movingAverageOnEpochs("lowAlpha", 10));
+       List<Epoch> epochs = ec.getEpochList();
+
+
+
 
        DataSmoother smoother = new DataSmoother(epochs);
 
        List<Plot> smoothedAlphaData = smoother.smooth("lowAlpha");
+
+        ProcessedDataContainer proc = new ProcessedDataContainer(smoothedAlphaData);
+        proc.applyMovingAverage(10);
+        proc.mapLevel(0, 100);
+
+        for(Plot p : proc){
+            System.out.println("Mapped Value: "+p);
+        }
 
 
         System.out.println("Smoothed Alpha Knots");
