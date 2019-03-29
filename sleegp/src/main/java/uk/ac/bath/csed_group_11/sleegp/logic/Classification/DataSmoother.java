@@ -51,33 +51,18 @@ public class DataSmoother {
 
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
-        EpochContainer ec = EpochContainer.loadContainerFromFile(new File("/Users/mathew/Documents/GitHub/project/testData/3 Hour (Fixed).ec"));
+        EpochContainer ec = EpochContainer.loadContainerFromFile(new File("/Users/mathew" +
+            "/Documents/GitHub/project/resources/test-data/3 Hour (Fixed).ec"));
 
 
-
-       ec.transformCurrentData(MathUtils.movingAverageOnEpochs("lowAlpha", 10));
-       List<Epoch> epochs = ec.getEpochList();
-
-
-
-
-       DataSmoother smoother = new DataSmoother(epochs);
-
-       List<Plot> smoothedAlphaData = smoother.smooth("lowAlpha");
-
-        ProcessedDataContainer proc = new ProcessedDataContainer(smoothedAlphaData);
-        proc.applyMovingAverage(10);
-        proc.mapLevel(0, 100);
+        ProcessedDataContainer proc = ClassificationUtils.convertData(ec);
 
         for(Plot p : proc){
             System.out.println("Mapped Value: "+p);
         }
 
 
-        System.out.println("Smoothed Alpha Knots");
-       for(Plot plot : smoothedAlphaData){
-           System.out.println(plot);
-       }
+
 
     }
 
