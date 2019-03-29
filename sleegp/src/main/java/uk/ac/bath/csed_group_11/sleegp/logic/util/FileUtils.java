@@ -26,4 +26,23 @@ public class FileUtils {
         return list;
 
     }
+
+    public static List<String> extractCSV(String path) throws FileNotFoundException {
+
+        List<String> list = new ArrayList<String>();
+
+        File file = new File(path);
+        Scanner sc = new Scanner(file);
+
+        while (sc.hasNextLine())
+        {
+
+            try{ list.add(sc.nextLine());
+
+            } catch(Exception e){}
+        }
+
+        return list;
+
+    }
 }

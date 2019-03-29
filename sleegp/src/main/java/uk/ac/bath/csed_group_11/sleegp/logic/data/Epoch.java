@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 
@@ -83,7 +84,26 @@ public class Epoch implements Serializable, Comparable<Epoch>{
     }
 
     public Epoch(String csvRow){
+        String[] attributes = csvRow.split(",");
+        Field[] fields = getClass().getDeclaredFields();
 
+
+        //for(String att : attributes) System.out.println(att);
+        int d =0;
+        for (int i =3; i<fields.length ;i++)
+            try {
+
+
+                setIntField(fields[i].getName(), Integer.parseInt(attributes[i-3]));
+               // System.out.println("i: "+(i-d)+", "+attributes[i]);
+
+            } catch (Exception ex) {
+               // System.out.println(ex);
+                System.out.println("fail");
+            }
+
+        timeElapsed = Long.parseLong(attributes[attributes.length - 2]);
+        timeStamp = attributes[attributes.length - 1];
     }
 
     /**

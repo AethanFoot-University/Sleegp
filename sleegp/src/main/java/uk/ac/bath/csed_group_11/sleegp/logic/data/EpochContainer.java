@@ -1,14 +1,12 @@
 package uk.ac.bath.csed_group_11.sleegp.logic.data;
 
-import uk.ac.bath.csed_group_11.sleegp.logic.util.Load;
-import uk.ac.bath.csed_group_11.sleegp.logic.util.MathUtils;
-import uk.ac.bath.csed_group_11.sleegp.logic.util.Save;
-import uk.ac.bath.csed_group_11.sleegp.logic.util.Transformation;
+import uk.ac.bath.csed_group_11.sleegp.logic.util.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
+import java.sql.SQLOutput;
 import java.util.*;
 
 /**
@@ -66,11 +64,15 @@ public class EpochContainer implements Serializable {
 
     public EpochContainer(List<String> CSVRows){
         data = new ArrayList<Epoch>();
-
+        boolean first = true;
         for(String row : CSVRows){
-            Epoch e = new Epoch(row);
-            data.add(e);
+            if (!first) {
+                Epoch e = new Epoch(row);
+                data.add(e);
+            }
+            first = false;
         }
+
 
     }
 
@@ -193,23 +195,14 @@ public class EpochContainer implements Serializable {
 
     public static void main(String[] args){
 
+        try {
+            EpochContainer ec = new EpochContainer(FileUtils.extractCSV("/home/aethan/Desktop/3hoursleep (Original) Export.csv"));
 
-        //Example implementation of calculating a moving average for a specific attribute
-
-        EpochContainer ec = new EpochContainer();
-
-        for(int i=0; i< 30; i++){
-            Epoch e = new Epoch(null, 0);
-            e.setAttention((int)(Math.random()*500));
-            e.setMeditation((int)(Math.random()*500));
-            ec.addEpoch(e);
+            ec.saveToFile(new File("/home/aethan/CSED/testData/3 Hour (Fixed).ec"));
+            System.out.println(ec.genCSV());
+        } catch (FileNotFoundException e) {
+            System.out.println("No such file");
         }
-
-
-        int avgWindow = 10;
-        List<Double> attention = ec.getTransformedData(MathUtils.movingAverage("attention", avgWindow));
-        List<Double> meditation = ec.getTransformedData(MathUtils.movingAverage("meditation", avgWindow));
-
 
     }
 
