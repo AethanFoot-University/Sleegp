@@ -26,6 +26,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -221,14 +222,31 @@ public class CLIMain {
                 ProcessedDataContainer container =
                     (ProcessedDataContainer)(new Load(new File(dataToDisplay)).load());
 
-                for(Plot p : container) toFormat += p.getTimeElapsed()+" | "+p.getLevel()+"%\n";
+                int awake = 0;
+                int asleep = 0;
+
+                for(Plot p : container) {
+//                    System.out.println(p.getLevel());
+
+                    if (p.getLevel() > 30.0) {
+                        awake += 1;
+                    } else {
+                        asleep += 1;
+                    }
+                }
+
+                double percentAwake = 100 * ((double)awake / (double)(awake + asleep));
+                double percentAsleep = 100.0 - percentAwake;
+
+                var percentFormat = new DecimalFormat("###.00");
+
+                toFormat += "Awake | " + percentFormat.format(percentAwake) + "%\n";
+                toFormat += "Asleep | " + percentFormat.format(percentAsleep) + "%\n";
 
                 String outputFormat = ConsoleUtils.printMessageBox(toFormat,
                     35);
 
                 System.out.println(outputFormat);
-
-
             } catch (IOException e) {
                 System.err.println("Please check file");
             } catch (ClassNotFoundException e) {
