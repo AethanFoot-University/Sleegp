@@ -32,7 +32,7 @@ public class CLIMain {
      */
     public static final String doc =
         "Usage:\n" +
-        "  sleegp record [-o <output-file>]\n" +
+        "  sleegp record [-s <seconds> | -m <minutes>] [-o <output-file>]\n" +
 //        "  sleegp simulate <data-file>\n" +
         "  sleegp convert [-o <output-file>] <input-file>\n" +
         "  sleegp process <raw-data-file>\n" +
@@ -45,6 +45,8 @@ public class CLIMain {
         "\n" +
         "Options:\n" +
         "  -o, --output <output-file>  output file location\n" +
+        "  -s, --seconds <seconds>     limit recording time to <seconds> seconds\n" +
+        "  -m, --minutes <minutes>     limit recording time to <minutes> minutes\n" +
         "  -h, --help                  show this help message and exit\n" +
         "  --version                   show version and exit\n";
 
@@ -88,12 +90,24 @@ public class CLIMain {
             }
 
             try {
-                Thread.sleep(60 * 60 * 10 * 1000);
+                Object time;
+
+                if ((time = opts.get("--seconds")) != null) {
+                    Integer seconds = Integer.valueOf((String)time);
+                    Thread.sleep(1000 * seconds);
+                } else if ((time = opts.get("--minutes")) != null) {
+                    Integer minutes = Integer.valueOf((String)time);
+                    Thread.sleep( 60 * 1000 * minutes);
+                } else {
+                    Thread.sleep(60 * 60 * 10 * 1000);
+                }
 
                 if (maybeOutputFile != null)
                     ec.saveToFile(new File(maybeOutputFile));
 
                 head.disconnect();
+            } catch (NumberFormatException e) {
+                System.err.println("Invalid time value entered: " + e.toString());
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (InterruptedException e) {
