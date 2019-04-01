@@ -14,6 +14,8 @@ import uk.ac.bath.csed_group_11.sleegp.gui.Views.Resource;
 import uk.ac.bath.csed_group_11.sleegp.gui.Utilities.StageLoader;
 import uk.ac.bath.csed_group_11.sleegp.gui.Utilities.StageRunnable;
 
+import java.io.File;
+
 public class GUIMain {
 
     public static void loadMainUI(String[] args){
@@ -22,7 +24,13 @@ public class GUIMain {
         StageRunnable<HomeScreenController> setup = new StageRunnable<HomeScreenController>() {
             @Override
             protected Resource<HomeScreenController> setupStage(Stage stage) {
-                Resource<HomeScreenController> resource = new Resource<HomeScreenController>("HomeScreen.fxml");
+                System.out.println(getClass().getResource("").getPath());
+
+                System.out.println("File: "+new File("").toPath());
+
+                Resource<HomeScreenController> resource = new Resource<HomeScreenController>(
+                    "HomeScreen.fxml");
+
                 stage.setTitle("SlEEG");
                 return resource;
             }

@@ -39,6 +39,17 @@ jar {
     }
 }
 
+sourceSets {
+    main {
+        output.resourcesDir = "build/classes/resources"
+    }
+    test {
+        output.resourcesDir = "build/classes/resources"
+    }
+}
+   
 test {
     useJUnitPlatform()
 }
+
+
