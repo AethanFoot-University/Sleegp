@@ -9,8 +9,8 @@ package uk.ac.bath.csed_group_11.sleegp.gui;
 //
 
 import javafx.stage.Stage;
-import uk.ac.bath.csed_group_11.sleegp.gui.Controllers.HomeScreenController;
-import uk.ac.bath.csed_group_11.sleegp.gui.Utilities.Resource;
+import uk.ac.bath.csed_group_11.sleegp.gui.Views.HomeScreenController;
+import uk.ac.bath.csed_group_11.sleegp.gui.Views.Resource;
 import uk.ac.bath.csed_group_11.sleegp.gui.Utilities.StageLoader;
 import uk.ac.bath.csed_group_11.sleegp.gui.Utilities.StageRunnable;
 
@@ -22,8 +22,9 @@ public class GUIMain {
         StageRunnable<HomeScreenController> setup = new StageRunnable<HomeScreenController>() {
             @Override
             protected Resource<HomeScreenController> setupStage(Stage stage) {
-                //Need to implement
-                return null;
+                Resource<HomeScreenController> resource = new Resource<HomeScreenController>("HomeScreen.fxml");
+                stage.setTitle("SlEEG");
+                return resource;
             }
         };
 

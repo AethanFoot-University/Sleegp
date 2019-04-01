@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import uk.ac.bath.csed_group_11.sleegp.gui.Views.Resource;
 
 public class StageLoader<Controller> extends Application{
     /**
@@ -59,6 +60,7 @@ public class StageLoader<Controller> extends Application{
                      userInterfaceSemaphore = false;
                  } catch (Exception e){
                      System.out.println("Failed to setup stage");
+                     e.printStackTrace();
                  }
              }
         });

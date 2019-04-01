@@ -1,4 +1,4 @@
-package uk.ac.bath.csed_group_11.sleegp.gui.Utilities;
+package uk.ac.bath.csed_group_11.sleegp.gui.Views;
 
 import java.io.IOException;
 import javafx.fxml.FXMLLoader;
@@ -29,10 +29,6 @@ public class Resource<ControllerType> {
         RESOURCE = res;
 
         try {
-
-
-
-
             getNode();
         } catch (IOException e) {
             System.out.println("Failed to fetch node");
@@ -47,7 +43,10 @@ public class Resource<ControllerType> {
      * @throws IOException
      */
     public Parent getNode() throws IOException {
-        return (node ==null) ?(node = LOADER.load(getClass().getResource(RESOURCE).openStream())) : node;
+        System.out.println(RESOURCE);
+        System.out.println("Path: "+getClass().getName());
+        return (node ==null) ?
+            (node = LOADER.load(getClass().getResource(RESOURCE).openStream())) : node;
     }
 
     /**

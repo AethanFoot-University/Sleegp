@@ -1,4 +1,4 @@
-package uk.ac.bath.csed_group_11.sleegp.gui.Controllers;
+package uk.ac.bath.csed_group_11.sleegp.gui.Views;
 
 import javafx.fxml.Initializable;
 
@@ -8,6 +8,6 @@ import java.util.ResourceBundle;
 public class HomeScreenController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        //Setup
+        System.out.println("Setting up main home screen controller");
     }
 }
