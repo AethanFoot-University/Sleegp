@@ -30,11 +30,16 @@ public class EpochContainerTests {
     public void convertECToCSV() {
         // Create a ClassLoader so we can get test resource files.
         var classLoader = Thread.currentThread().getContextClassLoader();
+
         var baseName = "2019-03-08-1457";
 
         // Load the URLs for the `.ec` and `.csv` files.
+
+
         var ecURL = classLoader.getResource( baseName + ".ec");
         var csvURL = classLoader.getResource(baseName + ".csv");
+
+
 
         if (ecURL == null || ecURL.getPath() == null) {
             fail("Unable to find resource \"" + baseName + ".ec\"");

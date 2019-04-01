@@ -1,4 +1,4 @@
-package uk.ac.bath.csed_group_11.sleegp.gui.Views;
+package uk.ac.bath.csed_group_11.sleegp.gui.Controllers;
 
 import javafx.fxml.Initializable;
 

@@ -34,6 +34,7 @@ import java.util.Map;
  * Contains the main entry point for command-line execution of slEEGp.
  */
 public class CLIMain {
+
     /**
      * Usage message for the CLI; also defines the format for acceptable arguments using Docopt.
      *

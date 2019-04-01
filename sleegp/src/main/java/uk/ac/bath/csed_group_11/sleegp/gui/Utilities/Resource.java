@@ -1,4 +1,4 @@
-package uk.ac.bath.csed_group_11.sleegp.gui.Views;
+package uk.ac.bath.csed_group_11.sleegp.gui.Utilities;
 
 import java.io.IOException;
 import javafx.fxml.FXMLLoader;
@@ -44,9 +44,10 @@ public class Resource<ControllerType> {
      * @throws IOException
      */
     public Parent getNode() throws IOException {
-        System.out.println("Path: "+getClass().getName());
+
+        var classLoader = Thread.currentThread().getContextClassLoader();
         return (node ==null) ?
-            (node = LOADER.load(getClass().getResource(RESOURCE).openStream())) : node;
+            (node = LOADER.load(classLoader.getResource(RESOURCE).openStream())) : node;
     }
 
     /**
