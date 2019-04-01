@@ -11,5 +11,5 @@ public abstract class StageRunnable<Controller>{
      * Changes to make to the stage
      * @param stage stage to modify
      */
-    abstract Resource<Controller> setupStage(Stage stage);
+    protected abstract Resource<Controller> setupStage(Stage stage);
 }

@@ -1,4 +1,4 @@
-package uk.ac.bath.csed_group_11.sleegp.gui;
+package uk.ac.bath.csed_group_11.sleegp.gui.Utilities;
 
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
