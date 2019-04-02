@@ -2,29 +2,100 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.TilePane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="670.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="uk.ac.bath.csed_group_11.sleegp.gui.Controllers.HomeScreenController">
+<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="300.0" minWidth="300.0" prefHeight="400.0" prefWidth="670.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="uk.ac.bath.csed_group_11.sleegp.gui.Controllers.HomeScreenController">
    <children>
-      <TilePane alignment="CENTER" hgap="5.0" prefHeight="400.0" prefWidth="629.0" vgap="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <children>
-            <Button mnemonicParsing="false" onAction="#capture" prefHeight="179.0" prefWidth="191.0" style="-fx-background-image: CaptureIcon.png;" styleClass="basic-button" text="Capture">
-               <TilePane.margin>
+      <BorderPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <top>
+            <HBox alignment="TOP_RIGHT" prefHeight="16.0" prefWidth="670.0" styleClass="top-bar" BorderPane.alignment="CENTER">
+               <children>
+                  <Button alignment="CENTER" contentDisplay="CENTER" defaultButton="true" mnemonicParsing="false" styleClass="basic-button" text="Sign In">
+                     <font>
+                        <Font name="Georgia" size="13.0" />
+                     </font>
+                  </Button>
+                  <Button alignment="CENTER" contentDisplay="CENTER" defaultButton="true" mnemonicParsing="false" styleClass="basic-button" text="Settings">
+                     <font>
+                        <Font name="Georgia" size="13.0" />
+                     </font>
+                  </Button>
+               </children>
+               <opaqueInsets>
                   <Insets />
-               </TilePane.margin>
-            </Button>
-            <Button mnemonicParsing="false" onAction="#view" prefHeight="179.0" prefWidth="191.0" styleClass="basic-button" text="View">
-               <TilePane.margin>
+               </opaqueInsets>
+               <BorderPane.margin>
                   <Insets />
-               </TilePane.margin>
-            </Button>
-            <Button mnemonicParsing="false" onAction="#analyse" prefHeight="179.0" prefWidth="191.0" styleClass="basic-button" text="Analyse">
-               <TilePane.margin>
-                  <Insets />
-               </TilePane.margin>
-            </Button>
-         </children>
-      </TilePane>
+               </BorderPane.margin>
+               <padding>
+                  <Insets right="10.0" />
+               </padding>
+            </HBox>
+         </top>
+         <center>
+            <TilePane alignment="CENTER" hgap="5.0" prefHeight="400.0" prefWidth="629.0" vgap="5.0" BorderPane.alignment="CENTER">
+               <children>
+                  <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" onMouseClicked="#capture" prefHeight="200.0" prefWidth="200.0" styleClass="basic-button">
+                     <children>
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <VBox alignment="CENTER" prefHeight="148.0" prefWidth="178.0">
+                                 <children>
+                                    <ImageView fitHeight="160.0" fitWidth="160.0" styleClass="basic-button">
+                                       <image>
+                                          <Image url="@CaptureIcon.png" />
+                                       </image>
+                                    </ImageView>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" onMouseClicked="#view" prefHeight="200.0" prefWidth="200.0" styleClass="basic-button">
+                     <children>
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <VBox alignment="CENTER" prefHeight="148.0" prefWidth="178.0">
+                                 <children>
+                                    <ImageView fitHeight="160.0" fitWidth="160.0" styleClass="basic-button">
+                                       <image>
+                                          <Image url="@ViewIcon.png" />
+                                       </image>
+                                    </ImageView>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" onMouseClicked="#analyse" prefHeight="200.0" prefWidth="200.0" styleClass="basic-button">
+                     <children>
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <VBox alignment="CENTER" prefHeight="148.0" prefWidth="178.0">
+                                 <children>
+                                    <ImageView fitHeight="160.0" fitWidth="160.0" styleClass="basic-button">
+                                       <image>
+                                          <Image url="@AnalyseIcon.png" />
+                                       </image>
+                                    </ImageView>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                     </children>
+                  </AnchorPane>
+               </children>
+            </TilePane>
+         </center>
+      </BorderPane>
    </children>
 </AnchorPane>

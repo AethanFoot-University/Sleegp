@@ -24,6 +24,8 @@ public class GUIMain {
             protected Resource<HomeScreenController> setupStage(Stage stage) {
         Resource<HomeScreenController> resource = new Resource<HomeScreenController>("HomeScreen.fxml");
                 stage.setTitle("SlEEG");
+                stage.setMinWidth(300);
+                stage.setMinHeight(300);
                 return resource;
             }
         };
