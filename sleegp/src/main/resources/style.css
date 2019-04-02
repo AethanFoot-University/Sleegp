@@ -136,3 +136,12 @@
 .table-view > .virtual-flow > .scroll-bar > .decrement-button {
     -fx-opacity: 0;
 }
+
+.menu-bar { /* The menu bar itself */
+-fx-text-fill: white;
+    -fx-fill: white;
+}
+.menu { /* The File menu item */ }
+.menu:showing { /* menu when it's being shown (activated) */ }
+.menu .label { /* Styles the text on a menu item */ }
+.menu:showing .label { /* Styles the text on a menu item when activated */ }
