@@ -23,7 +23,7 @@ public class GUIMain {
             @Override
             protected Resource<HomeScreenController> setupStage(Stage stage) {
         Resource<HomeScreenController> resource = new Resource<HomeScreenController>("HomeScreen.fxml");
-                stage.setTitle("SlEEG");
+                stage.setTitle("SlEEGp");
                 return resource;
             }
         };
