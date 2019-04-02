@@ -19,17 +19,25 @@
 	
 }
 
-.basic-button{
+.basic-button {
 	-fx-background-color: "transparent";
 	-fx-text-fill:"white";
+    -fx-border-color: "transparent";
+    -fx-border-radius: 2;
+    -fx-padding: 5 5 5 5;
 }
+
 .basic-button:hover {
--fx-cursor: hand;
-
+    -fx-cursor: hand;
+    -fx-border-color: "grey";
+    -fx-border-radius: 2;
 }
 
-
-
+.basic-button:pressed {
+    -fx-border-color: "grey";
+    -fx-border-radius: 2;
+    -fx-background-color: "grey";
+}
 
 .scroll-bar{
  -fx-background-color: transparent;

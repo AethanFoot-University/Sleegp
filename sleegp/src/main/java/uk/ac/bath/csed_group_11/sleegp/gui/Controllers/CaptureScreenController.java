@@ -13,4 +13,8 @@ public class CaptureScreenController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 
     }
+
+    public void startRecording() {
+        System.out.println("Starting recording...");
+    }
 }
