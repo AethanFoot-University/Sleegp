@@ -74,7 +74,7 @@
 }
 
 
-
+/** Table Views */
 .table-view{
     -fx-background-color: transparent;
 }
@@ -115,11 +115,6 @@
     -fx-padding: 0.0em; /* 0 */
 }
 
-.table-row-cell:selected {
-    -fx-background-color: #005797;
-    -fx-background-insets: 0;
-    -fx-background-radius: 1;
-}
 
 .table-view > .virtual-flow > .scroll-bar:vertical,
 .table-view > .virtual-flow > .scroll-bar:vertical > .track,
@@ -137,11 +132,31 @@
     -fx-opacity: 0;
 }
 
+/*Menus*/
+
 .menu-bar { /* The menu bar itself */
--fx-text-fill: white;
-    -fx-fill: white;
+/*fx-background-color: #222427; */
 }
 .menu { /* The File menu item */ }
 .menu:showing { /* menu when it's being shown (activated) */ }
-.menu .label { /* Styles the text on a menu item */ }
+.menu .label { -fx-text-fill: white }
 .menu:showing .label { /* Styles the text on a menu item when activated */ }
+
+
+
+
+/* Line Charts */
+CategoryAxis{
+    -fx-background-color: transparent;
+}
+NumberAxis{
+    -fx-background-color: transparent;
+
+}
+.chart-plot-background{
+    -fx-tick-label-fill: white;
+    -fx-background-color: #2B2B2B;
+}
+.chart-horizontal-grid-lines{
+    -fx-stroke: transparent;
+}
