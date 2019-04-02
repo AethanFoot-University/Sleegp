@@ -25,7 +25,6 @@ public class Resource<ControllerType> {
      * @param res FXML page to be loaded
      */
     public Resource(String res) {
-        System.out.println("Starting in: "+ getClass().getResource("/").getPath());
         LOADER = new FXMLLoader();
         RESOURCE = res;
 
@@ -44,7 +43,6 @@ public class Resource<ControllerType> {
      * @throws IOException
      */
     public Parent getNode() throws IOException {
-
         var classLoader = Thread.currentThread().getContextClassLoader();
         return (node ==null) ?
             (node = LOADER.load(classLoader.getResource(RESOURCE).openStream())) : node;
