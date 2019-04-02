@@ -10,6 +10,7 @@
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="300.0" minWidth="300.0" prefHeight="400.0" prefWidth="670.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="uk.ac.bath.csed_group_11.sleegp.gui.Controllers.HomeScreenController">
    <children>
@@ -17,7 +18,7 @@
          <top>
             <HBox alignment="TOP_RIGHT" prefHeight="16.0" prefWidth="670.0" styleClass="top-bar" BorderPane.alignment="CENTER">
                <children>
-                  <Button alignment="CENTER" contentDisplay="CENTER" defaultButton="true" mnemonicParsing="false" styleClass="basic-button" text="Sign In">
+                  <Button alignment="CENTER" contentDisplay="CENTER" defaultButton="true" mnemonicParsing="false" styleClass="basic-button" text="Switch User">
                      <font>
                         <Font name="Georgia" size="13.0" />
                      </font>
@@ -97,5 +98,22 @@
             </TilePane>
          </center>
       </BorderPane>
+      <HBox prefHeight="100.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="1000.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Sleegp">
+               <font>
+                  <Font size="23.0" />
+               </font>
+            </Text>
+            <ImageView fitHeight="27.0" fitWidth="27.0">
+               <image>
+                  <Image url="@HatIcon.png" />
+               </image>
+            </ImageView>
+         </children>
+         <padding>
+            <Insets left="10.0" />
+         </padding>
+      </HBox>
    </children>
 </AnchorPane>
