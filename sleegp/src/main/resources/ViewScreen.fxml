@@ -19,15 +19,15 @@
    <children>
       <BorderPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <center>
-            <LineChart prefHeight="307.0" prefWidth="384.0" BorderPane.alignment="CENTER">
+            <LineChart fx:id="mainChart" prefHeight="307.0" prefWidth="384.0" BorderPane.alignment="CENTER">
               <xAxis>
-                <CategoryAxis label="Time" side="BOTTOM" tickLabelFill="WHITE">
+                <CategoryAxis label="Time" side="BOTTOM" tickLabelFill="WHITE" fx:id="xAxis">
                      <tickLabelFont>
                         <Font name="Georgia" size="8.0" />
                      </tickLabelFont></CategoryAxis>
               </xAxis>
               <yAxis>
-                <NumberAxis label="Power" side="LEFT" style="-fx-tick-label-fill: white;" tickLabelFill="WHITE" />
+                <NumberAxis fx:id="yAxis" label="Power" side="LEFT" style="-fx-tick-label-fill: white;" tickLabelFill="WHITE" />
               </yAxis>
             </LineChart>
          </center>
