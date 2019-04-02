@@ -1,8 +1,14 @@
 package uk.ac.bath.csed_group_11.sleegp.gui.Controllers;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import uk.ac.bath.csed_group_11.sleegp.gui.Utilities.Resource;
 
 import java.io.IOException;
@@ -34,12 +40,20 @@ public class HomeScreenController implements Initializable {
         setView("AnalyseScreen.fxml");
     }
 
+    public void switchUser(){
+
+    }
+
+    public void settings(){
+
+    }
+
     private void setView(String FXML){
         Resource resource = new Resource(FXML);
 
         try {
-            mainPane.getChildren().setAll(resource.getNode());
-        } catch (IOException e) {
+            ((Stage)mainPane.getScene().getWindow()).setScene(new Scene(resource.getNode()));
+         } catch (IOException e) {
             System.out.println("Failed to change view to: "+FXML);
             e.printStackTrace();
         }
