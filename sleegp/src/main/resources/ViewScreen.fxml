@@ -55,12 +55,15 @@
          <bottom>
             <HBox alignment="CENTER" prefHeight="45.0" prefWidth="629.0" BorderPane.alignment="CENTER">
                <children>
-                  <Button mnemonicParsing="false" styleClass="basic-button" text="Play">
+                  <Button fx:id="playButton" mnemonicParsing="false" onMouseClicked="#play" prefHeight="29.0" prefWidth="51.0" styleClass="basic-button" text="▶️">
                      <HBox.margin>
                         <Insets left="5.0" right="5.0" />
                      </HBox.margin>
+                     <font>
+                        <Font size="24.0" />
+                     </font>
                   </Button>
-                  <Slider HBox.hgrow="ALWAYS">
+                  <Slider fx:id="scrollBar" HBox.hgrow="ALWAYS">
                      <HBox.margin>
                         <Insets left="5.0" right="5.0" />
                      </HBox.margin>

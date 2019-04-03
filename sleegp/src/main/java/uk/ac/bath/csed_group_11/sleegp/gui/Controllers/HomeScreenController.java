@@ -8,7 +8,9 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import uk.ac.bath.csed_group_11.sleegp.gui.Experiment.ExperimentManager;
 import uk.ac.bath.csed_group_11.sleegp.gui.Utilities.Resource;
 
 import java.io.IOException;
@@ -26,17 +28,22 @@ public class HomeScreenController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         System.out.println("Setting up main home screen controller");
+        if(ExperimentManager.isExperimentMode())ExperimentManager.startExperiment();
+
     }
 
     public void capture(){
         setView("CaptureScreen.fxml");
+        if(ExperimentManager.isExperimentMode()) ExperimentManager.notify("Start:Capture");
     }
 
     public void view(){
+        if(ExperimentManager.isExperimentMode()) ExperimentManager.notify("Start:View");
         setView("ViewScreen.fxml");
     }
 
     public void analyse(){
+        if(ExperimentManager.isExperimentMode()) ExperimentManager.notify("Start:Analyse");
         setView("AnalyseScreen.fxml");
     }
 

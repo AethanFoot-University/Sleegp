@@ -42,6 +42,7 @@ private String[] args;
         }
     }
 
-
-
+    public LoadingScreenController getController() {
+        return controller;
+    }
 }
