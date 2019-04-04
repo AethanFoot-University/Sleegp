@@ -1,11 +1,109 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Text?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 
-
-<AnchorPane prefHeight="400.0" prefWidth="629.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="uk.ac.bath.csed_group_11.sleegp.gui.Controllers.CaptureScreenController">
+<AnchorPane prefHeight="400.0" prefWidth="670.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="uk.ac.bath.csed_group_11.sleegp.gui.Controllers.CaptureScreenController">
    <children>
-      <Text layoutX="267.0" layoutY="33.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="title-box" text="Capture Screen" />
+      <VBox prefHeight="337.0" prefWidth="629.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <BorderPane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="40.0" prefWidth="629.0">
+               <center>
+                  <Label text="Capture" textFill="WHITE" BorderPane.alignment="CENTER" />
+               </center>
+               <right>
+                  <Pane prefHeight="200.0" prefWidth="70.5" BorderPane.alignment="CENTER" />
+               </right>
+               <left>
+                  <StackPane maxWidth="-Infinity" minWidth="-Infinity" BorderPane.alignment="CENTER">
+                     <children>
+                        <Button mnemonicParsing="false" styleClass="basic-button" stylesheets="@style.css" text="Back">
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                        </Button>
+                     </children>
+                     <padding>
+                        <Insets left="5.0" right="5.0" />
+                     </padding>
+                  </StackPane>
+               </left>
+            </BorderPane>
+            <HBox prefHeight="600.0" prefWidth="629.0">
+               <children>
+                  <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <StackPane prefHeight="150.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                           <children>
+                              <Button mnemonicParsing="false" styleClass="basic-button" stylesheets="@style.css" text="Connect Headset" />
+                           </children>
+                        </StackPane>
+                        <StackPane prefHeight="150.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                           <children>
+                              <Button mnemonicParsing="false" styleClass="basic-button" stylesheets="@style.css" text="Disconnect Headset" />
+                           </children>
+                        </StackPane>
+                     </children>
+                  </VBox>
+                  <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <StackPane prefHeight="150.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                           <children>
+                              <Button mnemonicParsing="false" styleClass="basic-button" stylesheets="@style.css" text="Choose Save Location" />
+                           </children>
+                        </StackPane>
+                     </children>
+                  </VBox>
+                  <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <StackPane prefHeight="150.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#startRecording" styleClass="basic-button" stylesheets="@style.css" text="Start Recording" />
+                           </children>
+                        </StackPane>
+                        <StackPane prefHeight="150.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                           <children>
+                              <Button mnemonicParsing="false" styleClass="basic-button" stylesheets="@style.css" text="Stop Recording" />
+                           </children>
+                        </StackPane>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <BorderPane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="40.0">
+               <left>
+                  <StackPane prefHeight="40.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <Label stylesheets="@style.css" text="Save File" textFill="WHITE" />
+                     </children>
+                     <padding>
+                        <Insets left="10.0" right="10.0" />
+                     </padding>
+                  </StackPane>
+               </left>
+               <center>
+                  <StackPane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="40.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <TextField editable="false" styleClass="text-box" stylesheets="@style.css" />
+                     </children>
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                  </StackPane>
+               </center>
+               <right>
+                  <Pane maxWidth="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="0.0" BorderPane.alignment="CENTER" />
+               </right>
+            </BorderPane>
+         </children>
+      </VBox>
    </children>
 </AnchorPane>

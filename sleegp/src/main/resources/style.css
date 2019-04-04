@@ -1,35 +1,53 @@
 .root{
     -fx-background-color: "#2B2B2B";
-    -fx-fill: "#BABABA";
 }
 .chat-room-list{
 -fx-fill: "#BBBBBB";
     -fx-background-color: "#2F3136";
 }
-.title-box{
-    -fx-text-fill: "#FFFFFF";
-    -fx-font-size: 15;
-    -fx-fill: "#FFFFFF";
-    -fx-border-color: "#222427";
-    -fx-border-width: 1;
-}
+
 .text-box{
 	-fx-background-color: "#484C52";
 	-fx-text-fill: "#B0B2B4";
 	
 }
 
-.basic-button{
+.basic-button {
 	-fx-background-color: "transparent";
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-border-color: transparent;
 	-fx-text-fill:"white";
-}
-.basic-button:hover {
--fx-cursor: hand;
-
+    -fx-padding: 5 5 5 5;
 }
 
+.basic-button:hover{
+    -fx-background-color: #2F3136;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-border-color: white;
+    -fx-cursor: hand;
+}
+
+.basic-button:pressed{
+    -fx-background-color: #4b4e53;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-border-color: white;
+}
+.top-bar{
+    -fx-border-color: "#222427";
+    -fx-border-width: 1;
+    -fx-background-color: #313335;
+
+}
 
 
+.basic-button:pressed {
+    -fx-border-color: "grey";
+    -fx-border-radius: 2;
+    -fx-background-color: "grey";
+}
 
 .scroll-bar{
  -fx-background-color: transparent;
@@ -63,7 +81,7 @@
 }
 
 
-
+/** Table Views */
 .table-view{
     -fx-background-color: transparent;
 }
@@ -104,11 +122,6 @@
     -fx-padding: 0.0em; /* 0 */
 }
 
-.table-row-cell:selected {
-    -fx-background-color: #005797;
-    -fx-background-insets: 0;
-    -fx-background-radius: 1;
-}
 
 .table-view > .virtual-flow > .scroll-bar:vertical,
 .table-view > .virtual-flow > .scroll-bar:vertical > .track,
@@ -125,3 +138,38 @@
 .table-view > .virtual-flow > .scroll-bar > .decrement-button {
     -fx-opacity: 0;
 }
+
+
+/*Menus*/
+
+.menu-bar { /* The menu bar itself */
+/*fx-background-color: #222427; */
+}
+.menu { /* The File menu item */ }
+.menu:showing { /* menu when it's being shown (activated) */ }
+.menu .label { -fx-text-fill: white }
+.menu:showing .label { /* Styles the text on a menu item when activated */ }
+.menu{
+    -fx-text-fill: black;
+    -fx-fill: white;
+}
+
+
+
+
+/* Line Charts */
+CategoryAxis{
+    -fx-background-color: transparent;
+}
+NumberAxis{
+    -fx-background-color: transparent;
+
+}
+.chart-plot-background{
+    -fx-tick-label-fill: white;
+    -fx-background-color: #2B2B2B;
+}
+.chart-horizontal-grid-lines{
+    -fx-stroke: transparent;
+}
+
