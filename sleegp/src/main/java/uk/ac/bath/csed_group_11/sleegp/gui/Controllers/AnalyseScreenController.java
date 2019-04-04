@@ -48,7 +48,7 @@ public class AnalyseScreenController implements Initializable {
         }
     }
 
-    /*public void process() {
+    public void process() {
 
 
         try {
@@ -65,5 +65,5 @@ public class AnalyseScreenController implements Initializable {
             System.err.println("Unable to load container from file: " + e.toString());
             return;
         }
-    }*/
+    }
 }
