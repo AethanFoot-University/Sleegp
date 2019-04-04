@@ -6,7 +6,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import uk.ac.bath.csed_group_11.sleegp.gui.Utilities.Resource;
+import uk.ac.bath.csed_group_11.sleegp.gui.Utilities.SceneUtils;
 import uk.ac.bath.csed_group_11.sleegp.logic.Classification.ClassificationUtils;
 import uk.ac.bath.csed_group_11.sleegp.logic.data.EpochContainer;
 import uk.ac.bath.csed_group_11.sleegp.logic.data.ProcessedDataContainer;
@@ -38,17 +40,10 @@ public class AnalyseScreenController implements Initializable {
     }
 
     public void back() {
-        Resource resource = new Resource("HomeScreen.fxml");
-
-        try {
-            mainPane.getChildren().setAll(resource.getNode());
-        } catch (IOException e) {
-            System.out.println("Failed to change view to: HomeScreen.fxml");
-            e.printStackTrace();
-        }
+        SceneUtils.setView((Stage)rawDataCombo.getScene().getWindow(), "HomeScreen.fxml");
     }
 
-    public void process() {
+   /* public void process() {
 
 
         try {
@@ -65,5 +60,5 @@ public class AnalyseScreenController implements Initializable {
             System.err.println("Unable to load container from file: " + e.toString());
             return;
         }
-    }
+    }*/
 }
