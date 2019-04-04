@@ -18,6 +18,12 @@ import uk.ac.bath.csed_group_11.sleegp.gui.Utilities.Resource;
 import uk.ac.bath.csed_group_11.sleegp.gui.Utilities.StageLoader;
 import uk.ac.bath.csed_group_11.sleegp.gui.Utilities.StageRunnable;
 import uk.ac.bath.csed_group_11.sleegp.gui.Windows.LoadingWindow;
+import uk.ac.bath.csed_group_11.sleegp.logic.data.DataCouple;
+import uk.ac.bath.csed_group_11.sleegp.logic.data.EpochContainer;
+import uk.ac.bath.csed_group_11.sleegp.logic.data.User;
+
+import java.io.File;
+import java.io.IOException;
 
 public class GUIMain {
 
