@@ -31,7 +31,7 @@ public class GUIMain {
         loadingWindow.showLoadingScreen();
         //This is where setup should happen:
 
-        try{ Thread.sleep(3000); } catch(Exception e) {}
+        try{ Thread.sleep(500); } catch(Exception e) {}
 
         loadingWindow.hideLoadingScreen();
         if(loadingWindow.getController().isExperimentModeActive()) setupExperiment();

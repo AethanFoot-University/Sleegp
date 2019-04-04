@@ -27,31 +27,10 @@
                      </tickLabelFont></CategoryAxis>
               </xAxis>
               <yAxis>
-                <NumberAxis fx:id="yAxis" label="Power" side="LEFT" style="-fx-tick-label-fill: white;" tickLabelFill="WHITE" />
+                <NumberAxis fx:id="yAxis" label="Power" side="LEFT" tickLabelFill="WHITE" />
               </yAxis>
             </LineChart>
          </center>
-         <top>
-            <MenuBar styleClass="top-bar" BorderPane.alignment="CENTER">
-              <menus>
-                <Menu mnemonicParsing="false" text="File">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="Close" />
-                  </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Edit">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="Delete" />
-                  </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Help">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="About" />
-                  </items>
-                </Menu>
-              </menus>
-            </MenuBar>
-         </top>
          <bottom>
             <HBox alignment="CENTER" prefHeight="45.0" prefWidth="629.0" BorderPane.alignment="CENTER">
                <children>
@@ -63,6 +42,16 @@
                         <Font size="24.0" />
                      </font>
                   </Button>
+                  <Text fx:id="speedText" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="(1x)">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </Text>
+                  <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="mm:ss:MM">
+                     <HBox.margin>
+                        <Insets left="5.0" right="5.0" />
+                     </HBox.margin>
+                  </Text>
                   <Slider fx:id="scrollBar" HBox.hgrow="ALWAYS">
                      <HBox.margin>
                         <Insets left="5.0" right="5.0" />
@@ -70,12 +59,51 @@
                   </Slider>
                   <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="mm:ss:MM">
                      <HBox.margin>
-                        <Insets left="5.0" right="5.0" />
+                        <Insets right="5.0" />
                      </HBox.margin>
                   </Text>
                </children>
             </HBox>
          </bottom>
+         <top>
+            <HBox BorderPane.alignment="CENTER">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#back" styleClass="basic-button" text="Back" />
+                  <MenuBar styleClass="top-bar" HBox.hgrow="ALWAYS">
+                    <menus>
+                      <Menu mnemonicParsing="false" text="File">
+                        <items>
+                              <MenuItem mnemonicParsing="false" text="Open File" />
+                              <Menu mnemonicParsing="false" text="Import/Export">
+                                <items>
+                                  <MenuItem mnemonicParsing="false" text="Import CSV" />
+                                <MenuItem mnemonicParsing="false" text="Export CSV" />
+                                </items>
+                              </Menu>
+                        </items>
+                      </Menu>
+                      <Menu mnemonicParsing="false" text="PlayBack">
+                        <items>
+                          <MenuItem mnemonicParsing="false" onAction="#play" text="Play / Stop" />
+                              <Menu mnemonicParsing="false" text="Speed">
+                                <items>
+                                  <MenuItem mnemonicParsing="false" onAction="#setSpeedHalf" text="0.5x" />
+                                    <MenuItem mnemonicParsing="false" onAction="#setSpeed1" text="1x" />
+                                    <MenuItem mnemonicParsing="false" onAction="#setSpeed2" text="2x" />
+                                    <MenuItem mnemonicParsing="false" onAction="#setSpeed4" text="4x" />
+                                    <MenuItem mnemonicParsing="false" onAction="#setSpeed16" text="16x" />
+                                    <MenuItem mnemonicParsing="false" onAction="#setSpeed64" text="64x" />
+                                    <MenuItem mnemonicParsing="false" onAction="#setSpeed256" text="256x" />
+                                    <MenuItem mnemonicParsing="false" onAction="#setSpeed1024" text="1024x" />
+                                </items>
+                              </Menu>
+                        </items>
+                      </Menu>
+                    </menus>
+                  </MenuBar>
+               </children>
+            </HBox>
+         </top>
       </BorderPane>
    </children>
 </AnchorPane>
