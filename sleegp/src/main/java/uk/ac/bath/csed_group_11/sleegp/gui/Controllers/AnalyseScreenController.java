@@ -1,11 +1,14 @@
 package uk.ac.bath.csed_group_11.sleegp.gui.Controllers;
 
 import javafx.application.Platform;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import uk.ac.bath.csed_group_11.sleegp.gui.Utilities.SceneUtils;
@@ -31,8 +34,35 @@ public class AnalyseScreenController implements Initializable {
     private ComboBox<EpochContainer> processedCombo;
     private ObservableList<EpochContainer> processedComboData = FXCollections.observableArrayList();
 
+    @FXML
+    TableView<String> processedTable;
+
+    TableColumn<String, String> dateColumn;
+    TableColumn<String, String> percentageColumn;
+    TableColumn<String, String> timeColumn;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        dateColumn.setCellValueFactory(param -> {
+            SimpleObjectProperty<String> property = new SimpleObjectProperty<>();
+            property.setValue(param.toString());
+            System.out.println("eivueaouv");
+            return property;
+        });
+
+        percentageColumn.setCellValueFactory(param -> {
+            SimpleObjectProperty<String> property = new SimpleObjectProperty<>();
+            property.setValue(param.toString());
+            return property;
+        });
+
+        timeColumn.setCellValueFactory(param -> {
+            SimpleObjectProperty<String> property = new SimpleObjectProperty<>();
+            property.setValue(param.toString());
+            return property;
+        });
+
+
         try {
             processedComboData.add(EpochContainer.loadContainerFromFile(new File("/home/aethan/CSED" +
                 "/resources/test-data/3 Hour (Fixed).ec")));
@@ -46,6 +76,14 @@ public class AnalyseScreenController implements Initializable {
         processedCombo.setOnAction((event) -> {
             EpochContainer epochSelected = processedCombo.getSelectionModel().getSelectedItem();
             System.out.println("ComboBox Action (selected: " + epochSelected + ")");
+        });
+
+
+
+        Platform.runLater(()->{
+            processedTable.getItems().add(";siudvgwoyegw");
+            System.out.println("Table");
+            processedTable.refresh();
         });
     }
 
@@ -79,12 +117,15 @@ public class AnalyseScreenController implements Initializable {
             System.out.println("usr saved");
 
             User user2 = User.loadUserFromFile(new File("test1.usr"));
-            System.out.println(user2.get(0).getRawData().genCSV());
 
             Platform.runLater(()->{
-                //set all text boxes
-
+                System.out.println(user2.get(0).getRawData().getEpoch(0).getTimeStamp());
+                processedTable.getItems().add(user2.get(0).getRawData().getEpoch(0).getTimeStamp());
+                System.out.println("Table");
+                processedTable.refresh();
             });
+
+
 
         } catch (IOException | ClassNotFoundException e) {
             System.err.println("Unable to load container from file: " + e.toString());
