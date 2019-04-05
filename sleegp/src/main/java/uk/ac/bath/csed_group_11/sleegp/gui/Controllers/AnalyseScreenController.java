@@ -55,8 +55,8 @@ public class AnalyseScreenController implements Initializable {
         listenForTableWidthChange();
 
         try {
-            processedComboData.add(EpochContainer.loadContainerFromFile(new File("/home/aethan/CSED" +
-                "/resources/test-data/3 Hour (Fixed).ec")));
+            processedComboData.add(EpochContainer.loadContainerFromFile(new File("/Users/mathew" +
+                "/Documents/GitHub/project/resources/test-data/3 Hour (Fixed).ec")));
         }  catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -174,8 +174,8 @@ public class AnalyseScreenController implements Initializable {
             User user = new User();
 
             EpochContainer ec;
-            ec = EpochContainer.loadContainerFromFile(new File("/home/aethan/CSED" +
-                "/resources/test-data/3 Hour (Fixed).ec"));
+            ec = EpochContainer.loadContainerFromFile(new File("/Users/mathew" +
+                "/Documents/GitHub/project/resources/test-data/3 Hour (Fixed).ec"));
             System.out.println("EC created");
 
             ProcessedDataContainer processedDataContainer = ClassificationUtils.convertData(ec);
@@ -184,8 +184,8 @@ public class AnalyseScreenController implements Initializable {
             user.add(new DataCouple(ec, processedDataContainer));
             System.out.println("Couple added");
             //Saving to file
-            processedDataContainer.saveToFile(new File("/home/aethan/CSED" +
-                "/resources/test-data/3 Hour test.sd"));
+            processedDataContainer.saveToFile(new File("/Users/mathew" +
+                "/Documents/GitHub/project/resources/test-data/save.sd"));
             System.out.println("PC saved");
             user.saveToFile(new File("test1.usr"));
             System.out.println("usr saved");

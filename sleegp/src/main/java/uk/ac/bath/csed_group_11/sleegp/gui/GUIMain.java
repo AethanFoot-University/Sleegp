@@ -66,7 +66,7 @@ public class GUIMain {
         SceneUtils.cacheResource(new Resource("HomeScreen.fxml"));
         SceneUtils.cacheResource(new Resource("CaptureScreen.fxml"));
         SceneUtils.cacheResource(new Resource("ViewScreen.fxml"));
-        SceneUtils.cacheResource(new Resource("AnalyseScreen.fxml"));
+        //SceneUtils.cacheResource(new Resource("AnalyseScreen.fxml"));
     }
 
     public static void setupExperiment(){
