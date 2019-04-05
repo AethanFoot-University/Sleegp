@@ -90,6 +90,17 @@
                                     <MenuItem mnemonicParsing="false" onAction="#setSpeed1024" text="1024x" />
                                 </items>
                               </Menu>
+                              <Menu mnemonicParsing="false" text="Data Window">
+                                 <items>
+                                    <MenuItem mnemonicParsing="false" onAction="#setWindow16" text="16" />
+                                    <MenuItem mnemonicParsing="false" onAction="#setWindow32" text="32" />
+                                    <MenuItem mnemonicParsing="false" onAction="#setWindow64" text="64" />
+                                    <MenuItem mnemonicParsing="false" onAction="#setWindow128" text="128" />
+                                    <MenuItem mnemonicParsing="false" onAction="#setWindow256" text="256" />
+                                    <MenuItem mnemonicParsing="false" onAction="#setWindow512" text="512" />
+                                    <MenuItem mnemonicParsing="false" onAction="#setWindow1024" text="1024" />
+                                 </items>
+                              </Menu>
                         </items>
                       </Menu>
                     </menus>

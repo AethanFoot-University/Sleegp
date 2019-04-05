@@ -138,6 +138,10 @@ public class ViewScreenController implements Initializable {
 
     //Playback
 
+    public void setWindow(int window){
+        if(graphPlayer!=null) graphPlayer.setWindow(window);
+    }
+
     private void playBackData(){
         if(graphPlayer!= null) graphPlayer.setPlay(true);
     }
@@ -202,13 +206,42 @@ public class ViewScreenController implements Initializable {
     }
 
     public void setSpeed256(){
-        setSpeed(64);
+        setSpeed(256);
     }
 
     public void setSpeed1024(){
         setSpeed(1024);
     }
 
+    //Windows
+    public void setWindow16(){
+        setWindow(16);
+    }
+
+    public void setWindow32(){
+        setWindow(32);
+    }
+
+    public void setWindow64(){
+        setWindow(64);
+    }
+
+    public void setWindow128(){
+        setWindow(128);
+    }
+
+    public void setWindow256(){
+        setWindow(256);
+    }
+
+    public void setWindow512(){
+        setWindow(512);
+    }
+
+    public void setWindow1024(){
+        setWindow(1024);
+    }
+    
     //Util Methods
     private void setTimeFromMillis(Text toSet, long millis){
         System.out.println(millis);
