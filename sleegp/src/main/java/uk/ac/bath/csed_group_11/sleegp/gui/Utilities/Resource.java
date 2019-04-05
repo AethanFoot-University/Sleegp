@@ -14,8 +14,8 @@ import javafx.scene.Parent;
  */
 public class Resource<ControllerType> {
 
-    private FXMLLoader LOADER;
-    private String RESOURCE;
+    private FXMLLoader loader;
+    private String resourceLocation;
     private Parent node = null;
     private ControllerType controller = null;
 
@@ -25,14 +25,18 @@ public class Resource<ControllerType> {
      * @param res FXML page to be loaded
      */
     public Resource(String res) {
-        LOADER = new FXMLLoader();
-        RESOURCE = res;
+        loader = new FXMLLoader();
+        resourceLocation = res;
 
         try {
             getNode();
         } catch (IOException e) {
             System.out.println("Failed to fetch node");
         }
+    }
+
+    public String getResourceLocation() {
+        return resourceLocation;
     }
 
     /**
@@ -45,7 +49,7 @@ public class Resource<ControllerType> {
     public Parent getNode() throws IOException {
         var classLoader = Thread.currentThread().getContextClassLoader();
         return (node ==null) ?
-            (node = LOADER.load(classLoader.getResource(RESOURCE).openStream())) : node;
+            (node = loader.load(classLoader.getResource(resourceLocation).openStream())) : node;
     }
 
     /**
@@ -56,7 +60,7 @@ public class Resource<ControllerType> {
      */
     public ControllerType getController() throws IOException {
 
-        return (controller ==null) ? (controller = LOADER.getController()) : controller;
+        return (controller ==null) ? (controller = loader.getController()) : controller;
     }
 
     /**
@@ -64,7 +68,7 @@ public class Resource<ControllerType> {
      * @param root to be set
      */
     public void setRoot(Object root){
-        LOADER.setRoot(root);
+        loader.setRoot(root);
     }
 
 }
