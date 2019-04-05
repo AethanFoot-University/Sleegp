@@ -17,10 +17,20 @@ public class User extends ArrayList<DataCouple> implements Serializable {
      */
     static final long serialVersionUID = -2183068004576095519L;
 
+    private int points = 0;
+
     public static String EXTENSION = ".usr";
 
     public boolean saveToFile(File firectory) throws FileNotFoundException {
         return FileTools.saveObject(this, firectory, EXTENSION);
+    }
+
+    public void setPoints(int points){
+        this.points+=points;
+    }
+
+    public int returnPoints(){
+        return points;
     }
 
     public static User loadUserFromFile(File file) throws IOException,
