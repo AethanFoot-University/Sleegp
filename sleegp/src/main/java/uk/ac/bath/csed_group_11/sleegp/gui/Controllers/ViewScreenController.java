@@ -4,13 +4,16 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.*;
 import javafx.scene.control.Button;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -57,6 +60,9 @@ public class ViewScreenController implements Initializable {
     @FXML
     ComboBox<String> attributeBox;
 
+    @FXML
+    ColorPicker colourPicker;
+
 
     private GraphPlayer graphPlayer = null;
     private EpochContainer epochContainer = null;
@@ -65,6 +71,7 @@ public class ViewScreenController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         attributeBox.getItems().addAll("attention","meditation","delta",
             "highAlpha","lowBeta",	 "highBeta","lowGamma","highGamma"," poorSignalLevel");
 
@@ -72,6 +79,22 @@ public class ViewScreenController implements Initializable {
             @Override public void changed(ObservableValue ov, String old, String newS) {
                 if(graphPlayer != null){
                     graphPlayer.setAttribute(newS);
+                }
+            }
+        });
+        colourPicker.setOnAction(new EventHandler() {
+            public void handle(Event t) {
+                if(graphPlayer !=null && colourPicker !=null){
+
+
+
+                    Color color = colourPicker.getValue();
+
+                    graphPlayer.setColour(colourPicker.getValue());
+                }
+                else{
+                    System.out.println("Graph Player is null: "+(graphPlayer ==null) +"\n Colour " +
+                        "Picker is null: "+(colourPicker ==null));
                 }
             }
         });
@@ -169,7 +192,15 @@ public class ViewScreenController implements Initializable {
                     });
 
                 }
+
+                @Override
+                public void notifyEndState() {
+                    currentTime.setText("Finished");
+                    clickToPlay = false;
+                    Platform.runLater(()->play());
+                }
             };
+            graphPlayer.setPlay(!clickToPlay);
         }
     }
 

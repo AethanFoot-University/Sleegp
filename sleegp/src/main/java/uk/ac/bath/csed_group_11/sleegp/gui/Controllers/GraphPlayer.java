@@ -2,8 +2,10 @@ package uk.ac.bath.csed_group_11.sleegp.gui.Controllers;
 
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.paint.Color;
 import uk.ac.bath.csed_group_11.sleegp.logic.data.Epoch;
 import uk.ac.bath.csed_group_11.sleegp.logic.data.EpochContainer;
 
@@ -31,6 +33,8 @@ public abstract class GraphPlayer {
     private boolean play = false;
 
     private boolean disposed = false;
+
+    private boolean endStateNotified = false;
 
     public GraphPlayer(LineChart<?, ?> chart, EpochContainer rawData, String attribute) {
         this.attribute = attribute;
@@ -60,6 +64,7 @@ public abstract class GraphPlayer {
     }
 
     public abstract void sendUpdate(long timeProgressed);
+    public abstract void notifyEndState();
 
     private void update(){
         if(play) {
@@ -68,6 +73,9 @@ public abstract class GraphPlayer {
             if (timeProgressed <= endTime) {
                 drawLatest();
                 sendUpdate(timeProgressed);
+                endStateNotified = false;
+            } else if (!endStateNotified){
+                notifyEndState();
             }
         }
         else{
@@ -196,5 +204,17 @@ public abstract class GraphPlayer {
 
     public void dispose(){
         disposed = true;
+    }
+
+    public void setColour(Color color){
+
+        Node line = mainSeries.getNode().lookup(".chart-series-area-line");
+
+        String rgb = String.format("%d, %d, %d",
+            (int) (color.getRed() * 255),
+            (int) (color.getGreen() * 255),
+            (int) (color.getBlue() * 255));
+
+        line.setStyle("-fx-stroke: rgba(" + rgb + ", 1.0);");
     }
 }
