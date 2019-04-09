@@ -23,7 +23,7 @@ public class EpochContainerTests {
     /**
      * Test that a {@code .ec} file can be deserialised into an {@code EpochContainer} instance,
      * and then serialised correctly as a {@code .csv} file.
-     *
+     * Requirements 6.7.2, 6.7.5
      * @author Mortensen, Soren
      */
     @Test
