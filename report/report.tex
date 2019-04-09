@@ -24,6 +24,61 @@
 \usepackage{graphicx, float}
 \graphicspath{{img/}}
 
+% Automatic commands at the beginning of tabular rows (?)
+\usepackage{array,etoolbox}
+
+\newcounter{reqsec}
+\newcounter{req}[reqsec]
+\newcounter{subreq}[req]
+
+\renewcommand{\thereq}{\thereqsec.\arabic{req}}
+\renewcommand{\thesubreq}{\thereq.\arabic{subreq}}
+
+\newcommand{\reqsec}[2]{\refstepcounter{reqsec}\thereqsec\label{#1}: #2}
+\newcommand{\reqsection}[2]{%
+  \toprule%
+  \multicolumn{3}{l}{\textbf{%
+    \reqsec{#1}{#2}%
+  }} \\%
+  \midrule%
+}
+
+\newcommand{\req}[1]{\refstepcounter{req}\thereq\label{#1}}
+\newcommand{\requirement}[2]{%
+  \req{#1}&%
+  #2&%
+}
+
+\newcommand{\subreq}[1]{\refstepcounter{subreq}\thesubreq\label{#1}}
+\newcommand{\subrequirement}[2]{%
+  \subreq{#1}&
+  #2&%
+}
+
+\newcommand{\priority}[1]{\emph{Priority:} #1\newline}
+\newcommand{\phigh}{\priority{High}}
+\newcommand{\pmed}{\priority{Medium}}
+\newcommand{\plow}{\priority{Low}}
+
+\newcommand{\deps}[1]{\emph{Dependencies:} #1\newline}
+\newcommand{\dnone}{\deps{None}}
+\newcommand{\source}[1]{\emph{Source:} #1\\}
+\newcommand{\sspec}{\source{Coursework specification}}
+\newcommand{\smin}[1]{\source{Meeting minutes \##1}}
+
+\newenvironment{reqtable}
+{\begin{longtable}{p{.07\textwidth} p{.43\textwidth} p{.40\textwidth}}}
+{\bottomrule%
+\end{longtable}}
+
+\newcommand\reqheader{%
+  \textbf{Index} & \textbf{Description} & \textbf{Priority, Dependencies, Source} \\%
+  \midrule%
+}
+
+% Better horizontal lines for tables
+\usepackage{booktabs}
+
 % Tables that break over pages
 \usepackage{longtable}
 
@@ -100,7 +155,7 @@
 
 \newpage
 \include{tex/introduction}
-% \include{tex/requirements}
+\include{tex/requirements}
 % \include{tex/design}
 % \include{tex/conclusions}
 
