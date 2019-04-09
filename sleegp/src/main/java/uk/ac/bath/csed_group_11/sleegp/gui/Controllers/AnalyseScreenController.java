@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.chart.BarChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
@@ -24,6 +25,7 @@ import javafx.scene.control.skin.TableViewSkin;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import uk.ac.bath.csed_group_11.sleegp.gui.Experiment.ExperimentManager;
 import uk.ac.bath.csed_group_11.sleegp.gui.Utilities.Resource;
 import uk.ac.bath.csed_group_11.sleegp.gui.Utilities.SceneUtils;
 import uk.ac.bath.csed_group_11.sleegp.logic.Classification.ClassificationUtils;
@@ -56,15 +58,17 @@ public class AnalyseScreenController implements Initializable {
     TableColumn<TableData, Double> timeColumn;
 
     @FXML
+    BarChart<String, Number> barChart;
+
+    @FXML
     LineChart<Number, Number> lineChart;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        setupTable();
-        listenForTableWidthChange();
-        Platform.runLater(() ->{
-
-        });
+        if (!ExperimentManager.isExperimentMode()) {
+            setupTable();
+            listenForTableWidthChange();
+        }
 
         try {
             System.out.println();
@@ -184,33 +188,43 @@ public class AnalyseScreenController implements Initializable {
             System.out.println("usr saved");
 
             User user2 = User.loadUserFromFile(new File("test2.usr"));
-
-            Platform.runLater(()->{
+            if (!ExperimentManager.isExperimentMode()) {
+                Platform.runLater(() -> {
 //                String[] timeStamp =
 //                    user2.get(0).getRawData().getEpoch(0).getTimeStamp().replace('.', ' ').split(
 //                        " ");
 //                for (int i = 0; i < timeStamp.length; i++) {
 //                   timeStamp[i] = timeStamp[i].trim();
 //                }
-                //String date = timeStamp[1] + "/" + timeStamp[2] + "/" + timeStamp[0];
-                TableData data =
-                    new TableData(user2.get(0).getRawData().getEpoch(0).getTimeStamp().replace('.', ' '), 93, 130);
-                TableData data1 =
-                    new TableData(user2.get(0).getRawData().getEpoch(1).getTimeStamp().replace('.', ' '), 94, 104);
-                TableData data2 =
-                    new TableData(user2.get(0).getRawData().getEpoch(2).getTimeStamp().replace('.', ' '), 95, 90);
-                TableData data3 =
-                    new TableData(user2.get(0).getRawData().getEpoch(2).getTimeStamp().replace('.', ' '), 67, 95);
-                TableData data4 =
-                    new TableData(user2.get(0).getRawData().getEpoch(2).getTimeStamp().replace('.', ' '), 20, 98);
+                    //String date = timeStamp[1] + "/" + timeStamp[2] + "/" + timeStamp[0];
+                    TableData data =
+                        new TableData(user2.get(0).getRawData().getEpoch(0).getTimeStamp().replace('.', ' '), 93, 130);
+                    TableData data1 =
+                        new TableData(user2.get(0).getRawData().getEpoch(1).getTimeStamp().replace('.', ' '), 94, 104);
+                    TableData data2 =
+                        new TableData(user2.get(0).getRawData().getEpoch(2).getTimeStamp().replace('.', ' '), 95, 90);
+                    TableData data3 =
+                        new TableData(user2.get(0).getRawData().getEpoch(3).getTimeStamp().replace('.', ' '), 67, 95);
+                    TableData data4 =
+                        new TableData(user2.get(0).getRawData().getEpoch(4).getTimeStamp().replace('.', ' '), 20, 98);
 
-//                processedTable.getItems().add(data);
-//                processedTable.getItems().add(data1);
-//                processedTable.getItems().add(data2);
-                processedTable.getItems().addAll(data, data1, data2, data3, data4);
-                System.out.println("Table");
-                processedTable.refresh();
-            });
+                    processedTable.getItems().addAll(data, data1, data2, data3, data4);
+                    System.out.println("Table");
+                    processedTable.refresh();
+                });
+            } else {
+                XYChart.Series<String, Number> barSeries = new XYChart.Series<>();
+
+                barSeries.getData().add(new XYChart.Data<>(user2.get(0).getRawData().getEpoch(0).getTimeStamp(), 8));
+                barSeries.getData().add(new XYChart.Data<>(user2.get(0).getRawData().getEpoch(1).getTimeStamp(), 9));
+                barSeries.getData().add(new XYChart.Data<>(user2.get(0).getRawData().getEpoch(2).getTimeStamp(), 3));
+                barSeries.getData().add(new XYChart.Data<>(user2.get(0).getRawData().getEpoch(3).getTimeStamp(), 5));
+
+                Platform.runLater(() ->{
+                    barChart.getData().add(barSeries);
+                });
+
+            }
         } catch (IOException | ClassNotFoundException e) {
             System.err.println("Unable to load container from file: " + e.toString());
             return;

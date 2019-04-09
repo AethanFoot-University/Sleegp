@@ -257,6 +257,28 @@ NumberAxis{
 
 .tab-pane>*.tab-header-area>*.tab-header-background
 {
-    -fx-background-color: -fx-outer-border, -fx-text-box-border, transparent;
+    -fx-background-color: #2B2B2B;
+    -fx-outer-border: #2B2B2B;
+    -fx-text-box-border: #2B2B2B;
 }
+
+.tab-pane .tab
+{
+    -fx-background-color: "transparent";
+
+}
+
+.tab .tab-label {
+    -fx-alignment: CENTER;
+    -fx-text-fill: "white";
+}
+
+.tab:selected .tab-label {
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 2 5 2 5;
+    -fx-border-color: white;
+}
+
+
 
