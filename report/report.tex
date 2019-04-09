@@ -2,8 +2,9 @@
 
 % References
 \usepackage[utf8]{inputenc}
-\usepackage[style=bath]{biblatex}
-% \addbibresource{res/references.bib}
+\usepackage[style=bath,sorting=ynt,backend=biber]{biblatex}
+\assignrefcontextentries[]{*}
+\addbibresource{res/references.bib}
 
 % Allow URLs in biblatex entries to break at lowercase characters
 \setcounter{biburllcpenalty}{100}
@@ -98,13 +99,14 @@
 \tableofcontents
 
 \newpage
-% \include{tex/introduction}
+\include{tex/introduction}
 % \include{tex/requirements}
 % \include{tex/design}
 % \include{tex/conclusions}
 
-% \section{References}
-% \printbibliography[heading=none]
+\section{References}
+\newrefcontext[sorting=nyt]
+\printbibliography[heading=none]
 
 % \include{tex/group-contribution-form}
 
