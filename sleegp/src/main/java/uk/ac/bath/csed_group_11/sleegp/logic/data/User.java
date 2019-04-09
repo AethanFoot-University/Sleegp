@@ -17,7 +17,10 @@ public class User extends ArrayList<DataCouple> implements Serializable {
      */
     static final long serialVersionUID = -2183068004576095519L;
 
+    //these integers set up the point system
     private int points = 0;
+    private int level = 1;
+    private int expPoints = (1000*level+15)%level;
 
     public static String EXTENSION = ".usr";
 
@@ -27,11 +30,21 @@ public class User extends ArrayList<DataCouple> implements Serializable {
 
     public void setPoints(int points){
         this.points+=points;
+        if(points == expPoints ){
+        level+=1;
+        }
     }
 
     public int returnPoints(){
         return points;
     }
+
+    public int returnLvl(){
+        return level;
+    }
+
+
+
 
     public static User loadUserFromFile(File file) throws IOException,
         ClassNotFoundException {
