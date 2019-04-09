@@ -1,9 +1,6 @@
 package uk.ac.bath.csed_group_11.sleegp.logic.util;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +10,16 @@ import java.util.List;
  * @author mathew
  */
 public class FileTools {
+
+    public static boolean saveObject(Object toSave, File firectory, String extension) throws FileNotFoundException {
+        if (firectory.toString().contains(extension)) {
+            Save saver = new Save(firectory);
+            saver.write(toSave);
+        } else {
+            System.out.println("Cannot save without proper extenson: " + extension);
+        }
+        return false;
+    }
 
     /**
      * Writes a new entry to a new or existing text file
