@@ -253,3 +253,10 @@ NumberAxis{
     -fx-opacity: .4;
 }
 
+/* tab pane*/
+
+.tab-pane>*.tab-header-area>*.tab-header-background
+{
+    -fx-background-color: -fx-outer-border, -fx-text-box-border, transparent;
+}
+
