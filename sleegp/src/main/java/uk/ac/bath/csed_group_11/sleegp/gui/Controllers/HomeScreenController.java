@@ -36,8 +36,11 @@ public class HomeScreenController implements Initializable {
     }
 
     public void analyse(){
-        if(ExperimentManager.isExperimentMode()) ExperimentManager.notify("Start:Analyse");
-        SceneUtils.setView(getStage(), "AnalyseScreen.fxml");
+        if(ExperimentManager.isExperimentMode()) {
+            ExperimentManager.notify("Start:Analyse");
+            SceneUtils.setView(getStage(), ExperimentManager.getVIEW());
+        }
+        else{SceneUtils.setView(getStage(), "AnalyseScreen.fxml");}
     }
 
     public void switchUser(){
