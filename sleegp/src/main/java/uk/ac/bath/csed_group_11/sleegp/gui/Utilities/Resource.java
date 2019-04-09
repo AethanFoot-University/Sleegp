@@ -1,5 +1,6 @@
 package uk.ac.bath.csed_group_11.sleegp.gui.Utilities;
 
+import java.io.File;
 import java.io.IOException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -69,6 +70,11 @@ public class Resource<ControllerType> {
      */
     public void setRoot(Object root){
         loader.setRoot(root);
+    }
+
+    public static File getFileFromResource(String resource){
+        var classLoader = Thread.currentThread().getContextClassLoader();
+            return new File( classLoader.getResource(resource).getPath());
     }
 
 }

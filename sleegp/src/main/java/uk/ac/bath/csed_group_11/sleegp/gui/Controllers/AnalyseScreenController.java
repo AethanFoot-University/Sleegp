@@ -12,6 +12,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.skin.NestedTableColumnHeader;
 import javafx.scene.control.skin.TableColumnHeader;
@@ -20,8 +23,10 @@ import javafx.scene.control.skin.TableViewSkin;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import uk.ac.bath.csed_group_11.sleegp.gui.Utilities.Resource;
 import uk.ac.bath.csed_group_11.sleegp.gui.Utilities.SceneUtils;
 import uk.ac.bath.csed_group_11.sleegp.logic.Classification.ClassificationUtils;
+import uk.ac.bath.csed_group_11.sleegp.logic.Classification.Plot;
 import uk.ac.bath.csed_group_11.sleegp.logic.data.*;
 
 import java.io.File;
@@ -49,14 +54,20 @@ public class AnalyseScreenController implements Initializable {
     TableColumn<TableData, String> percentageColumn;
     TableColumn<TableData, String> timeColumn;
 
+    @FXML
+    LineChart<Number, Number> lineChart;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setupTable();
         listenForTableWidthChange();
+        Platform.runLater(() ->{
+
+        });
 
         try {
-            processedComboData.add(EpochContainer.loadContainerFromFile(new File("/Users/mathew" +
-                "/Documents/GitHub/project/resources/test-data/3 Hour (Fixed).ec")));
+            System.out.println();
+            processedComboData.add(EpochContainer.loadContainerFromFile(Resource.getFileFromResource("Test.ec")));
         }  catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -67,6 +78,24 @@ public class AnalyseScreenController implements Initializable {
         processedCombo.setOnAction((event) -> {
             EpochContainer epochSelected = processedCombo.getSelectionModel().getSelectedItem();
             System.out.println("ComboBox Action (selected: " + epochSelected + ")");
+            XYChart.Series<Number, Number> series = new XYChart.Series<>();
+            XYChart.Series<Number, Number> seriesPercent = new XYChart.Series<>();
+            try {
+                User user = User.loadUserFromFile(new File("test2.usr"));
+                for (int i = 0; i < user.get(0).getProcessedData().size(); i += 10) {
+                    Plot plot = user.get(0).getProcessedData().get(i);
+                    series.getData().add(new XYChart.Data<>(plot.getTimeElapsed(),
+                        plot.getLevel()));
+                }
+                seriesPercent.getData().add(new XYChart.Data<>(0, 60));
+                seriesPercent.getData().add(new XYChart.Data<>(user.get(0).getProcessedData().get(user.get(0).getProcessedData().size() - 1).getTimeElapsed(),
+                    60));
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            lineChart.getData().addAll(series, seriesPercent);
         });
 
 
@@ -76,68 +105,35 @@ public class AnalyseScreenController implements Initializable {
         Platform.runLater(()->{
             double inlWidth = processedTable.getScene().getWindow().widthProperty().getValue();
 
-            dateColumn = new TableColumn<>();
+            dateColumn = new TableColumn<>("Date");
             dateColumn.setCellValueFactory(param -> {
                 SimpleObjectProperty<String> property = new SimpleObjectProperty<>();
                 property.setValue(param.getValue().getDate());
                 return property;
             });
-            Button btnDate = new Button("Date");
-            btnDate.setStyle("-fx-background-color: \"transparent\";\n" +
-                "    -fx-border-radius: 10;\n" +
-                "    -fx-background-radius: 10;\n" +
-                "    -fx-border-color: transparent;\n" +
-                "\t-fx-text-fill:\"white\";\n" +
-                "    -fx-padding: 5 5 5 5;");
-            dateColumn.setGraphic(btnDate);
             dateColumn.setPrefWidth(inlWidth * (4.0 / 15.0));
             dateColumn.setMinWidth(100);
-            dateColumn.setSortable(false);
-            btnDate.setOnAction((event) -> {
-                System.out.println("hi");
-            });
+            //dateColumn.setSortable(false);
 
-            percentageColumn = new TableColumn<>();
+            percentageColumn = new TableColumn<>("Percentage Slept");
             percentageColumn.setCellValueFactory(param -> {
                 SimpleObjectProperty<String> property = new SimpleObjectProperty<>();
                 property.setValue(param.getValue().getPercentage());
                 return property;
             });
-            Button btnPercentage = new Button("Percentage Slept");
-            btnPercentage.setStyle("-fx-background-color: \"transparent\";\n" +
-                "    -fx-border-radius: 10;\n" +
-                "    -fx-background-radius: 10;\n" +
-                "    -fx-border-color: transparent;\n" +
-                "\t-fx-text-fill:\"white\";\n" +
-                "    -fx-padding: 5 5 5 5;");
-            percentageColumn.setGraphic(btnPercentage);
             percentageColumn.setPrefWidth(inlWidth * (2.0 / 5.0));
             percentageColumn.setMinWidth(150);
-            percentageColumn.setSortable(false);
-            btnPercentage.setOnAction((event) -> {
-                System.out.println("hi");
-            });
+            //percentageColumn.setSortable(false);
 
-            timeColumn = new TableColumn<>();
+            timeColumn = new TableColumn<>("Time Slept");
             timeColumn.setCellValueFactory(param -> {
                 SimpleObjectProperty<String> property = new SimpleObjectProperty<>();
                 property.setValue(param.getValue().getTime());
                 return property;
             });
-            Button btnTime = new Button("Time Slept");
-            btnTime.setStyle("-fx-background-color: \"transparent\";\n" +
-                "    -fx-border-radius: 10;\n" +
-                "    -fx-background-radius: 10;\n" +
-                "    -fx-border-color: transparent;\n" +
-                "\t-fx-text-fill:\"white\";\n" +
-                "    -fx-padding: 5 5 5 5;");
-            timeColumn.setGraphic(btnTime);
             timeColumn.setPrefWidth(inlWidth * (1.0 / 3.0));
             timeColumn.setMinWidth(125);
-            timeColumn.setSortable(false);
-            btnTime.setOnAction((event) -> {
-                System.out.println("hi");
-            });
+            //timeColumn.setSortable(false);
 
             processedTable.getColumns().addAll(dateColumn, percentageColumn, timeColumn);
         });
@@ -174,8 +170,7 @@ public class AnalyseScreenController implements Initializable {
             User user = new User();
 
             EpochContainer ec;
-            ec = EpochContainer.loadContainerFromFile(new File("/Users/mathew" +
-                "/Documents/GitHub/project/resources/test-data/3 Hour (Fixed).ec"));
+            ec = EpochContainer.loadContainerFromFile(Resource.getFileFromResource("Test.ec"));
             System.out.println("EC created");
 
             ProcessedDataContainer processedDataContainer = ClassificationUtils.convertData(ec);
@@ -184,13 +179,13 @@ public class AnalyseScreenController implements Initializable {
             user.add(new DataCouple(ec, processedDataContainer));
             System.out.println("Couple added");
             //Saving to file
-            processedDataContainer.saveToFile(new File("/Users/mathew" +
-                "/Documents/GitHub/project/resources/test-data/save.sd"));
+            processedDataContainer.saveToFile(new File("/home/aethan/Sleegp/sleegp/src/main" +
+                "/resources/Test.sd"));
             System.out.println("PC saved");
-            user.saveToFile(new File("test1.usr"));
+            user.saveToFile(new File("test2.usr"));
             System.out.println("usr saved");
 
-            User user2 = User.loadUserFromFile(new File("test1.usr"));
+            User user2 = User.loadUserFromFile(new File("test2.usr"));
 
             Platform.runLater(()->{
 //                String[] timeStamp =
@@ -202,9 +197,9 @@ public class AnalyseScreenController implements Initializable {
                 //String date = timeStamp[1] + "/" + timeStamp[2] + "/" + timeStamp[0];
                 TableData data = new TableData(user2.get(0).getRawData().getEpoch(0).getTimeStamp().replace('.', ' '), "93", "8");
                 TableData data1 =
-                    new TableData(user2.get(0).getRawData().getEpoch(1).getTimeStamp().replace('.', ' '), "93", "8");
+                    new TableData(user2.get(0).getRawData().getEpoch(1).getTimeStamp().replace('.', ' '), "94", "10");
                 TableData data2 =
-                    new TableData(user2.get(0).getRawData().getEpoch(2).getTimeStamp().replace('.', ' '), "93", "8");
+                    new TableData(user2.get(0).getRawData().getEpoch(2).getTimeStamp().replace('.', ' '), "95", "9");
 
                 processedTable.getItems().add(data);
                 processedTable.getItems().add(data1);
