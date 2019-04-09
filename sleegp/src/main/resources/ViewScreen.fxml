@@ -5,6 +5,8 @@
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ColorPicker?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
@@ -18,61 +20,114 @@
 <AnchorPane prefHeight="500.0" prefWidth="1000.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="uk.ac.bath.csed_group_11.sleegp.gui.Controllers.ViewScreenController">
    <children>
       <BorderPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <center>
-            <LineChart fx:id="mainChart" prefHeight="307.0" prefWidth="384.0" BorderPane.alignment="CENTER">
-              <xAxis>
-                <CategoryAxis label="Time" side="BOTTOM" tickLabelFill="WHITE" fx:id="xAxis">
-                     <tickLabelFont>
-                        <Font name="Georgia" size="8.0" />
-                     </tickLabelFont></CategoryAxis>
-              </xAxis>
-              <yAxis>
-                <NumberAxis fx:id="yAxis" label="Power" side="LEFT" style="-fx-tick-label-fill: white;" tickLabelFill="WHITE" />
-              </yAxis>
-            </LineChart>
-         </center>
-         <top>
-            <MenuBar styleClass="top-bar" BorderPane.alignment="CENTER">
-              <menus>
-                <Menu mnemonicParsing="false" text="File">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="Close" />
-                  </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Edit">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="Delete" />
-                  </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Help">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="About" />
-                  </items>
-                </Menu>
-              </menus>
-            </MenuBar>
-         </top>
          <bottom>
             <HBox alignment="CENTER" prefHeight="45.0" prefWidth="629.0" BorderPane.alignment="CENTER">
                <children>
-                  <Button mnemonicParsing="false" styleClass="basic-button" text="Play">
+                  <Button fx:id="playButton" mnemonicParsing="false" onMouseClicked="#play" prefHeight="29.0" prefWidth="51.0" styleClass="basic-button" text="▶️">
                      <HBox.margin>
                         <Insets left="5.0" right="5.0" />
                      </HBox.margin>
+                     <font>
+                        <Font size="24.0" />
+                     </font>
                   </Button>
-                  <Slider HBox.hgrow="ALWAYS">
+                  <Text fx:id="speedText" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="(1x)">
                      <HBox.margin>
-                        <Insets left="5.0" right="5.0" />
+                        <Insets />
                      </HBox.margin>
-                  </Slider>
-                  <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="mm:ss:MM">
+                  </Text>
+                  <Text fx:id="currentTime" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="hh:mm:ss:MM" wrappingWidth="94.97265625" HBox.hgrow="NEVER">
                      <HBox.margin>
                         <Insets left="5.0" right="5.0" />
                      </HBox.margin>
                   </Text>
+                  <Slider fx:id="scrollBar" blockIncrement="1.0" onMouseReleased="#seek" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets left="5.0" right="5.0" />
+                     </HBox.margin>
+                  </Slider>
+                  <Text fx:id="totalTime" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="hh:mm:ss:MM">
+                     <HBox.margin>
+                        <Insets right="5.0" />
+                     </HBox.margin>
+                  </Text>
+                  <ComboBox fx:id="attributeBox" prefWidth="150.0">
+                     <HBox.margin>
+                        <Insets left="5.0" right="10.0" />
+                     </HBox.margin>
+                  </ComboBox>
                </children>
             </HBox>
          </bottom>
+         <top>
+            <HBox BorderPane.alignment="CENTER">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#back" styleClass="basic-button" text="Back" />
+                  <MenuBar styleClass="top-bar" HBox.hgrow="ALWAYS">
+                    <menus>
+                      <Menu mnemonicParsing="false" text="File">
+                        <items>
+                              <MenuItem mnemonicParsing="false" onAction="#openECFile" text="Open File" />
+                              <Menu mnemonicParsing="false" text="Import/Export">
+                                <items>
+                                  <MenuItem mnemonicParsing="false" text="Import CSV" />
+                                <MenuItem mnemonicParsing="false" text="Export CSV" />
+                                </items>
+                              </Menu>
+                        </items>
+                      </Menu>
+                      <Menu mnemonicParsing="false" text="PlayBack">
+                        <items>
+                          <MenuItem mnemonicParsing="false" onAction="#play" text="Play / Stop" />
+                              <Menu mnemonicParsing="false" text="Speed">
+                                <items>
+                                  <MenuItem mnemonicParsing="false" onAction="#setSpeedHalf" text="0.5x" />
+                                    <MenuItem mnemonicParsing="false" onAction="#setSpeed1" text="1x" />
+                                    <MenuItem mnemonicParsing="false" onAction="#setSpeed2" text="2x" />
+                                    <MenuItem mnemonicParsing="false" onAction="#setSpeed4" text="4x" />
+                                    <MenuItem mnemonicParsing="false" onAction="#setSpeed16" text="16x" />
+                                    <MenuItem mnemonicParsing="false" onAction="#setSpeed64" text="64x" />
+                                    <MenuItem mnemonicParsing="false" onAction="#setSpeed256" text="256x" />
+                                    <MenuItem mnemonicParsing="false" onAction="#setSpeed1024" text="1024x" />
+                                </items>
+                              </Menu>
+                              <Menu mnemonicParsing="false" text="Data Window">
+                                 <items>
+                                    <MenuItem mnemonicParsing="false" onAction="#setWindow16" text="16" />
+                                    <MenuItem mnemonicParsing="false" onAction="#setWindow32" text="32" />
+                                    <MenuItem mnemonicParsing="false" onAction="#setWindow64" text="64" />
+                                    <MenuItem mnemonicParsing="false" onAction="#setWindow128" text="128" />
+                                    <MenuItem mnemonicParsing="false" onAction="#setWindow256" text="256" />
+                                    <MenuItem mnemonicParsing="false" onAction="#setWindow512" text="512" />
+                                    <MenuItem mnemonicParsing="false" onAction="#setWindow1024" text="1024" />
+                                 </items>
+                              </Menu>
+                        </items>
+                      </Menu>
+                        <Menu mnemonicParsing="false" text="UI">
+                          <items>
+                            <MenuItem mnemonicParsing="false" text="Pick Colour">
+                                 <graphic>
+                                    <ColorPicker fx:id="colourPicker" />
+                                 </graphic>
+                              </MenuItem>
+                          </items>
+                        </Menu>
+                    </menus>
+                  </MenuBar>
+               </children>
+            </HBox>
+         </top>
+         <center>
+            <LineChart fx:id="mainChart" BorderPane.alignment="CENTER">
+              <xAxis>
+                <CategoryAxis side="BOTTOM" />
+              </xAxis>
+              <yAxis>
+                <NumberAxis side="LEFT" />
+              </yAxis>
+            </LineChart>
+         </center>
       </BorderPane>
    </children>
 </AnchorPane>

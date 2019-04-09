@@ -21,12 +21,13 @@
                   <Insets right="10.0" />
                </padding>
                <children>
+                  <Text fx:id="infoText" fill="#37dd77" opacity="0.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Experiment Mode Active  " />
                   <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="© Group 11 2019" />
                </children>
             </HBox>
          </bottom>
          <center>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <HBox alignment="CENTER" onKeyTyped="#clicked" onMouseClicked="#clicked" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <children>
                   <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Sleegp">
                      <font>

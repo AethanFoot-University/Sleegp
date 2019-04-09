@@ -197,6 +197,13 @@ public class EpochContainer implements Serializable {
 
         return data;
     }
+    @Override
+    public String toString(){
+        if(data.size()>0){
+            return "Container Date: "+data.get(0).getTimeStamp();
+        }
+        return "Empty Container";
+    }
 
     public void reset() {
         this.data = new ArrayList<>();

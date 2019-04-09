@@ -27,13 +27,18 @@ private String[] args;
         this.args = args;
     }
 
-    public void showLoadingScreen(){
+    public void showLoadingScreen(int wait){
         if(controller == null){
             controller = new StageLoader<LoadingScreenController>().open(args, SETUP);
         }
         else{
             controller.showWindow();
         }
+
+        try {
+            Thread.sleep(wait);
+            while(controller.isExperimentModeActive() &&!controller.isExperimentModeChosen()) Thread.sleep(100);
+        } catch (InterruptedException e) {}
     }
 
     public void hideLoadingScreen(){
@@ -42,6 +47,7 @@ private String[] args;
         }
     }
 
-
-
+    public LoadingScreenController getController() {
+        return controller;
+    }
 }
