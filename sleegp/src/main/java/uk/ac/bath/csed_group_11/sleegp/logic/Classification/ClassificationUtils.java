@@ -23,7 +23,7 @@ public class ClassificationUtils {
         List<Epoch> epochs = epochContainer.getEpochList();
         DataSmoother smoother = new DataSmoother(epochs);
 
-        List<Plot> smoothedAlphaData = smoother.smooth("lowAlpha");
+        List<Plot> smoothedAlphaData = smoother.smooth("lowAlpha", 75);
 
         ProcessedDataContainer proc = new ProcessedDataContainer(smoothedAlphaData);
         proc.applyMovingAverage(10);

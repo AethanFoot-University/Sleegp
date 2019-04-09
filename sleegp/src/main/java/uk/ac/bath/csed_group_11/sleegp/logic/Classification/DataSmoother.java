@@ -19,9 +19,10 @@ public class DataSmoother {
         this.epochs = epochs;
     }
 
-    public List<Plot> smooth(String reference){
+    public List<Plot> smooth(String reference, int maxPoorSignal){
         SplineInterpolator spline  = new SplineInterpolator();
-        PolynomialSplineFunction poly = spline.interpolate(getTimePeriods() , getDataByReference(reference));
+        PolynomialSplineFunction poly = spline.interpolate(getTimePeriods() ,
+            getDataByReference(reference, maxPoorSignal));
 
 
         List<Plot> plotList = new ArrayList<Plot>();
@@ -42,9 +43,12 @@ public class DataSmoother {
         return timeElapsed;
     }
 
-    private double[] getDataByReference(String reference){
+    private double[] getDataByReference(String reference, int maxPoorSignal){
         double[] data = new double[epochs.size()];
-        for(int i =0; i< epochs.size() ; i++) data[i] = epochs.get(i).getByReference(reference);
+        for(int i =0; i< epochs.size() ; i++) {
+           if (maxPoorSignal >= epochs.get(i).getPoorSignalLevel()) data[i] =
+               epochs.get(i).getByReference(reference);
+        }
 
         return data;
     }
