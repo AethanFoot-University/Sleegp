@@ -1,15 +1,30 @@
 package uk.ac.bath.csed_group_11.sleegp.gui.Experiment;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ExperimentManager {
+
+    public static String[] FXML = {"AnalyseScreen.fxml", "AnalyseScreenVersion2.fxml" };
+
+    private static String VIEW = null;
+
     private static long startTime = 0;
     private static List<Flag> FLAG_LIST = new ArrayList<>();
     private static boolean experimentEnded = false;
     private static boolean experimentMode = false;
     private static Runnable experimentEnd = null;
     private static long endTime = 0;
+
+    public static void promptUserExperimentChoice(){
+        VIEW = (String) JOptionPane.showInputDialog(null, "Choose a view to run: ",
+            "Experiment Chooser", JOptionPane.QUESTION_MESSAGE, null,FXML,FXML[1]);
+    }
+
+    public static String getVIEW() {
+        return VIEW;
+    }
 
     public static void startExperiment(){
         startTime = System.currentTimeMillis();
@@ -56,5 +71,8 @@ public class ExperimentManager {
 
     public static List<Flag> getFlagList() {
         return FLAG_LIST;
+    }
+
+    public static void main(String[] args){
     }
 }

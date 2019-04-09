@@ -6,6 +6,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import uk.ac.bath.csed_group_11.sleegp.gui.Experiment.ExperimentManager;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -18,7 +19,7 @@ public class LoadingScreenController implements Initializable {
     Text infoText;
 
     private boolean experimentModeActive = false;
-
+    private boolean experimentModeChosen = false;
     private int clicked =0;
 
     @Override
@@ -44,10 +45,17 @@ public class LoadingScreenController implements Initializable {
         if((clicked> 2) &&!experimentModeActive){
             infoText.setOpacity(1.0);
             experimentModeActive = true;
+
+            new Thread(()->{ExperimentManager.promptUserExperimentChoice();
+            experimentModeChosen = true; }).start();
         }
         else{
             clicked ++;
         }
+    }
+
+    public boolean isExperimentModeChosen() {
+        return experimentModeChosen;
     }
 
     private Stage getStage(){

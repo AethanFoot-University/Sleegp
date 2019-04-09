@@ -19,6 +19,7 @@ import uk.ac.bath.csed_group_11.sleegp.gui.Utilities.StageRunnable;
 import uk.ac.bath.csed_group_11.sleegp.gui.Windows.LoadingWindow;
 
 public class GUIMain {
+    public static final int DEFAULT_WAIT = 3000;
 
     public static void loadMainUI(String[] args){
 
@@ -27,7 +28,7 @@ public class GUIMain {
 
         //Loads loading screen while setup is taking place
         LoadingWindow loadingWindow = new LoadingWindow(args);
-        loadingWindow.showLoadingScreen();
+        loadingWindow.showLoadingScreen(DEFAULT_WAIT);
 
         //This is where setup should happen:
         load();
