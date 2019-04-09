@@ -5,7 +5,6 @@
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ColorPicker?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
@@ -68,12 +67,8 @@
                       <Menu mnemonicParsing="false" text="File">
                         <items>
                               <MenuItem mnemonicParsing="false" onAction="#openECFile" text="Open File" />
-                              <Menu mnemonicParsing="false" text="Import/Export">
-                                <items>
-                                  <MenuItem mnemonicParsing="false" text="Import CSV" />
-                                <MenuItem mnemonicParsing="false" text="Export CSV" />
-                                </items>
-                              </Menu>
+                              <MenuItem mnemonicParsing="false" onAction="#openUserFile" text="Load From User" />
+                          <MenuItem mnemonicParsing="false" onAction="#exportToCSV" text="Export CSV" />
                         </items>
                       </Menu>
                       <Menu mnemonicParsing="false" text="PlayBack">
@@ -104,15 +99,6 @@
                               </Menu>
                         </items>
                       </Menu>
-                        <Menu mnemonicParsing="false" text="UI">
-                          <items>
-                            <MenuItem mnemonicParsing="false" text="Pick Colour">
-                                 <graphic>
-                                    <ColorPicker fx:id="colourPicker" />
-                                 </graphic>
-                              </MenuItem>
-                          </items>
-                        </Menu>
                     </menus>
                   </MenuBar>
                </children>

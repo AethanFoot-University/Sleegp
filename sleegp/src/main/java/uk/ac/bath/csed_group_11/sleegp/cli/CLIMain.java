@@ -18,7 +18,6 @@ import uk.ac.bath.csed_group_11.sleegp.logic.hardware.Headset;
 import uk.ac.bath.csed_group_11.sleegp.logic.hardware.SimulatedHeadset;
 import uk.ac.bath.csed_group_11.sleegp.logic.util.ConsoleUtils;
 import uk.ac.bath.csed_group_11.sleegp.logic.util.Load;
-import uk.ac.bath.csed_group_11.sleegp.logic.util.MathUtils;
 import uk.ac.bath.csed_group_11.sleegp.logic.util.ObjectConverter;
 
 import java.io.File;
@@ -27,7 +26,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
 import java.text.DecimalFormat;
-import java.util.List;
 import java.util.Map;
 
 /**
