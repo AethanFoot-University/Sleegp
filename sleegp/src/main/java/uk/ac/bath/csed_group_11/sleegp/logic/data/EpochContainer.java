@@ -198,6 +198,14 @@ public class EpochContainer implements Serializable {
         return data;
     }
 
+    public void reset() {
+        this.data = new ArrayList<>();
+
+        this.autoSaveLocation = null;
+        this.lastSave = 0;
+        this.savePeriod = 5000;
+    }
+
     public static void main(String[] args){
 
         try {
