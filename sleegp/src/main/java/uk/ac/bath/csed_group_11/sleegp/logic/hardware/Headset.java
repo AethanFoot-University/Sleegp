@@ -37,6 +37,10 @@ public abstract class Headset {
      */
     long systemStartTime;
     /**
+     * Whether or not the headset socket is connected.
+     */
+    private boolean connected = false;
+    /**
      * Whether or not a recording should take place
      */
     private boolean capturing = false;
@@ -187,35 +191,51 @@ public abstract class Headset {
         putOnHeadsetRunnable = null;
     }
 
+    public boolean isConnected() {
+        return connected;
+    }
+
+    public boolean connect() {
+        systemStartTime = System.currentTimeMillis();
+
+        try {
+            this.headSocket = new Socket(this.host, this.port);
+
+            if (!headSocket.isConnected()) {
+                this.connected = false;
+            }
+
+            this.JSONStream =
+                new BufferedReader(new InputStreamReader(this.headSocket.getInputStream()));
+            this.outputStream = this.headSocket.getOutputStream();
+
+            this.connected = this.initStream();
+        } catch (IOException e) {
+            System.out.println(e.getMessage() + TROUBLE_SHOOTING_MSG);
+
+            this.connected = false;
+            return this.connected;
+        }
+
+        return this.connected;
+    }
+
     /**
      * Connects to the API and starts streaming data
      * @return
      */
     public boolean capture() {
-        systemStartTime = System.currentTimeMillis();
+        if (!this.isConnected()) {
+            var connected = this.connect();
 
-        try {
-            headSocket = new Socket(host, port);
-
-            if (!headSocket.isConnected()) {
-                return (capturing = false);
+            if (!connected) {
+                return (this.capturing = false);
             }
-
-            JSONStream = new BufferedReader(new InputStreamReader(headSocket.getInputStream()));
-            outputStream = headSocket.getOutputStream();
-
-            if (!initStream()) {
-                return false;
-            }
-
-            //Run the network thread
-            capturing = headSocket.isConnected();
-            new Thread(networkThread).start();
-
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage() + TROUBLE_SHOOTING_MSG);
-            capturing = false;
         }
+
+        //Run the network thread
+        capturing = headSocket.isConnected();
+        new Thread(networkThread).start();
 
         return capturing;
     }
