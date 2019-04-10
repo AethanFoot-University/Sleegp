@@ -7,22 +7,13 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
-import javafx.scene.control.skin.NestedTableColumnHeader;
-import javafx.scene.control.skin.TableColumnHeader;
-import javafx.scene.control.skin.TableHeaderRow;
-import javafx.scene.control.skin.TableViewSkin;
-import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import uk.ac.bath.csed_group_11.sleegp.gui.Experiment.ExperimentManager;
@@ -35,8 +26,6 @@ import uk.ac.bath.csed_group_11.sleegp.logic.data.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 
 /**
@@ -47,8 +36,8 @@ public class AnalyseScreenController implements Initializable {
     AnchorPane mainPane;
 
     @FXML
-    private ComboBox<EpochContainer> processedCombo;
-    private ObservableList<EpochContainer> processedComboData = FXCollections.observableArrayList();
+    private ComboBox<String> processedCombo;
+    private ObservableList<String> processedComboData = FXCollections.observableArrayList();
 
     @FXML
     TableView<TableData> processedTable;
@@ -69,41 +58,9 @@ public class AnalyseScreenController implements Initializable {
             setupTable();
             listenForTableWidthChange();
         }
-
-        try {
-            System.out.println();
-            processedComboData.add(EpochContainer.loadContainerFromFile(Resource.getFileFromResource("Test.ec")));
-        }  catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        processedCombo.setItems(processedComboData);
-
-        processedCombo.setOnAction((event) -> {
-            EpochContainer epochSelected = processedCombo.getSelectionModel().getSelectedItem();
-            System.out.println("ComboBox Action (selected: " + epochSelected + ")");
-            XYChart.Series<Number, Number> series = new XYChart.Series<>();
-            XYChart.Series<Number, Number> seriesPercent = new XYChart.Series<>();
-            try {
-                User user = User.loadUserFromFile(new File("test2.usr"));
-                for (int i = 0; i < user.get(0).getProcessedData().size(); i += 10) {
-                    Plot plot = user.get(0).getProcessedData().get(i);
-                    series.getData().add(new XYChart.Data<>(plot.getTimeElapsed(),
-                        plot.getLevel()));
-                }
-                seriesPercent.getData().add(new XYChart.Data<>(0, 60));
-                seriesPercent.getData().add(new XYChart.Data<>(user.get(0).getProcessedData().get(user.get(0).getProcessedData().size() - 1).getTimeElapsed(),
-                    60));
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            lineChart.getData().addAll(series, seriesPercent);
-        });
-
-
+        addToLastWeek();
+        comboBoxSetup();
+        listenForComboAction();
     }
 
     public void setupTable() {
@@ -141,6 +98,46 @@ public class AnalyseScreenController implements Initializable {
         });
     }
 
+    public void addToLastWeek() {
+        try {
+            User user = User.loadUserFromFile(new File("test2.usr"));
+            double percentage = calculatePercentageSlept(user.get(0).getProcessedData());
+            double timeSlept = calculateTimeSlept(percentage,
+                user.get(0).getProcessedData().get(user.get(0).getProcessedData().size() - 1).getTimeElapsed());
+            if (!ExperimentManager.isExperimentMode()) {
+                Platform.runLater(() -> {
+                    ObservableList<TableData> data = FXCollections.observableArrayList(
+                        new TableData(user.get(0).getRawData().getEpoch(0).getTimeStamp().replace('.', ' '), percentage, timeSlept)
+//                        new TableData(user.get(0).getRawData().getEpoch(1).getTimeStamp().replace('.', ' '), 94, 104),
+//                        new TableData(user.get(0).getRawData().getEpoch(2).getTimeStamp().replace('.', ' '), 95, 90),
+//                        new TableData(user.get(0).getRawData().getEpoch(3).getTimeStamp().replace('.', ' '), 67, 95),
+//                        new TableData(user.get(0).getRawData().getEpoch(4).getTimeStamp().replace('.', ' '), 20, 98)
+                    );
+
+                    processedTable.getItems().addAll(data);
+                    System.out.println("Table");
+                    processedTable.refresh();
+                });
+            } else {
+                XYChart.Series<String, Number> barSeries = new XYChart.Series<>();
+
+                barSeries.getData().add(new XYChart.Data<>(user.get(0).getRawData().getEpoch(0).getTimeStamp(), 8));
+                barSeries.getData().add(new XYChart.Data<>(user.get(0).getRawData().getEpoch(1).getTimeStamp(), 9));
+                barSeries.getData().add(new XYChart.Data<>(user.get(0).getRawData().getEpoch(2).getTimeStamp(), 3));
+                barSeries.getData().add(new XYChart.Data<>(user.get(0).getRawData().getEpoch(3).getTimeStamp(), 5));
+
+                Platform.runLater(() -> {
+                    barChart.getData().add(barSeries);
+                });
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void listenForTableWidthChange() {
         Platform.runLater(() -> {
             processedTable.getScene().getWindow().widthProperty().addListener(new ChangeListener<Number>() {
@@ -156,75 +153,96 @@ public class AnalyseScreenController implements Initializable {
                 }
             });
         });
+    }
 
+    public void comboBoxSetup() {
+        try {
+            User user = User.loadUserFromFile(Resource.getFileFromResource("test2.usr"));
+            processedComboData.add(user.get(0).getRawData().getEpoch(0).getTimeStamp());
+        }  catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        processedCombo.setItems(processedComboData);
+    }
+
+    public void listenForComboAction() {
+        processedCombo.setOnAction((event) -> {
+            String selected = processedCombo.getSelectionModel().getSelectedItem();
+            System.out.println("ComboBox Action (selected: " + selected + ")");
+            XYChart.Series<Number, Number> series = new XYChart.Series<>();
+            XYChart.Series<Number, Number> seriesPercent = new XYChart.Series<>();
+            try {
+                User user = User.loadUserFromFile(new File("test2.usr"));
+                DataCouple couple = null;
+                for (int i = 0; i < user.size(); i++) {
+                    if (user.get(i).getRawData().getEpoch(0).getTimeStamp().equals(selected)) {
+                        couple = user.get(i);
+                    }
+                }
+
+                for (int i = 0; i < user.get(0).getProcessedData().size(); i += 10) {
+                    Plot plot = couple.getProcessedData().get(i);
+                    series.getData().add(new XYChart.Data<>(plot.getTimeElapsed(),
+                        plot.getLevel()));
+                }
+                seriesPercent.getData().add(new XYChart.Data<>(0, 60));
+                seriesPercent.getData().add(new XYChart.Data<>(user.get(0).getProcessedData().get(user.get(0).getProcessedData().size() - 1).getTimeElapsed(),
+                    60));
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            lineChart.getData().addAll(series, seriesPercent);
+        });
+    }
+
+    public double calculatePercentageSlept(ProcessedDataContainer container) {
+        int awake = 0;
+        int asleep = 0;
+
+        for(Plot p : container) {
+            if (p.getLevel() > 60.0) {
+                awake += 1;
+            } else {
+                asleep += 1;
+            }
+        }
+
+        return 100 * ((double)asleep / (double)(awake + asleep));
+    }
+
+    public double calculateTimeSlept(double percentage, double totalTime) {
+        double milliseconds = (percentage / 100) * totalTime;
+        return milliseconds / (1000 * 60 * 60);
     }
 
     public void back() {
         SceneUtils.setView((Stage) processedCombo.getScene().getWindow(), "HomeScreen.fxml");
     }
 
-   public void process() {
+    public void process() {
        new Thread(()->{
 
         try {
+            User user = User.loadUserFromFile(new File("test2.usr"));
+            ProcessedDataContainer processedDataContainer;
+            for (int i = 0; i < user.size(); i++) {
+                if (user.get(i).getProcessedData() == null) {
+                    processedDataContainer = ClassificationUtils.convertData(user.get(i).getRawData());
+                    System.out.println("PC created");
+                    user.add(new DataCouple(user.get(i).getRawData(), processedDataContainer));
+                    System.out.println("Couple added");
+                }
+            }
 
-
-            User user = new User();
-
-            EpochContainer ec;
-            ec = EpochContainer.loadContainerFromFile(Resource.getFileFromResource("Test.ec"));
-            System.out.println("EC created");
-
-            ProcessedDataContainer processedDataContainer = ClassificationUtils.convertData(ec);
-            System.out.println("PC created");
-
-            user.add(new DataCouple(ec, processedDataContainer));
-            System.out.println("Couple added");
             //Saving to file
-            processedDataContainer.saveToFile(new File("/home/aethan/Sleegp/sleegp/src/main" +
-                "/resources/Test.sd"));
-            System.out.println("PC saved");
             user.saveToFile(new File("test2.usr"));
             System.out.println("usr saved");
 
-            User user2 = User.loadUserFromFile(new File("test2.usr"));
-            if (!ExperimentManager.isExperimentMode()) {
-                Platform.runLater(() -> {
-//                String[] timeStamp =
-//                    user2.get(0).getRawData().getEpoch(0).getTimeStamp().replace('.', ' ').split(
-//                        " ");
-//                for (int i = 0; i < timeStamp.length; i++) {
-//                   timeStamp[i] = timeStamp[i].trim();
-//                }
-                    //String date = timeStamp[1] + "/" + timeStamp[2] + "/" + timeStamp[0];
-                    TableData data =
-                        new TableData(user2.get(0).getRawData().getEpoch(0).getTimeStamp().replace('.', ' '), 93, 130);
-                    TableData data1 =
-                        new TableData(user2.get(0).getRawData().getEpoch(1).getTimeStamp().replace('.', ' '), 94, 104);
-                    TableData data2 =
-                        new TableData(user2.get(0).getRawData().getEpoch(2).getTimeStamp().replace('.', ' '), 95, 90);
-                    TableData data3 =
-                        new TableData(user2.get(0).getRawData().getEpoch(3).getTimeStamp().replace('.', ' '), 67, 95);
-                    TableData data4 =
-                        new TableData(user2.get(0).getRawData().getEpoch(4).getTimeStamp().replace('.', ' '), 20, 98);
 
-                    processedTable.getItems().addAll(data, data1, data2, data3, data4);
-                    System.out.println("Table");
-                    processedTable.refresh();
-                });
-            } else {
-                XYChart.Series<String, Number> barSeries = new XYChart.Series<>();
-
-                barSeries.getData().add(new XYChart.Data<>(user2.get(0).getRawData().getEpoch(0).getTimeStamp(), 8));
-                barSeries.getData().add(new XYChart.Data<>(user2.get(0).getRawData().getEpoch(1).getTimeStamp(), 9));
-                barSeries.getData().add(new XYChart.Data<>(user2.get(0).getRawData().getEpoch(2).getTimeStamp(), 3));
-                barSeries.getData().add(new XYChart.Data<>(user2.get(0).getRawData().getEpoch(3).getTimeStamp(), 5));
-
-                Platform.runLater(() ->{
-                    barChart.getData().add(barSeries);
-                });
-
-            }
         } catch (IOException | ClassNotFoundException e) {
             System.err.println("Unable to load container from file: " + e.toString());
             return;

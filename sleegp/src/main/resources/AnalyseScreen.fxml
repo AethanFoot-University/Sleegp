@@ -32,6 +32,11 @@
                <children>
                   <TabPane prefHeight="200.0" prefWidth="200.0" styleClass="tab-header-background" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <tabs>
+                        <Tab text="Goals">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                          </content>
+                        </Tab>
                       <Tab text="Graph">
                            <content>
                               <AnchorPane prefHeight="200.0" prefWidth="200.0">
