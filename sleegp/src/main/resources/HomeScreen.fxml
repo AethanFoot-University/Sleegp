@@ -12,9 +12,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
-
-<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="670.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="uk.ac.bath.csed_group_11.sleegp.gui.Controllers.HomeScreenController">
+<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="900.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="uk.ac.bath.csed_group_11.sleegp.gui.Controllers.HomeScreenController">
 
    <children>
       <BorderPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -22,11 +20,6 @@
             <HBox alignment="TOP_RIGHT" prefHeight="16.0" prefWidth="670.0" styleClass="top-bar" BorderPane.alignment="CENTER">
                <children>
                   <Button alignment="CENTER" contentDisplay="CENTER" defaultButton="true" mnemonicParsing="false" onAction="#switchUser" styleClass="basic-button" text="Switch User">
-                     <font>
-                        <Font name="Georgia" size="13.0" />
-                     </font>
-                  </Button>
-                  <Button alignment="CENTER" contentDisplay="CENTER" defaultButton="true" mnemonicParsing="false" onAction="#settings" styleClass="basic-button" text="Settings">
                      <font>
                         <Font name="Georgia" size="13.0" />
                      </font>
@@ -89,6 +82,23 @@
                                     <ImageView fitHeight="160.0" fitWidth="160.0" styleClass="basic-button">
                                        <image>
                                           <Image url="@AnalyseIcon.png" />
+                                       </image>
+                                    </ImageView>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" onMouseClicked="#stats" prefHeight="200.0" prefWidth="200.0" styleClass="basic-button">
+                     <children>
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <VBox alignment="CENTER" prefHeight="148.0" prefWidth="178.0">
+                                 <children>
+                                    <ImageView fitHeight="160.0" fitWidth="160.0" styleClass="basic-button">
+                                       <image>
+                                          <Image url="@StatsIcon.png" />
                                        </image>
                                     </ImageView>
                                  </children>

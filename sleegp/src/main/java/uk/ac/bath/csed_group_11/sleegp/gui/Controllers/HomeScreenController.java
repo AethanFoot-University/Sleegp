@@ -43,6 +43,10 @@ public class HomeScreenController implements Initializable {
         else{SceneUtils.setView(getStage(), "AnalyseScreen.fxml");}
     }
 
+    public void stats(){
+        SceneUtils.displayPopUp("Feature is not yet supported.");
+    }
+
     public void switchUser(){
 
     }
