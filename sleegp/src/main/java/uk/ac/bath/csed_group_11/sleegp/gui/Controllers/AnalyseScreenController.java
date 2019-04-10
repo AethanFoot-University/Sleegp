@@ -157,7 +157,7 @@ public class AnalyseScreenController implements Initializable {
 
     public void comboBoxSetup() {
         try {
-            User user = User.loadUserFromFile(Resource.getFileFromResource("test2.usr"));
+            User user = User.loadUserFromFile(new File("test2.usr"));
             processedComboData.add(user.get(0).getRawData().getEpoch(0).getTimeStamp());
         }  catch (IOException e) {
             e.printStackTrace();
