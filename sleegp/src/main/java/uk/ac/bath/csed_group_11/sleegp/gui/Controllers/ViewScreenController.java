@@ -127,24 +127,26 @@ public class ViewScreenController implements Initializable {
             FilePicker filePicker = new FilePicker(".ec", "Epoch Container", "");
             File epLocation = filePicker.getFile(getStage(), FilePicker.OPEN);
 
-            new Thread(()->{
-                Platform.runLater(()->{
+            if(epLocation !=null) {
+                new Thread(() -> {
+                    Platform.runLater(() -> {
 
-                    try {
-                        epochContainer = EpochContainer.loadContainerFromFile(epLocation);
+                        try {
+                            epochContainer = EpochContainer.loadContainerFromFile(epLocation);
 
-                        prepareECView();
-                        setupPlayBack();
+                            prepareECView();
+                            setupPlayBack();
 
-                    } catch (IOException e) {
-                        System.out.println("Epoch Container Load Failed");
+                        } catch (IOException e) {
+                            System.out.println("Epoch Container Load Failed");
 
-                    } catch (ClassNotFoundException e) {
-                        System.out.println("Mis-labeled file!");
-                    }
+                        } catch (ClassNotFoundException e) {
+                            System.out.println("Mis-labeled file!");
+                        }
 
-                });
-            }).start();
+                    });
+                }).start();
+            }
     }
 
     public void openUserFile(){
@@ -152,27 +154,25 @@ public class ViewScreenController implements Initializable {
     }
 
     public void exportToCSV(){
-            if(epochContainer !=null) {
 
-                FilePicker filePicker = new FilePicker(".csv", "Comma-Separated Values", "Export.csv");
-                File epLocation = filePicker.getFile(getStage(), FilePicker.SAVE);
-                new Thread(()->{
-                String csv = epochContainer.genCSV();
-                try {
-                    FileTools.write(epLocation.getPath(), csv);
-                } catch (IOException e) {
-                    System.out.println("CSV write failed!");
+                if (epochContainer != null) {
+
+                    FilePicker filePicker = new FilePicker(".csv", "Comma-Separated Values", "Export.csv");
+                    File exportLocation = filePicker.getFile(getStage(), FilePicker.SAVE);
+
+                    if(exportLocation !=null) {
+                        new Thread(() -> {
+                            String csv = epochContainer.genCSV();
+                            try {
+                                FileTools.write(exportLocation.getPath(), csv);
+                            } catch (IOException e) {
+                                System.out.println("CSV write failed!");
+                            }
+                        }).start();
+                    }
+                } else {
+                    SceneUtils.displayPopUp("Please load some data first into the view to export");
                 }
-            }).start();
-            }
-            else{
-
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Warning");
-                alert.setHeaderText("No data loaded");
-                alert.setContentText("Please load some data first into the view to export");
-                alert.show();
-            }
 
     }
 
