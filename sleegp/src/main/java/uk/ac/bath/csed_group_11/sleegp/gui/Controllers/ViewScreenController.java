@@ -119,6 +119,7 @@ public class ViewScreenController implements Initializable {
     }
 
     public void back(){
+        if(!clickToPlay) play();
         SceneUtils.setView(getStage(), "HomeScreen.fxml");
     }
 
@@ -299,7 +300,6 @@ public class ViewScreenController implements Initializable {
     
     //Util Methods
     private void setTimeFromMillis(Text toSet, long millis){
-        System.out.println(millis);
         long hours = millis/(1000*60*60);
         millis = millis%(1000*60*60);
 
