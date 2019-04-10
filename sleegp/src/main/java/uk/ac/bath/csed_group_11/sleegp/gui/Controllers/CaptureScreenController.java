@@ -131,16 +131,18 @@ public class CaptureScreenController implements Initializable {
 
         var file = fp.getFile(stage, FilePicker.SAVE);
 
-        this.saveFilePath.clear();
-        this.saveFilePath.appendText(file.getAbsolutePath());
+        if (file != null) {
+            this.saveFilePath.clear();
+            this.saveFilePath.appendText(file.getAbsolutePath());
 
-        this.outputFile = file;
-        var autoSaveFile = new File(file.getAbsolutePath() + ".auto");
+            this.outputFile = file;
+            var autoSaveFile = new File(file.getAbsolutePath() + ".auto");
 
-        this.epochContainer.reset();
-        this.epochContainer.setAutoSave(autoSaveFile, 10000);
+            this.epochContainer.reset();
+            this.epochContainer.setAutoSave(autoSaveFile, 10000);
 
-        this.setSaveLocChosen(true);
+            this.setSaveLocChosen(true);
+        }
     }
 
     public void startRecording() {
