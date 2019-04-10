@@ -7,6 +7,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import uk.ac.bath.csed_group_11.sleegp.gui.Utilities.FilePicker;
+import uk.ac.bath.csed_group_11.sleegp.gui.Utilities.SceneUtils;
 import uk.ac.bath.csed_group_11.sleegp.logic.data.Epoch;
 import uk.ac.bath.csed_group_11.sleegp.logic.data.EpochContainer;
 import uk.ac.bath.csed_group_11.sleegp.logic.hardware.Headset;
@@ -167,6 +168,6 @@ public class CaptureScreenController implements Initializable {
     }
 
     public void back() {
-
+        SceneUtils.setView((Stage)this.mainPane.getScene().getWindow(), "HomeScreen.fxml");
     }
 }
