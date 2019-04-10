@@ -65,7 +65,9 @@ public class FilePicker {
         File f = null;
         if (option == SAVE) {
             f = PICKER.showSaveDialog(s);
-            if (!f.getName().contains(FILE_TYPE)) {
+            if (f == null) {
+                return null;
+            } else if (!f.getName().contains(FILE_TYPE)) {
                 f = new File(f.getAbsoluteFile() + FILE_TYPE);
             }
         } else if (option == OPEN) {

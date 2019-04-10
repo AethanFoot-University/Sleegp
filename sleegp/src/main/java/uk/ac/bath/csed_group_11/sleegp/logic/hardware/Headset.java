@@ -37,6 +37,10 @@ public abstract class Headset {
      */
     long systemStartTime;
     /**
+     * Whether or not the headset socket is connected.
+     */
+    private boolean connected = false;
+    /**
      * Whether or not a recording should take place
      */
     private boolean capturing = false;
@@ -81,13 +85,11 @@ public abstract class Headset {
     /**
      * Main thread that the updater API runs on
      */
-    Runnable networkThread = new Runnable() {
-        @Override
-        public void run() {
-            String input;
-            try {
-                while ((input = JSONStream.readLine()) != null) {
-
+    private Runnable networkThread = () -> {
+        String input;
+        try {
+            while (this.isCapturing()) {
+                if (JSONStream.ready() && (input = JSONStream.readLine()) != null) {
                     try {
                         if (input.contains("eSense")) {
                             Epoch e = new Epoch(input, System.currentTimeMillis() - systemStartTime);
@@ -99,12 +101,10 @@ public abstract class Headset {
                     } catch (Exception e) {
                         System.out.println("Failed to serialise object.\n" + e.getMessage());
                     }
-
                 }
-            } catch (SocketException e) {
-            } catch (IOException ex) {
             }
-
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     };
 
@@ -187,35 +187,51 @@ public abstract class Headset {
         putOnHeadsetRunnable = null;
     }
 
+    public boolean isConnected() {
+        return connected;
+    }
+
+    public boolean connect() {
+        systemStartTime = System.currentTimeMillis();
+
+        try {
+            this.headSocket = new Socket(this.host, this.port);
+
+            if (!headSocket.isConnected()) {
+                this.connected = false;
+            }
+
+            this.JSONStream =
+                new BufferedReader(new InputStreamReader(this.headSocket.getInputStream()));
+            this.outputStream = this.headSocket.getOutputStream();
+
+            this.connected = this.initStream();
+        } catch (IOException e) {
+            System.out.println(e.getMessage() + TROUBLE_SHOOTING_MSG);
+
+            this.connected = false;
+            return this.connected;
+        }
+
+        return this.connected;
+    }
+
     /**
      * Connects to the API and starts streaming data
      * @return
      */
     public boolean capture() {
-        systemStartTime = System.currentTimeMillis();
+        if (!this.isConnected()) {
+            var connected = this.connect();
 
-        try {
-            headSocket = new Socket(host, port);
-
-            if (!headSocket.isConnected()) {
-                return (capturing = false);
+            if (!connected) {
+                return (this.capturing = false);
             }
-
-            JSONStream = new BufferedReader(new InputStreamReader(headSocket.getInputStream()));
-            outputStream = headSocket.getOutputStream();
-
-            if (!initStream()) {
-                return false;
-            }
-
-            //Run the network thread
-            capturing = headSocket.isConnected();
-            new Thread(networkThread).start();
-
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage() + TROUBLE_SHOOTING_MSG);
-            capturing = false;
         }
+
+        //Run the network thread
+        capturing = headSocket.isConnected();
+        new Thread(networkThread).start();
 
         return capturing;
     }
@@ -228,13 +244,18 @@ public abstract class Headset {
         return System.currentTimeMillis() - this.systemStartTime;
     }
 
+    public void stopRecording() {
+        this.setCapturing(false);
+    }
+
     /**
      * Disconnects from the API and stops main updater thread
      * @throws IOException
      */
     public void disconnect() throws IOException {
         //Stops main thread
-        capturing = false;
+        if (this.isCapturing())
+            this.setCapturing(false);
 
         //Closes streams
         JSONStream.close();

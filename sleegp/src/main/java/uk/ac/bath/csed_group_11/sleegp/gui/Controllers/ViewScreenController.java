@@ -9,18 +9,17 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Slider;
+import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import org.controlsfx.dialog.Dialogs;
 import uk.ac.bath.csed_group_11.sleegp.gui.Experiment.ExperimentManager;
 import uk.ac.bath.csed_group_11.sleegp.gui.Utilities.FilePicker;
 import uk.ac.bath.csed_group_11.sleegp.gui.Utilities.SceneUtils;
 import uk.ac.bath.csed_group_11.sleegp.logic.data.EpochContainer;
+import uk.ac.bath.csed_group_11.sleegp.logic.util.FileTools;
 
 import java.io.File;
 import java.io.IOException;
@@ -82,7 +81,7 @@ public class ViewScreenController implements Initializable {
                 }
             }
         });
-        colourPicker.setOnAction(new EventHandler() {
+        /*colourPicker.setOnAction(new EventHandler() {
             public void handle(Event t) {
                 if(graphPlayer !=null && colourPicker !=null){
 
@@ -97,7 +96,7 @@ public class ViewScreenController implements Initializable {
                         "Picker is null: "+(colourPicker ==null));
                 }
             }
-        });
+        });*/
 
     }
 
@@ -148,7 +147,32 @@ public class ViewScreenController implements Initializable {
             }).start();
     }
 
+    public void openUserFile(){
+        System.out.println("Loading file from user");
+    }
+
     public void exportToCSV(){
+            if(epochContainer !=null) {
+
+                FilePicker filePicker = new FilePicker(".csv", "Comma-Separated Values", "Export.csv");
+                File epLocation = filePicker.getFile(getStage(), FilePicker.SAVE);
+                new Thread(()->{
+                String csv = epochContainer.genCSV();
+                try {
+                    FileTools.write(epLocation.getPath(), csv);
+                } catch (IOException e) {
+                    System.out.println("CSV write failed!");
+                }
+            }).start();
+            }
+            else{
+
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Warning");
+                alert.setHeaderText("No data loaded");
+                alert.setContentText("Please load some data first into the view to export");
+                alert.show();
+            }
 
     }
 

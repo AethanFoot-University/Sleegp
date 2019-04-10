@@ -56,6 +56,11 @@ public abstract class SimulatedHeadset extends Headset {
     }
 
     @Override
+    public boolean connect() {
+        return true;
+    }
+
+    @Override
     public boolean capture() {
         setCapturing(true);
         systemStartTime = System.currentTimeMillis();

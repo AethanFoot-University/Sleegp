@@ -11,13 +11,13 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="400.0" prefWidth="670.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="uk.ac.bath.csed_group_11.sleegp.gui.Controllers.CaptureScreenController">
+<AnchorPane fx:id="mainPane" prefHeight="400.0" prefWidth="670.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="uk.ac.bath.csed_group_11.sleegp.gui.Controllers.CaptureScreenController">
    <children>
       <VBox prefHeight="337.0" prefWidth="629.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <BorderPane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="40.0" prefWidth="629.0">
                <center>
-                  <Label text="Capture" textFill="WHITE" BorderPane.alignment="CENTER" />
+                  <Label styleClass="text-label" text="Capture" textFill="WHITE" BorderPane.alignment="CENTER" />
                </center>
                <right>
                   <Pane prefHeight="200.0" prefWidth="70.5" BorderPane.alignment="CENTER" />
@@ -25,7 +25,7 @@
                <left>
                   <StackPane maxWidth="-Infinity" minWidth="-Infinity" BorderPane.alignment="CENTER">
                      <children>
-                        <Button mnemonicParsing="false" styleClass="basic-button" stylesheets="@style.css" text="Back">
+                        <Button mnemonicParsing="false" onAction="#back" styleClass="basic-button" stylesheets="@style.css" text="Back">
                            <padding>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </padding>
@@ -43,12 +43,22 @@
                      <children>
                         <StackPane prefHeight="150.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                            <children>
-                              <Button mnemonicParsing="false" styleClass="basic-button" stylesheets="@style.css" text="Connect Headset" />
+                              <Button fx:id="connectButton" mnemonicParsing="false" onAction="#connectHeadset" styleClass="basic-button" stylesheets="@style.css" text="Connect Headset" />
                            </children>
                         </StackPane>
                         <StackPane prefHeight="150.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                            <children>
-                              <Button mnemonicParsing="false" styleClass="basic-button" stylesheets="@style.css" text="Disconnect Headset" />
+                              <Button fx:id="disconnectButton" mnemonicParsing="false" onAction="#disconnectHeadset" styleClass="basic-button" stylesheets="@style.css" text="Disconnect Headset" />
+                           </children>
+                        </StackPane>
+                     </children>
+                  </VBox>
+                  <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <StackPane fx:id="chartPane" prefHeight="150.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                        <StackPane prefHeight="150.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                           <children>
+                              <Button fx:id="saveLocationButton" mnemonicParsing="false" onAction="#chooseSaveLocation" styleClass="basic-button" stylesheets="@style.css" text="Choose Save Location" />
                            </children>
                         </StackPane>
                      </children>
@@ -57,21 +67,12 @@
                      <children>
                         <StackPane prefHeight="150.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                            <children>
-                              <Button mnemonicParsing="false" styleClass="basic-button" stylesheets="@style.css" text="Choose Save Location" />
-                           </children>
-                        </StackPane>
-                     </children>
-                  </VBox>
-                  <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
-                     <children>
-                        <StackPane prefHeight="150.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
-                           <children>
-                              <Button mnemonicParsing="false" onAction="#startRecording" styleClass="basic-button" stylesheets="@style.css" text="Start Recording" />
+                              <Button fx:id="startRecordingButton" mnemonicParsing="false" onAction="#startRecording" styleClass="basic-button" stylesheets="@style.css" text="Start Recording" />
                            </children>
                         </StackPane>
                         <StackPane prefHeight="150.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                            <children>
-                              <Button mnemonicParsing="false" styleClass="basic-button" stylesheets="@style.css" text="Stop Recording" />
+                              <Button fx:id="stopRecordingButton" mnemonicParsing="false" onAction="#stopRecording" styleClass="basic-button" stylesheets="@style.css" text="Stop Recording" />
                            </children>
                         </StackPane>
                      </children>
@@ -82,7 +83,7 @@
                <left>
                   <StackPane prefHeight="40.0" BorderPane.alignment="CENTER">
                      <children>
-                        <Label stylesheets="@style.css" text="Save File" textFill="WHITE" />
+                        <Label styleClass="text-label" stylesheets="@style.css" text="Save File" textFill="WHITE" />
                      </children>
                      <padding>
                         <Insets left="10.0" right="10.0" />
@@ -92,7 +93,7 @@
                <center>
                   <StackPane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="40.0" BorderPane.alignment="CENTER">
                      <children>
-                        <TextField editable="false" styleClass="text-box" stylesheets="@style.css" />
+                        <TextField fx:id="saveFilePath" editable="false" styleClass="text-box" stylesheets="@style.css" />
                      </children>
                      <padding>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
