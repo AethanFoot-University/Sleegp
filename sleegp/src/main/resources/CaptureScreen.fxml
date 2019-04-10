@@ -17,7 +17,7 @@
          <children>
             <BorderPane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="40.0" prefWidth="629.0">
                <center>
-                  <Label text="Capture" textFill="WHITE" BorderPane.alignment="CENTER" />
+                  <Label styleClass="text-label" text="Capture" textFill="WHITE" BorderPane.alignment="CENTER" />
                </center>
                <right>
                   <Pane prefHeight="200.0" prefWidth="70.5" BorderPane.alignment="CENTER" />
@@ -82,7 +82,7 @@
                <left>
                   <StackPane prefHeight="40.0" BorderPane.alignment="CENTER">
                      <children>
-                        <Label stylesheets="@style.css" text="Save File" textFill="WHITE" />
+                        <Label styleClass="text-label" stylesheets="@style.css" text="Save File" textFill="WHITE" />
                      </children>
                      <padding>
                         <Insets left="10.0" right="10.0" />
