@@ -85,13 +85,11 @@ public abstract class Headset {
     /**
      * Main thread that the updater API runs on
      */
-    Runnable networkThread = new Runnable() {
-        @Override
-        public void run() {
-            String input;
-            try {
-                while ((input = JSONStream.readLine()) != null) {
-
+    private Runnable networkThread = () -> {
+        String input;
+        try {
+            while (this.isCapturing()) {
+                if (JSONStream.ready() && (input = JSONStream.readLine()) != null) {
                     try {
                         if (input.contains("eSense")) {
                             Epoch e = new Epoch(input, System.currentTimeMillis() - systemStartTime);
@@ -103,12 +101,10 @@ public abstract class Headset {
                     } catch (Exception e) {
                         System.out.println("Failed to serialise object.\n" + e.getMessage());
                     }
-
                 }
-            } catch (SocketException e) {
-            } catch (IOException ex) {
             }
-
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     };
 
@@ -248,13 +244,18 @@ public abstract class Headset {
         return System.currentTimeMillis() - this.systemStartTime;
     }
 
+    public void stopRecording() {
+        this.setCapturing(false);
+    }
+
     /**
      * Disconnects from the API and stops main updater thread
      * @throws IOException
      */
     public void disconnect() throws IOException {
         //Stops main thread
-        capturing = false;
+        if (this.isCapturing())
+            this.setCapturing(false);
 
         //Closes streams
         JSONStream.close();

@@ -150,20 +150,23 @@ public class CaptureScreenController implements Initializable {
         // TODO: Check whether the capture was successful
         this.headset.capture();
 
-        this.disconnectButton.setDisable(false);
-        this.connectButton.setDisable(true);
+        this.disconnectButton.setDisable(true);
+        this.saveLocationButton.setDisable(true);
+        this.startRecordingButton.setDisable(true);
+        this.stopRecordingButton.setDisable(false);
     }
 
     public void stopRecording() {
         try {
+            this.headset.stopRecording();
             this.epochContainer.saveToFile(this.outputFile);
-
-            this.headset.disconnect();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            this.disconnectButton.setDisable(true);
-            this.connectButton.setDisable(false);
+            this.disconnectButton.setDisable(false);
+            this.saveLocationButton.setDisable(false);
+            this.startRecordingButton.setDisable(false);
+            this.stopRecordingButton.setDisable(true);
         }
     }
 
