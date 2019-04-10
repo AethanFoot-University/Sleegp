@@ -25,7 +25,7 @@
                <left>
                   <StackPane maxWidth="-Infinity" minWidth="-Infinity" BorderPane.alignment="CENTER">
                      <children>
-                        <Button fx:id="backButton" mnemonicParsing="false" onAction="#back" styleClass="basic-button" stylesheets="@style.css" text="Back">
+                        <Button mnemonicParsing="false" onAction="#back" styleClass="basic-button" stylesheets="@style.css" text="Back">
                            <padding>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </padding>
@@ -55,6 +55,7 @@
                   </VBox>
                   <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
                      <children>
+                        <StackPane fx:id="chartPane" prefHeight="150.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
                         <StackPane prefHeight="150.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                            <children>
                               <Button fx:id="saveLocationButton" mnemonicParsing="false" onAction="#chooseSaveLocation" styleClass="basic-button" stylesheets="@style.css" text="Choose Save Location" />

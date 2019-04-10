@@ -1,17 +1,20 @@
 package uk.ac.bath.csed_group_11.sleegp.gui.Controllers;
 
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.chart.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import uk.ac.bath.csed_group_11.sleegp.gui.Utilities.FilePicker;
@@ -21,9 +24,9 @@ import uk.ac.bath.csed_group_11.sleegp.logic.data.EpochContainer;
 import uk.ac.bath.csed_group_11.sleegp.logic.hardware.Headset;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 
 /**
@@ -32,9 +35,6 @@ import java.util.ResourceBundle;
 public class CaptureScreenController implements Initializable {
     @FXML
     AnchorPane mainPane;
-
-    @FXML
-    private Button backButton;
 
     @FXML
     private Button connectButton;
@@ -54,6 +54,11 @@ public class CaptureScreenController implements Initializable {
     @FXML
     private TextField saveFilePath;
 
+    @FXML
+    private StackPane chartPane;
+
+    private AreaChart<String, Number> chart;
+
     private Headset headset;
 
     private EpochContainer epochContainer;
@@ -68,10 +73,50 @@ public class CaptureScreenController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         this.epochContainer = new EpochContainer();
 
+        var xAxis = new CategoryAxis();
+        xAxis.setCategories(FXCollections.observableArrayList(Arrays.asList(
+            "a", "m", "Δ", "Θ", "lα", "hα", "lβ", "hβ", "lγ", "hγ", "s"
+        )));
+        xAxis.setLabel("Value");
+        xAxis.setAutoRanging(true);
+        xAxis.setAnimated(false);
+
+        var yAxis = new NumberAxis();
+        yAxis.setLowerBound(100.0);
+        yAxis.setUpperBound(1000.0);
+        yAxis.setLabel("Level");
+        yAxis.setAutoRanging(true);
+        yAxis.setAnimated(false);
+
+        this.chart = new AreaChart<>(xAxis, yAxis);
+        this.chart.setTitle("Live Data");
+        this.chart.setAnimated(false);
+
+        var series = new XYChart.Series<String, Number>();
+        series.setName("Latest");
+
+        series.getData().add(new XYChart.Data<>("a", 0));
+        series.getData().add(new XYChart.Data<>("m", 0));
+        series.getData().add(new XYChart.Data<>("Δ", 0));
+        series.getData().add(new XYChart.Data<>("Θ", 0));
+        series.getData().add(new XYChart.Data<>("lα", 0));
+        series.getData().add(new XYChart.Data<>("hα", 0));
+        series.getData().add(new XYChart.Data<>("lβ", 0));
+        series.getData().add(new XYChart.Data<>("hβ", 0));
+        series.getData().add(new XYChart.Data<>("lγ", 0));
+        series.getData().add(new XYChart.Data<>("hγ", 0));
+        series.getData().add(new XYChart.Data<>("s", 0));
+
+        Platform.runLater(() -> this.chart.getData().add(series));
+        this.chartPane.getChildren().add(chart);
+
+        var controller = this;
+
         this.headset = new Headset() {
             @Override
             public void update(Epoch data) {
                 epochContainer.addEpoch(data);
+                controller.updateChart(data);
             }
         };
 
@@ -203,6 +248,24 @@ public class CaptureScreenController implements Initializable {
             this.startRecordingButton.setDisable(false);
             this.stopRecordingButton.setDisable(true);
         }
+    }
+
+    private void updateChart(Epoch data) {
+        var series = this.chart.getData().get(0);
+
+        Platform.runLater(() -> {
+            series.getData().get(0).setYValue(data.getAttention());
+            series.getData().get(1).setYValue(data.getMeditation());
+            series.getData().get(2).setYValue(data.getDelta() / 10000);
+            series.getData().get(3).setYValue(data.getTheta() / 1000);
+            series.getData().get(4).setYValue(data.getLowAlpha() / 100);
+            series.getData().get(5).setYValue(data.getHighAlpha() / 100);
+            series.getData().get(6).setYValue(data.getLowBeta() / 100);
+            series.getData().get(7).setYValue(data.getHighBeta() / 100);
+            series.getData().get(8).setYValue(data.getLowGamma() / 100);
+            series.getData().get(9).setYValue(data.getHighGamma() / 100);
+            series.getData().get(10).setYValue(data.getPoorSignalLevel());
+        });
     }
 
     public void back() {
