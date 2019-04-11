@@ -177,7 +177,7 @@ public class CaptureScreenController implements Initializable {
     }
 
     public void chooseSaveLocation() {
-        var fp = new FilePicker(User.EXTENSION, "Binary File", "untitled");
+        var fp = new FilePicker(".ec", "Binary File", "untitled");
         var stage = (Stage)this.mainPane.getScene().getWindow();
 
         var file = fp.getFile(stage, FilePicker.SAVE);
@@ -187,10 +187,10 @@ public class CaptureScreenController implements Initializable {
             this.saveFilePath.appendText(file.getAbsolutePath());
 
             this.outputFile = file;
-//            var autoSaveFile = new File(file.getAbsolutePath() + ".auto");
+            var autoSaveFile = new File(file.getAbsolutePath() + ".auto");
 
             this.epochContainer.reset();
-//            this.epochContainer.setAutoSave(autoSaveFile, 10000);
+            this.epochContainer.setAutoSave(autoSaveFile, 10000);
 
             this.setSaveLocChosen(true);
         }
@@ -209,6 +209,7 @@ public class CaptureScreenController implements Initializable {
     public void stopRecording() {
         try {
             this.headset.stopRecording();
+            this.epochContainer.saveToFile(this.outputFile);
 
             try {
                 var user = User.loadDefaultUser();
