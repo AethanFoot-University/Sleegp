@@ -45,6 +45,7 @@ public class LoadingScreenController implements Initializable {
         if((clicked> 2) &&!experimentModeActive){
             infoText.setOpacity(1.0);
             experimentModeActive = true;
+            ExperimentManager.setExperimentMode(true);
 
             new Thread(()->{ExperimentManager.promptUserExperimentChoice();
             experimentModeChosen = true; }).start();

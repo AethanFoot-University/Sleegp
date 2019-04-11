@@ -16,13 +16,17 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import org.apache.commons.math3.analysis.function.Exp;
 import uk.ac.bath.csed_group_11.sleegp.gui.Experiment.ExperimentManager;
+import uk.ac.bath.csed_group_11.sleegp.gui.Experiment.Flag;
 import uk.ac.bath.csed_group_11.sleegp.gui.Utilities.Resource;
 import uk.ac.bath.csed_group_11.sleegp.gui.Utilities.SceneUtils;
 import uk.ac.bath.csed_group_11.sleegp.logic.Classification.ClassificationUtils;
 import uk.ac.bath.csed_group_11.sleegp.logic.Classification.Plot;
 import uk.ac.bath.csed_group_11.sleegp.logic.data.*;
 
+import javax.swing.*;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -62,6 +66,7 @@ public class AnalyseScreenController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        if (ExperimentManager.isExperimentMode()) getAnswers();
         try {
             user = User.loadUserFromFile(new File("test2.usr"));
         } catch (IOException | ClassNotFoundException e) {
@@ -72,7 +77,7 @@ public class AnalyseScreenController implements Initializable {
             //goalLabel.setText(user.getCurrentGoal() + "");
         });
 
-        if (!ExperimentManager.isExperimentMode()) {
+        if (ExperimentManager.getVIEW().equals("AnalyseScreen.fxml")) {
             setupTable();
             listenForTableWidthChange();
         }
@@ -81,7 +86,32 @@ public class AnalyseScreenController implements Initializable {
         listenForComboAction();
     }
 
+    public void getAnswers() {
+        new Thread(() ->{
+            JFrame f = new JFrame();
+            String answer = null;
+            answer = JOptionPane.showInputDialog(f, "What is the time slept for the " +
+                "11/02/2019");
+            if (answer.equals("3.68")) {
+                ExperimentManager.notify("First Answered");
+                answer = JOptionPane.showInputDialog(f, "What is the date where time slept is 5.89");
 
+                if (answer.equals("22/02/2019")) {
+                    ExperimentManager.notify("Second Answered");
+
+                    for (Flag flag : ExperimentManager.getFlagList()) {
+                        System.out.println(flag.toString());
+                    }
+                    ExperimentManager.endExperiment();
+                } else {
+                    getAnswers();
+                }
+            } else {
+                getAnswers();
+            }
+
+        }).start();
+    }
 
 //    public void setupGoalChart() {
 //        //User user = User.loadUserFromFile(new File("test2.usr"));
@@ -127,7 +157,82 @@ public class AnalyseScreenController implements Initializable {
 
     public void addToLastWeek() {
         //User user = User.loadUserFromFile(new File("test2.usr"));
-        if (!ExperimentManager.isExperimentMode()) {
+        if (ExperimentManager.isExperimentMode()) {
+            if (ExperimentManager.getVIEW().equals("AnalyseScreen.fxml")) {
+                Platform.runLater(() -> {
+                    processedTable.getItems().clear();
+                    ObservableList<TableData> data = FXCollections.observableArrayList(
+                        new TableData("06/02/2019", 90.74, 9.34),
+                        new TableData("07/02/2019", 96.20, 7.53),
+                        new TableData("08/02/2019", 86.32, 8.94),
+                        new TableData("09/02/2019", 92.99, 5.73),
+                        new TableData("10/02/2019", 95.32, 10.32),
+                        new TableData("11/02/2019", 67.28, 3.68),
+                        new TableData("12/02/2019", 76.63, 6.36),
+                        new TableData("13/02/2019", 93.67, 9.78),
+                        new TableData("14/02/2019", 69.26, 4.65),
+                        new TableData("15/02/2019", 87.39, 11.56),
+                        new TableData("16/02/2019", 93.31, 3.97),
+                        new TableData("17/02/2019", 82.63, 7.24),
+                        new TableData("18/02/2019", 65.92, 8.37),
+                        new TableData("19/02/2019", 90.23, 6.95),
+                        new TableData("20/02/2019", 94.19, 9.43),
+                        new TableData("21/02/2019", 56.80, 2.75),
+                        new TableData("22/02/2019", 58.31, 5.89),
+                        new TableData("23/02/2019", 91.73, 13.74),
+                        new TableData("24/02/2019", 97.54, 4.87),
+                        new TableData("25/02/2019", 87.43, 6.71),
+                        new TableData("26/02/2019", 73.93, 8.10),
+                        new TableData("27/02/2019", 97.13, 5.65),
+                        new TableData("28/02/2019", 92.65, 9.06),
+                        new TableData("01/03/2019", 84.39, 10.35),
+                        new TableData("02/03/2019", 96.95, 4.07),
+                        new TableData("03/03/2019", 89.97, 6.48),
+                        new TableData("04/03/2019", 79.30, 9.72),
+                        new TableData("05/03/2019", 86.54, 10.45)
+                        );
+                    processedTable.getItems().addAll(data);
+
+                    System.out.println("Table");
+                    processedTable.refresh();
+                });
+            } else {
+                Platform.runLater(() -> {
+                    XYChart.Series<String, Number> barSeries = new XYChart.Series<>();
+                    barChart.getData().clear();
+                    barSeries.getData().add(new XYChart.Data<>("06/02/2019", 9.34));
+                    barSeries.getData().add(new XYChart.Data<>("07/02/2019", 7.53));
+                    barSeries.getData().add(new XYChart.Data<>("08/02/2019", 8.94));
+                    barSeries.getData().add(new XYChart.Data<>("09/02/2019", 5.73));
+                    barSeries.getData().add(new XYChart.Data<>("10/02/2019", 10.32));
+                    barSeries.getData().add(new XYChart.Data<>("11/02/2019", 3.68));
+                    barSeries.getData().add(new XYChart.Data<>("12/02/2019", 6.36));
+                    barSeries.getData().add(new XYChart.Data<>("13/02/2019", 9.78));
+                    barSeries.getData().add(new XYChart.Data<>("14/02/2019", 4.65));
+                    barSeries.getData().add(new XYChart.Data<>("15/02/2019", 11.56));
+                    barSeries.getData().add(new XYChart.Data<>("16/02/2019", 3.97));
+                    barSeries.getData().add(new XYChart.Data<>("17/02/2019", 7.24));
+                    barSeries.getData().add(new XYChart.Data<>("18/02/2019", 8.37));
+                    barSeries.getData().add(new XYChart.Data<>("19/02/2019", 6.95));
+                    barSeries.getData().add(new XYChart.Data<>("20/02/2019", 9.43));
+                    barSeries.getData().add(new XYChart.Data<>("21/02/2019", 2.75));
+                    barSeries.getData().add(new XYChart.Data<>("22/02/2019", 5.89));
+                    barSeries.getData().add(new XYChart.Data<>("23/02/2019", 13.74));
+                    barSeries.getData().add(new XYChart.Data<>("24/02/2019", 4.87));
+                    barSeries.getData().add(new XYChart.Data<>("25/02/2019", 6.71));
+                    barSeries.getData().add(new XYChart.Data<>("26/02/2019", 8.10));
+                    barSeries.getData().add(new XYChart.Data<>("27/02/2019", 5.65));
+                    barSeries.getData().add(new XYChart.Data<>("28/02/2019", 9.06));
+                    barSeries.getData().add(new XYChart.Data<>("01/02/2019", 10.35));
+                    barSeries.getData().add(new XYChart.Data<>("02/02/2019", 4.07));
+                    barSeries.getData().add(new XYChart.Data<>("03/02/2019", 6.48));
+                    barSeries.getData().add(new XYChart.Data<>("04/02/2019", 9.72));
+                    barSeries.getData().add(new XYChart.Data<>("05/02/2019", 10.45));
+
+                    barChart.getData().add(barSeries);
+                });
+            }
+        } else {
             Platform.runLater(() -> {
                 processedTable.getItems().clear();
                 for (DataCouple couple : user) {
@@ -145,23 +250,6 @@ public class AnalyseScreenController implements Initializable {
                 System.out.println("Table");
                 processedTable.refresh();
             });
-        } else {
-            Platform.runLater(() -> {
-            XYChart.Series<String, Number> barSeries = new XYChart.Series<>();
-
-            for (DataCouple couple : user) {
-                double percentage1 =
-                    calculatePercentageSlept(couple.getProcessedData());
-                double timeSlept1 = calculateTimeSlept(percentage1,
-                    couple.getProcessedData().get(couple.getProcessedData().size() - 1).getTimeElapsed());
-
-                barSeries.getData().add(new XYChart.Data<>(couple.getRawData().getEpoch(0).getTimeStamp(), timeSlept1));
-            }
-
-
-                barChart.getData().add(barSeries);
-            });
-
         }
     }
 
