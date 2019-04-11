@@ -10,10 +10,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import uk.ac.bath.csed_group_11.sleegp.cli.SleegpConstants;
 import uk.ac.bath.csed_group_11.sleegp.gui.Utilities.FilePicker;
 import uk.ac.bath.csed_group_11.sleegp.gui.Utilities.SceneUtils;
+import uk.ac.bath.csed_group_11.sleegp.logic.data.DataCouple;
 import uk.ac.bath.csed_group_11.sleegp.logic.data.Epoch;
 import uk.ac.bath.csed_group_11.sleegp.logic.data.EpochContainer;
+import uk.ac.bath.csed_group_11.sleegp.logic.data.User;
 import uk.ac.bath.csed_group_11.sleegp.logic.hardware.Headset;
 
 import java.io.File;
@@ -174,7 +177,7 @@ public class CaptureScreenController implements Initializable {
     }
 
     public void chooseSaveLocation() {
-        var fp = new FilePicker(".ec", "Binary File", "untitled");
+        var fp = new FilePicker(User.EXTENSION, "Binary File", "untitled");
         var stage = (Stage)this.mainPane.getScene().getWindow();
 
         var file = fp.getFile(stage, FilePicker.SAVE);
@@ -184,10 +187,10 @@ public class CaptureScreenController implements Initializable {
             this.saveFilePath.appendText(file.getAbsolutePath());
 
             this.outputFile = file;
-            var autoSaveFile = new File(file.getAbsolutePath() + ".auto");
+//            var autoSaveFile = new File(file.getAbsolutePath() + ".auto");
 
             this.epochContainer.reset();
-            this.epochContainer.setAutoSave(autoSaveFile, 10000);
+//            this.epochContainer.setAutoSave(autoSaveFile, 10000);
 
             this.setSaveLocChosen(true);
         }
@@ -206,7 +209,14 @@ public class CaptureScreenController implements Initializable {
     public void stopRecording() {
         try {
             this.headset.stopRecording();
-            this.epochContainer.saveToFile(this.outputFile);
+
+            try {
+                var user = User.loadDefaultUser();
+                user.add(new DataCouple(this.epochContainer));
+                user.saveToFile(new File(SleegpConstants.RELATIVE_USER_FILE));
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
