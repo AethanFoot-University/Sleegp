@@ -6,7 +6,7 @@ import java.util.List;
 
 public class ExperimentManager {
 
-    public static String[] FXML = {"AnalyseScreen.fxml", "AnalyseScreenVersion2.fxml" };
+    public static String[] FXML = {"AnalyseScreen.fxml", "AnalyseScreen2.fxml" };
 
     private static String VIEW = null;
 

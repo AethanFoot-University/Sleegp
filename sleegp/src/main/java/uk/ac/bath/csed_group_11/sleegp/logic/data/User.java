@@ -22,6 +22,8 @@ public class User extends ArrayList<DataCouple> implements Serializable {
     private int level = 1;
     private int expPoints = (1000*level+15)%level;
 
+    private int currentGoal = 0;
+
     public static String EXTENSION = ".usr";
 
     public boolean saveToFile(File firectory) throws FileNotFoundException {
@@ -52,5 +54,13 @@ public class User extends ArrayList<DataCouple> implements Serializable {
         Object loaded = loader.load();
 
         return (User)loaded;
+    }
+
+    public int getCurrentGoal() {
+        return currentGoal;
+    }
+
+    public void setCurrentGoal(int currentGoal) {
+        this.currentGoal = currentGoal;
     }
 }

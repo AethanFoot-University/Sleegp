@@ -32,6 +32,8 @@ import java.util.ResourceBundle;
  * To be written by: Aethan and Xander
  */
 public class AnalyseScreenController implements Initializable {
+    private User user = null;
+
     @FXML
     AnchorPane mainPane;
 
@@ -52,8 +54,24 @@ public class AnalyseScreenController implements Initializable {
     @FXML
     LineChart<Number, Number> lineChart;
 
+    @FXML
+    TextField goalTextField;
+
+    @FXML
+    Label goalLabel;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        try {
+            user = User.loadUserFromFile(new File("test2.usr"));
+        } catch (IOException | ClassNotFoundException e) {
+            System.err.println("Unable to load container from file: " + e.toString());
+            return;
+        }
+        Platform.runLater(() -> {
+            //goalLabel.setText(user.getCurrentGoal() + "");
+        });
+
         if (!ExperimentManager.isExperimentMode()) {
             setupTable();
             listenForTableWidthChange();
@@ -62,6 +80,15 @@ public class AnalyseScreenController implements Initializable {
         comboBoxSetup();
         listenForComboAction();
     }
+
+
+
+//    public void setupGoalChart() {
+//        //User user = User.loadUserFromFile(new File("test2.usr"));
+//        double percentage = calculatePercentageSlept(user.get(0).getProcessedData());
+//        double timeSlept = calculateTimeSlept(percentage,
+//            user.get(0).getProcessedData().get(user.get(0).getProcessedData().size() - 1).getTimeElapsed());
+//    }
 
     public void setupTable() {
         Platform.runLater(()->{
@@ -99,42 +126,42 @@ public class AnalyseScreenController implements Initializable {
     }
 
     public void addToLastWeek() {
-        try {
-            User user = User.loadUserFromFile(new File("test2.usr"));
-            double percentage = calculatePercentageSlept(user.get(0).getProcessedData());
-            double timeSlept = calculateTimeSlept(percentage,
-                user.get(0).getProcessedData().get(user.get(0).getProcessedData().size() - 1).getTimeElapsed());
-            if (!ExperimentManager.isExperimentMode()) {
-                Platform.runLater(() -> {
-                    ObservableList<TableData> data = FXCollections.observableArrayList(
-                        new TableData(user.get(0).getRawData().getEpoch(0).getTimeStamp().replace('.', ' '), percentage, timeSlept)
-//                        new TableData(user.get(0).getRawData().getEpoch(1).getTimeStamp().replace('.', ' '), 94, 104),
-//                        new TableData(user.get(0).getRawData().getEpoch(2).getTimeStamp().replace('.', ' '), 95, 90),
-//                        new TableData(user.get(0).getRawData().getEpoch(3).getTimeStamp().replace('.', ' '), 67, 95),
-//                        new TableData(user.get(0).getRawData().getEpoch(4).getTimeStamp().replace('.', ' '), 20, 98)
-                    );
+        //User user = User.loadUserFromFile(new File("test2.usr"));
+        if (!ExperimentManager.isExperimentMode()) {
+            Platform.runLater(() -> {
+                processedTable.getItems().clear();
+                for (DataCouple couple : user) {
+                    double percentage1 =
+                        calculatePercentageSlept(couple.getProcessedData());
+                    double timeSlept1 = calculateTimeSlept(percentage1,
+                        couple.getProcessedData().get(couple.getProcessedData().size() - 1).getTimeElapsed());
 
-                    processedTable.getItems().addAll(data);
-                    System.out.println("Table");
-                    processedTable.refresh();
-                });
-            } else {
-                XYChart.Series<String, Number> barSeries = new XYChart.Series<>();
+                    TableData data =
+                        new TableData(couple.getRawData().getEpoch(0).getTimeStamp().replace('.', ' '), percentage1, timeSlept1);
 
-                barSeries.getData().add(new XYChart.Data<>(user.get(0).getRawData().getEpoch(0).getTimeStamp(), 8));
-                barSeries.getData().add(new XYChart.Data<>(user.get(0).getRawData().getEpoch(1).getTimeStamp(), 9));
-                barSeries.getData().add(new XYChart.Data<>(user.get(0).getRawData().getEpoch(2).getTimeStamp(), 3));
-                barSeries.getData().add(new XYChart.Data<>(user.get(0).getRawData().getEpoch(3).getTimeStamp(), 5));
+                    processedTable.getItems().add(data);
+                }
 
-                Platform.runLater(() -> {
-                    barChart.getData().add(barSeries);
-                });
+                System.out.println("Table");
+                processedTable.refresh();
+            });
+        } else {
+            Platform.runLater(() -> {
+            XYChart.Series<String, Number> barSeries = new XYChart.Series<>();
 
+            for (DataCouple couple : user) {
+                double percentage1 =
+                    calculatePercentageSlept(couple.getProcessedData());
+                double timeSlept1 = calculateTimeSlept(percentage1,
+                    couple.getProcessedData().get(couple.getProcessedData().size() - 1).getTimeElapsed());
+
+                barSeries.getData().add(new XYChart.Data<>(couple.getRawData().getEpoch(0).getTimeStamp(), timeSlept1));
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+
+
+                barChart.getData().add(barSeries);
+            });
+
         }
     }
 
@@ -156,14 +183,11 @@ public class AnalyseScreenController implements Initializable {
     }
 
     public void comboBoxSetup() {
-        try {
-            User user = User.loadUserFromFile(new File("test2.usr"));
-            processedComboData.add(user.get(0).getRawData().getEpoch(0).getTimeStamp());
-        }  catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+        //User user = User.loadUserFromFile(new File("test2.usr"));
+        for (DataCouple couple : user) {
+            processedComboData.add(couple.getRawData().getEpoch(0).getTimeStamp());
         }
+
         processedCombo.setItems(processedComboData);
     }
 
@@ -173,28 +197,24 @@ public class AnalyseScreenController implements Initializable {
             System.out.println("ComboBox Action (selected: " + selected + ")");
             XYChart.Series<Number, Number> series = new XYChart.Series<>();
             XYChart.Series<Number, Number> seriesPercent = new XYChart.Series<>();
-            try {
-                User user = User.loadUserFromFile(new File("test2.usr"));
-                DataCouple couple = null;
-                for (int i = 0; i < user.size(); i++) {
-                    if (user.get(i).getRawData().getEpoch(0).getTimeStamp().equals(selected)) {
-                        couple = user.get(i);
-                    }
-                }
 
-                for (int i = 0; i < user.get(0).getProcessedData().size(); i += 10) {
-                    Plot plot = couple.getProcessedData().get(i);
-                    series.getData().add(new XYChart.Data<>(plot.getTimeElapsed(),
-                        plot.getLevel()));
+            //User user = User.loadUserFromFile(new File("test2.usr"));
+            DataCouple couple = null;
+            for (int i = 0; i < user.size(); i++) {
+                if (user.get(i).getRawData().getEpoch(0).getTimeStamp().equals(selected)) {
+                    couple = user.get(i);
                 }
-                seriesPercent.getData().add(new XYChart.Data<>(0, 60));
-                seriesPercent.getData().add(new XYChart.Data<>(user.get(0).getProcessedData().get(user.get(0).getProcessedData().size() - 1).getTimeElapsed(),
-                    60));
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
             }
+
+            for (int i = 0; i < user.get(0).getProcessedData().size(); i += 10) {
+                Plot plot = couple.getProcessedData().get(i);
+                series.getData().add(new XYChart.Data<>(plot.getTimeElapsed(),
+                    plot.getLevel()));
+            }
+            seriesPercent.getData().add(new XYChart.Data<>(0, 60));
+            seriesPercent.getData().add(new XYChart.Data<>(user.get(0).getProcessedData().get(user.get(0).getProcessedData().size() - 1).getTimeElapsed(),
+                60));
+
             lineChart.getData().addAll(series, seriesPercent);
         });
     }
@@ -225,16 +245,21 @@ public class AnalyseScreenController implements Initializable {
 
     public void process() {
        new Thread(()->{
-
         try {
-            User user = User.loadUserFromFile(new File("test2.usr"));
+            //User user = User.loadUserFromFile(new File("test2.usr"));
             ProcessedDataContainer processedDataContainer;
+
+
+//            EpochContainer ec =
+//                EpochContainer.loadContainerFromFile(Resource.getFileFromResource("Test.ec"));
+//            user.add(new DataCouple(ec, null));
+            System.out.println(user.size());
             for (int i = 0; i < user.size(); i++) {
                 if (user.get(i).getProcessedData() == null) {
                     processedDataContainer = ClassificationUtils.convertData(user.get(i).getRawData());
                     System.out.println("PC created");
-                    user.add(new DataCouple(user.get(i).getRawData(), processedDataContainer));
-                    System.out.println("Couple added");
+                    user.get(i).setProcessedData(processedDataContainer);
+                    System.out.println("Processed data added");
                 }
             }
 
@@ -242,13 +267,25 @@ public class AnalyseScreenController implements Initializable {
             user.saveToFile(new File("test2.usr"));
             System.out.println("usr saved");
 
+            addToLastWeek();
+
 
         } catch (IOException | ClassNotFoundException e) {
-            System.err.println("Unable to load container from file: " + e.toString());
+            System.err.println("Unable to save container from file: " + e.toString());
             return;
         }
 
         }).start();
+    }
+
+    public void setGoal() {
+        try {
+            user.setCurrentGoal(Integer.parseInt(goalTextField.getText()));
+        } catch (NumberFormatException e) {
+            System.out.println("Please enter an integer.");
+            goalTextField.setText("Please enter an integer.");
+        }
+
     }
 
     public class TableData {
