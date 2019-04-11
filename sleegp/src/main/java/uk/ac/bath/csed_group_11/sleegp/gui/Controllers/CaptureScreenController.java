@@ -132,12 +132,7 @@ public class CaptureScreenController implements Initializable {
     public void setConnected(boolean connected) {
         this.disconnectButton.setDisable(!connected);
         this.connectButton.setDisable(connected);
-
-        if (connected && this.isSaveLocChosen()) {
-            this.startRecordingButton.setDisable(false);
-        } else {
-            this.startRecordingButton.setDisable(true);
-        }
+        this.startRecordingButton.setDisable(!connected);
 
         this.connected = connected;
     }
@@ -147,12 +142,6 @@ public class CaptureScreenController implements Initializable {
     }
 
     public void setSaveLocChosen(boolean saveLocChosen) {
-        if (saveLocChosen && this.isConnected()) {
-            this.startRecordingButton.setDisable(false);
-        } else {
-            this.startRecordingButton.setDisable(true);
-        }
-
         this.saveLocChosen = saveLocChosen;
     }
 
@@ -209,7 +198,10 @@ public class CaptureScreenController implements Initializable {
     public void stopRecording() {
         try {
             this.headset.stopRecording();
-            this.epochContainer.saveToFile(this.outputFile);
+
+            if (this.isSaveLocChosen()) {
+                this.epochContainer.saveToFile(this.outputFile);
+            }
 
             try {
                 var user = User.loadDefaultUser();
