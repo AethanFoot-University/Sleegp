@@ -410,7 +410,6 @@ public class AnalyseScreenController implements Initializable {
             System.out.println("usr saved");
 
             addToLastWeek();
-            setupGoalChart();
         }).start();
     }
 
