@@ -89,26 +89,37 @@ public class AnalyseScreenController implements Initializable {
     public void getAnswers() {
         new Thread(() ->{
             JFrame f = new JFrame();
-            String answer = null;
-            answer = JOptionPane.showInputDialog(f, "What is the time slept for the " +
-                "11/02/2019");
-            if (answer.equals("3.68")) {
-                ExperimentManager.notify("First Answered");
-                answer = JOptionPane.showInputDialog(f, "What is the date where time slept is 5.89");
+            String answer = "null";
+            while (true) {
+                if (answer.equals("null")) {
+                    answer = JOptionPane.showInputDialog(f, "What is the time slept for the " +
+                        "11/02/2019");
+                }
+                if (answer.equals("3.68")) {
+                    ExperimentManager.notify("First Answered");
+                    break;
+                } else {
+                    answer = "null";
+                }
+            }
 
+            while (true) {
+                if (answer.equals("null")) {
+                    answer = JOptionPane.showInputDialog(f, "What is the date where time slept is 5.89");
+                }
                 if (answer.equals("22/02/2019")) {
                     ExperimentManager.notify("Second Answered");
-
-                    for (Flag flag : ExperimentManager.getFlagList()) {
-                        System.out.println(flag.toString());
-                    }
-                    ExperimentManager.endExperiment();
+                    break;
                 } else {
-                    getAnswers();
+                    answer = "null";
                 }
-            } else {
-                getAnswers();
             }
+
+            for (Flag flag : ExperimentManager.getFlagList()) {
+                System.out.println(flag.toString());
+            }
+            ExperimentManager.endExperiment();
+
 
         }).start();
     }
