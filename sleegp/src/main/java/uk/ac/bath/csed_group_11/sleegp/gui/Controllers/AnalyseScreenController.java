@@ -8,26 +8,31 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import uk.ac.bath.csed_group_11.sleegp.cli.SleegpConstants;
 import uk.ac.bath.csed_group_11.sleegp.gui.Experiment.ExperimentManager;
 import uk.ac.bath.csed_group_11.sleegp.gui.Experiment.Flag;
+import uk.ac.bath.csed_group_11.sleegp.gui.Utilities.FilePicker;
 import uk.ac.bath.csed_group_11.sleegp.gui.Utilities.SceneUtils;
 import uk.ac.bath.csed_group_11.sleegp.logic.Classification.ClassificationUtils;
 import uk.ac.bath.csed_group_11.sleegp.logic.Classification.Plot;
 import uk.ac.bath.csed_group_11.sleegp.logic.data.*;
+import uk.ac.bath.csed_group_11.sleegp.logic.util.FileUtils;
 
 import javax.swing.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.StreamCorruptedException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -65,13 +70,27 @@ public class AnalyseScreenController implements Initializable {
 
     @FXML
     LineChart<String, Number> goalChart;
+    private boolean tableSetup = false;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        goalTextField.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
 
+                    if(event.getCode().toString().equals("ENTER"))
+                    {
+                        setGoal();
+                    }
+            }
+        });
 
         if (ExperimentManager.isExperimentMode()) getAnswers();
-        user = User.loadDefaultUser();
+        try{
+            user = User.loadDefaultUser();
+        } catch(Exception e){
+            recoverFile();
+        }
 //        try {
 //            EpochContainer ec = EpochContainer.loadContainerFromFile(Resource.getFileFromResource(
 //                "Test.ec"));
@@ -87,10 +106,7 @@ public class AnalyseScreenController implements Initializable {
             goalLabel.setText(user.getCurrentGoal() + "");
         });
         if (user.size() > 0) {
-            if (!ExperimentManager.isExperimentMode()) {
-                setupTable();
-                listenForTableWidthChange();
-            }
+
 
             if (ExperimentManager.isExperimentMode()) {
                 if (ExperimentManager.getVIEW().equals("AnalyseScreen.fxml")) {
@@ -98,14 +114,42 @@ public class AnalyseScreenController implements Initializable {
                     listenForTableWidthChange();
                 }
             }
-            setupGoalChart();
-            addToLastWeek();
-            comboBoxSetup();
+            refreshView();
             listenForComboAction();
         } else {
             new Thread(()->{
                 Platform.runLater(()->SceneUtils.displayPopUp("You haven't recorded any data."));
             }).start();
+        }
+    }
+
+    public void deleteSelected() {
+        try {
+            int selected = processedTable.getSelectionModel().getSelectedIndex();
+            System.out.println("Deleting row number: " + selected);
+            if(user.size()>1 )user.remove(selected); else SceneUtils.displayOnPopupFXThread("You " +
+                "cannot delete your only piece of data!");
+            saveUser();
+            Platform.runLater(()->refreshView());
+       } catch (Exception e) {
+            SceneUtils.displayOnPopupFXThread("Please select the row you would like to delete.");
+        }
+    }
+
+    private void recoverFile(){
+        SceneUtils.displayOnPopupFXThread("User file is corrupted, repairing...");
+        user = new User();
+        saveUser();
+    }
+
+    private void refreshView(){
+        setupGoalChart();
+        addToLastWeek();
+        comboBoxSetup();
+        if (!ExperimentManager.isExperimentMode() &&!tableSetup) {
+            setupTable();
+            listenForTableWidthChange();
+            tableSetup = true;
         }
     }
 
@@ -160,6 +204,7 @@ public class AnalyseScreenController implements Initializable {
     }
 
     public void setupGoalChart() {
+
         XYChart.Series<String, Number> series = new XYChart.Series<>();
         XYChart.Series<String, Number> seriesGoal = new XYChart.Series<>();
         double totalTime = 0;
@@ -175,6 +220,8 @@ public class AnalyseScreenController implements Initializable {
         }
         seriesGoal.getData().add(new XYChart.Data<>(user.get(0).getRawData().getEpoch(0).getTimeStamp(), user.getCurrentGoal()));
         seriesGoal.getData().add(new XYChart.Data<>(user.get(user.size() - 1).getRawData().getEpoch(0).getTimeStamp(), user.getCurrentGoal()));
+
+        if(goalChart.getData().size()>0) goalChart.getData().clear();
 
         goalChart.getData().addAll(series, seriesGoal);
     }
@@ -331,6 +378,7 @@ public class AnalyseScreenController implements Initializable {
     }
 
     public void comboBoxSetup() {
+        if(processedComboData.size() > 0) processedComboData.clear();
         for (DataCouple couple : user) {
             processedComboData.add(couple.getRawData().getEpoch(0).getTimeStamp());
         }
@@ -391,6 +439,7 @@ public class AnalyseScreenController implements Initializable {
     }
 
     public void process() {
+        System.out.println("Processing");
        new Thread(()->{
            try {
                ProcessedDataContainer processedDataContainer;
@@ -428,6 +477,59 @@ public class AnalyseScreenController implements Initializable {
             System.out.println("Please enter a number.");
             goalTextField.setText("Please enter a number.");
         }
+    }
+
+    public void importCSV(){
+
+            FilePicker filePicker = new FilePicker(".csv", "Comma-Separated Values", "");
+            File importLocation = filePicker.getFile(getStage(), FilePicker.OPEN);
+        new Thread(()-> {
+            if (importLocation != null) {
+                try {
+                    EpochContainer importedEpoch =
+                        new EpochContainer(FileUtils.extractCSV(importLocation.getAbsolutePath()));
+                    if(importedEpoch !=null)user.add(new DataCouple(importedEpoch));
+
+                    Platform.runLater(()->{
+                        process();
+                        saveUser();
+                        refreshView();
+                    });
+                } catch (IOException e) {
+                    SceneUtils.displayOnPopupFXThread("File not found!");
+                } catch (Exception e) {
+                    SceneUtils.displayOnPopupFXThread("Corrupted file!");
+                }
+            }
+        }).start();
+    }
+
+    public void importEC(){
+
+            FilePicker filePicker = new FilePicker(".ec", "Epoch Container", "");
+            File importLocation = filePicker.getFile(getStage(), FilePicker.OPEN);
+        new Thread(()-> {
+            if (importLocation != null) {
+                try {
+                    EpochContainer importedEpoch =
+                        EpochContainer.loadContainerFromFile(importLocation);
+                    if(importedEpoch !=null)user.add(new DataCouple(importedEpoch));
+                    Platform.runLater(()->{
+                        process();
+                        saveUser();
+                        refreshView();
+                    });
+                } catch (IOException e) {
+                    SceneUtils.displayOnPopupFXThread("File not found!");
+                } catch (Exception e) {
+                    SceneUtils.displayOnPopupFXThread("Corrupted file!");
+                }
+            }
+        }).start();
+    }
+
+    private Stage getStage(){
+        return (Stage) processedCombo.getScene().getWindow();
     }
 
     public class TableData {

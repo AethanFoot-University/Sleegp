@@ -1,5 +1,6 @@
 package uk.ac.bath.csed_group_11.sleegp.gui.Utilities;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -19,7 +20,12 @@ public class SceneUtils<controller> {
 
     private static List<Resource> resourceCache = new ArrayList<>();
 
+    public static void displayOnPopupFXThread(String message){
+        new Thread(()-> Platform.runLater(()->SceneUtils.displayPopUp(message))).start();
+    }
+
     public static void displayPopUp(String message) {
+        System.out.println("Displaying to user: "+message);
         var popUp = new Stage();
         popUp.initModality(Modality.WINDOW_MODAL);
 

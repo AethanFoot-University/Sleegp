@@ -1,6 +1,7 @@
 package uk.ac.bath.csed_group_11.sleegp.logic.data;
 
 import uk.ac.bath.csed_group_11.sleegp.cli.SleegpConstants;
+import uk.ac.bath.csed_group_11.sleegp.gui.Utilities.Resource;
 import uk.ac.bath.csed_group_11.sleegp.logic.util.FileTools;
 import uk.ac.bath.csed_group_11.sleegp.logic.util.Load;
 import uk.ac.bath.csed_group_11.sleegp.logic.util.ObjectConverter;
@@ -69,9 +70,9 @@ public class User extends ArrayList<DataCouple> implements Serializable {
         return user;
     }
 
-    public static User loadDefaultUser(){
+    public static User loadDefaultUser() throws IOException, ClassNotFoundException {
         User loaded = null;
-        try { loaded = User.loadUserFromFile(new File(SleegpConstants.RELATIVE_USER_FILE));} catch (Exception e){}
+         try{loaded = User.loadUserFromFile(new File(SleegpConstants.RELATIVE_USER_FILE)); } catch(IOException e){loaded = null;}
 
         if(loaded ==null) return generateUserDB();
 
@@ -92,5 +93,19 @@ public class User extends ArrayList<DataCouple> implements Serializable {
 
     public void setCurrentGoal(double currentGoal) {
         this.currentGoal = currentGoal;
+    }
+
+    //Temporary script for populating the User with new sleep data
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
+        User u = User.loadDefaultUser();
+        EpochContainer ec = EpochContainer.loadContainerFromFile(new File("/Users/mathew" +
+            "/Documents/GitHub/project/resources/test-data/3 Hour (Fixed).ec"));
+
+        u.add(new DataCouple(ec));
+
+        u.saveToFile(new File(SleegpConstants.RELATIVE_USER_FILE));
+
+        System.out.println("[Process Complete]");
+
     }
 }

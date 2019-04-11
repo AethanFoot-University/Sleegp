@@ -7,6 +7,9 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableView?>
@@ -16,13 +19,32 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="mainPane" prefHeight="500.0" prefWidth="900.0" styleClass="root" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="uk.ac.bath.csed_group_11.sleegp.gui.Controllers.AnalyseScreenController">
+<AnchorPane fx:id="mainPane" prefHeight="500.0" prefWidth="900.0" styleClass="root" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="uk.ac.bath.csed_group_11.sleegp.gui.Controllers.AnalyseScreenController">
    <children>
       <BorderPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <top>
-            <HBox alignment="CENTER_LEFT" styleClass="top-bar" BorderPane.alignment="CENTER">
+            <HBox alignment="CENTER_LEFT" BorderPane.alignment="CENTER">
                <children>
                 <Button mnemonicParsing="false" onAction="#back" styleClass="basic-button" text="Back" />
+                  <MenuBar styleClass="top-bar" HBox.hgrow="ALWAYS">
+                    <menus>
+                      <Menu mnemonicParsing="false" text="Import">
+                        <items>
+                              <Menu mnemonicParsing="false" text="Epoch Data">
+                                 <items>
+                                <MenuItem mnemonicParsing="false" onAction="#importCSV" text=".csv" />
+                                    <MenuItem mnemonicParsing="false" onAction="#importEC" text=".ec" />
+                                 </items>
+                              </Menu>
+                        </items>
+                      </Menu>
+                        <Menu mnemonicParsing="false" text="Delete">
+                          <items>
+                              <MenuItem mnemonicParsing="false" onAction="#deleteSelected" text="Selected Container" />
+                          </items>
+                        </Menu>
+                    </menus>
+                  </MenuBar>
                   <Button mnemonicParsing="false" onAction="#process" styleClass="basic-button" text="Process" />
                </children>
             </HBox>
@@ -67,7 +89,7 @@
                                                             <Insets right="20.0" />
                                                          </HBox.margin>
                                                       </Label>
-                                                      <TextField fx:id="goalTextField" />
+                                                      <TextField fx:id="goalTextField" styleClass="text-box" />
                                                       <Button mnemonicParsing="false" onAction="#setGoal" styleClass="basic-button" text="Set Goal">
                                                          <HBox.margin>
                                                             <Insets left="10.0" />
