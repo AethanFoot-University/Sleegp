@@ -446,9 +446,16 @@ public class AnalyseScreenController implements Initializable {
                for (int i = 0; i < user.size(); i++) {
                    if (user.get(i).getProcessedData() == null) {
                        processedDataContainer = ClassificationUtils.convertData(user.get(i).getRawData());
-                       System.out.println("PC created");
-                       user.get(i).setProcessedData(processedDataContainer);
-                       System.out.println("Processed data added");
+
+                       if(processedDataContainer !=null) {
+                           user.get(i).setProcessedData(processedDataContainer);
+                       }
+                       else{
+                            SceneUtils.displayOnPopupFXThread("Terribly sorry. The sleep: "+user.get(i).getRawData().toString()+" was too short to be processed.");
+                            try{user.remove((i--)); } catch(Exception e){}
+                           Platform.runLater(()->refreshView());
+
+                       }
                    }
                }
            } catch (IOException e) {
