@@ -43,7 +43,7 @@
                                  <children>
                                     <BorderPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <center>
-                                          <LineChart BorderPane.alignment="CENTER">
+                                          <LineChart fx:id="goalChart" BorderPane.alignment="CENTER">
                                             <xAxis>
                                               <CategoryAxis side="BOTTOM" />
                                             </xAxis>
@@ -67,12 +67,12 @@
                                                             <Insets left="20.0" right="10.0" />
                                                          </HBox.margin>
                                                       </Label>
-                                                      <Label styleClass="text-label" text="Label">
+                                                      <Label fx:id="goalLabel" styleClass="text-label" text="Label">
                                                          <HBox.margin>
                                                             <Insets right="20.0" />
                                                          </HBox.margin>
                                                       </Label>
-                                                      <TextField fx:id="goalTextField" text="No Goal Set" />
+                                                      <TextField fx:id="goalTextField" />
                                                       <Button mnemonicParsing="false" onAction="#setGoal" styleClass="basic-button" text="Set Goal">
                                                          <HBox.margin>
                                                             <Insets left="10.0" />
