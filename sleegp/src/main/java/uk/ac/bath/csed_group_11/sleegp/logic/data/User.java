@@ -18,11 +18,21 @@ public class User extends ArrayList<DataCouple> implements Serializable {
     static final long serialVersionUID = -2183068004576095519L;
 
     //these integers set up the point system
-    private int points = 0;
-    private int level = 1;
-    private int expPoints = (1000*level+15)%level;
 
-    private int currentGoal = 0;
+    /**
+     * Total amount of points
+     */
+    private int points = 0;
+    //private int expPoints = (1000*level+15)%level;
+
+    transient static final int POINTS_PER_LEVEL = 1500;
+    transient static final int POINTS_FOR_REACHING_GOAL = 3000;
+
+
+    /*
+        Hours per week
+     */
+    private double currentGoal = 0;
 
     public static String EXTENSION = ".usr";
 
@@ -30,19 +40,21 @@ public class User extends ArrayList<DataCouple> implements Serializable {
         return FileTools.saveObject(this, firectory, EXTENSION);
     }
 
-    public void setPoints(int points){
-        this.points+=points;
-        if(points == expPoints ){
-        level+=1;
-        }
+    public void appendHourlyPoints(double sleptHours){
+        points += (sleptHours/currentGoal) *POINTS_PER_LEVEL;
     }
+
 
     public int returnPoints(){
         return points;
     }
 
     public int returnLvl(){
-        return level;
+        return points / POINTS_PER_LEVEL;
+    }
+
+    public double getPercentageProgress(){
+        return (points/(POINTS_PER_LEVEL *1.0)) - (points/POINTS_PER_LEVEL);
     }
 
 
@@ -56,11 +68,11 @@ public class User extends ArrayList<DataCouple> implements Serializable {
         return (User)loaded;
     }
 
-    public int getCurrentGoal() {
+    public double getCurrentGoal() {
         return currentGoal;
     }
 
-    public void setCurrentGoal(int currentGoal) {
+    public void setCurrentGoal(double currentGoal) {
         this.currentGoal = currentGoal;
     }
 }
