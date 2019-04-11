@@ -313,18 +313,12 @@ The user has already opened the application.
   \source{Sleep app questionnaire}
 
   \requirement{req:manual-entry}
-  {The system should permit the manual entering of relevant user data from the last 24 hours.}
+  {The system must permit the manual entry of a goal that is the average time slept during the week.}
   \pmed
-  \deps{\ref{req:manual-entry-bed-woke}}
+  \dnone
   \source{Coursework specification, sleep app questionnaire,
     \textcite{British-Medical-Association:2018aa}}
 
-  \subrequirement{req:manual-entry-bed-woke}
-  {The system must permit the manual entry of information that corresponds to the times when the
-    user went to bed and woke up.}
-  \pmed
-  \dnone
-  \source{\textcite{British-Medical-Association:2018aa}, sleep app questionnaire}
 
   \requirement{req:apply-sorting-algorithm}
   {The system should apply a ``known'' sorting algorithm which allows users to sort tracking data}
