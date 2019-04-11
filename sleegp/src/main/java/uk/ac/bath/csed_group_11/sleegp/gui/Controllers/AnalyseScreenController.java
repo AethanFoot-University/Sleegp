@@ -71,9 +71,7 @@ public class AnalyseScreenController implements Initializable {
 
 
         if (ExperimentManager.isExperimentMode()) getAnswers();
-
-            user = User.loadDefaultUser();
-
+        user = User.loadDefaultUser();
 //        try {
 //            EpochContainer ec = EpochContainer.loadContainerFromFile(Resource.getFileFromResource(
 //                "Test.ec"));
@@ -88,22 +86,25 @@ public class AnalyseScreenController implements Initializable {
         Platform.runLater(() -> {
             goalLabel.setText(user.getCurrentGoal() + "");
         });
-
-        if (!ExperimentManager.isExperimentMode()) {
-            setupTable();
-            listenForTableWidthChange();
-        }
-
-        if (ExperimentManager.isExperimentMode()) {
-            if (ExperimentManager.getVIEW().equals("AnalyseScreen.fxml")) {
+        if (user.size() > 0) {
+            if (!ExperimentManager.isExperimentMode()) {
                 setupTable();
                 listenForTableWidthChange();
             }
+
+            if (ExperimentManager.isExperimentMode()) {
+                if (ExperimentManager.getVIEW().equals("AnalyseScreen.fxml")) {
+                    setupTable();
+                    listenForTableWidthChange();
+                }
+            }
+            setupGoalChart();
+            addToLastWeek();
+            comboBoxSetup();
+            listenForComboAction();
+        } else {
+            JOptionPane.showMessageDialog(new JFrame(), "You haven't recorded any data.");
         }
-        setupGoalChart();
-        addToLastWeek();
-        comboBoxSetup();
-        listenForComboAction();
     }
 
     public void getAnswers() {

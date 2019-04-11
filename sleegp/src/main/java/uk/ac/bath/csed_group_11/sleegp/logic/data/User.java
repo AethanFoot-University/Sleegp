@@ -60,7 +60,11 @@ public class User extends ArrayList<DataCouple> implements Serializable {
 
     public static User generateUserDB(){
         User user = new User();
-        //To be completed
+        try {
+            user.saveToFile(new File(SleegpConstants.RELATIVE_USER_FILE));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 
         return user;
     }
