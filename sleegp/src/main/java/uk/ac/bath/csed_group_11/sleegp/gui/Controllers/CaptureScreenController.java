@@ -10,10 +10,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import uk.ac.bath.csed_group_11.sleegp.cli.SleegpConstants;
 import uk.ac.bath.csed_group_11.sleegp.gui.Utilities.FilePicker;
 import uk.ac.bath.csed_group_11.sleegp.gui.Utilities.SceneUtils;
+import uk.ac.bath.csed_group_11.sleegp.logic.data.DataCouple;
 import uk.ac.bath.csed_group_11.sleegp.logic.data.Epoch;
 import uk.ac.bath.csed_group_11.sleegp.logic.data.EpochContainer;
+import uk.ac.bath.csed_group_11.sleegp.logic.data.User;
 import uk.ac.bath.csed_group_11.sleegp.logic.hardware.Headset;
 
 import java.io.File;
@@ -129,12 +132,7 @@ public class CaptureScreenController implements Initializable {
     public void setConnected(boolean connected) {
         this.disconnectButton.setDisable(!connected);
         this.connectButton.setDisable(connected);
-
-        if (connected && this.isSaveLocChosen()) {
-            this.startRecordingButton.setDisable(false);
-        } else {
-            this.startRecordingButton.setDisable(true);
-        }
+        this.startRecordingButton.setDisable(!connected);
 
         this.connected = connected;
     }
@@ -144,12 +142,6 @@ public class CaptureScreenController implements Initializable {
     }
 
     public void setSaveLocChosen(boolean saveLocChosen) {
-        if (saveLocChosen && this.isConnected()) {
-            this.startRecordingButton.setDisable(false);
-        } else {
-            this.startRecordingButton.setDisable(true);
-        }
-
         this.saveLocChosen = saveLocChosen;
     }
 
@@ -206,7 +198,18 @@ public class CaptureScreenController implements Initializable {
     public void stopRecording() {
         try {
             this.headset.stopRecording();
-            this.epochContainer.saveToFile(this.outputFile);
+
+            if (this.isSaveLocChosen()) {
+                this.epochContainer.saveToFile(this.outputFile);
+            }
+
+            try {
+                var user = User.loadDefaultUser();
+                user.add(new DataCouple(this.epochContainer));
+                user.saveToFile(new File(SleegpConstants.RELATIVE_USER_FILE));
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

@@ -19,16 +19,22 @@ public class ClassificationUtils {
      * @throws ClassNotFoundException
      */
     public static ProcessedDataContainer convertData(EpochContainer epochContainer) throws IOException, ClassNotFoundException {
-        epochContainer.transformCurrentData(MathUtils.movingAverageOnEpochs("lowAlpha", 10));
-        List<Epoch> epochs = epochContainer.getEpochList();
-        DataSmoother smoother = new DataSmoother(epochs);
+        try {
+            epochContainer.transformCurrentData(MathUtils.movingAverageOnEpochs("lowAlpha", 10));
+            List<Epoch> epochs = epochContainer.getEpochList();
+            DataSmoother smoother = new DataSmoother(epochs);
 
-        List<Plot> smoothedAlphaData = smoother.smooth("lowAlpha", 75);
+            List<Plot> smoothedAlphaData = smoother.smooth("lowAlpha", 75);
 
-        ProcessedDataContainer proc = new ProcessedDataContainer(smoothedAlphaData);
-        proc.applyMovingAverage(10);
-        proc.mapLevel(0, 100);
+            ProcessedDataContainer proc = new ProcessedDataContainer(smoothedAlphaData);
+            proc.applyMovingAverage(10);
+            proc.mapLevel(0, 100);
+            return proc;
+        }catch (Exception e){
+            System.out.println("Not enough data to process");
+            return null;
+        }
 
-        return proc;
+
     }
 }
