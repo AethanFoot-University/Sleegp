@@ -103,7 +103,9 @@ public class AnalyseScreenController implements Initializable {
             comboBoxSetup();
             listenForComboAction();
         } else {
-            JOptionPane.showMessageDialog(new JFrame(), "You haven't recorded any data.");
+            new Thread(()->{
+                Platform.runLater(()->SceneUtils.displayPopUp("You haven't recorded any data."));
+            }).start();
         }
     }
 
