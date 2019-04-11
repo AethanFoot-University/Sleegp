@@ -95,10 +95,14 @@ public class AnalyseScreenController implements Initializable {
                     answer = JOptionPane.showInputDialog(f, "What is the time slept for the " +
                         "11/02/2019");
                 }
-                if (answer.equals("3.68")) {
-                    ExperimentManager.notify("First Answered");
-                    break;
-                } else {
+                try {
+                    if (Double.parseDouble(answer) >= 3.5 || Double.parseDouble(answer) <= 4) {
+                        ExperimentManager.notify("First Answered");
+                        break;
+                    } else {
+                        answer = "null";
+                    }
+                } catch (NumberFormatException e) {
                     answer = "null";
                 }
             }
