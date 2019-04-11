@@ -16,17 +16,15 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import org.apache.commons.math3.analysis.function.Exp;
+import uk.ac.bath.csed_group_11.sleegp.cli.SleegpConstants;
 import uk.ac.bath.csed_group_11.sleegp.gui.Experiment.ExperimentManager;
 import uk.ac.bath.csed_group_11.sleegp.gui.Experiment.Flag;
-import uk.ac.bath.csed_group_11.sleegp.gui.Utilities.Resource;
 import uk.ac.bath.csed_group_11.sleegp.gui.Utilities.SceneUtils;
 import uk.ac.bath.csed_group_11.sleegp.logic.Classification.ClassificationUtils;
 import uk.ac.bath.csed_group_11.sleegp.logic.Classification.Plot;
 import uk.ac.bath.csed_group_11.sleegp.logic.data.*;
 
 import javax.swing.*;
-import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -73,12 +71,8 @@ public class AnalyseScreenController implements Initializable {
 
 
         if (ExperimentManager.isExperimentMode()) getAnswers();
-        try {
-            user = User.loadUserFromFile(new File("test3.usr"));
-        } catch (IOException | ClassNotFoundException e) {
-            System.err.println("Unable to load container from file: " + e.toString());
-            return;
-        }
+
+            user = User.loadDefaultUser();
 
 //        try {
 //            EpochContainer ec = EpochContainer.loadContainerFromFile(Resource.getFileFromResource(
@@ -156,9 +150,9 @@ public class AnalyseScreenController implements Initializable {
 
     public void saveUser() {
         try {
-            user.saveToFile(new File("test3.usr"));
+            user.saveToFile(new File(SleegpConstants.RELATIVE_USER_FILE));
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            System.out.println("Have you tampered with the user file? You naughty boy.");
         }
     }
 

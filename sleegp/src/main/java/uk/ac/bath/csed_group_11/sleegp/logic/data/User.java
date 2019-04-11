@@ -1,5 +1,6 @@
 package uk.ac.bath.csed_group_11.sleegp.logic.data;
 
+import uk.ac.bath.csed_group_11.sleegp.cli.SleegpConstants;
 import uk.ac.bath.csed_group_11.sleegp.logic.util.FileTools;
 import uk.ac.bath.csed_group_11.sleegp.logic.util.Load;
 import uk.ac.bath.csed_group_11.sleegp.logic.util.ObjectConverter;
@@ -57,8 +58,21 @@ public class User extends ArrayList<DataCouple> implements Serializable {
         return (points/(POINTS_PER_LEVEL *1.0)) - (points/POINTS_PER_LEVEL);
     }
 
+    public static User generateUserDB(){
+        User user = new User();
+        //To be completed
 
+        return user;
+    }
 
+    public static User loadDefaultUser(){
+        User loaded = null;
+        try { loaded = User.loadUserFromFile(new File(SleegpConstants.RELATIVE_USER_FILE));} catch (Exception e){}
+
+        if(loaded ==null) return generateUserDB();
+
+        return loaded;
+    }
 
     public static User loadUserFromFile(File file) throws IOException,
         ClassNotFoundException {
