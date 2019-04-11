@@ -488,13 +488,7 @@ public class AnalyseScreenController implements Initializable {
                 try {
                     EpochContainer importedEpoch =
                         new EpochContainer(FileUtils.extractCSV(importLocation.getAbsolutePath()));
-                    if(importedEpoch !=null)user.add(new DataCouple(importedEpoch));
-
-                    Platform.runLater(()->{
-                        process();
-                        saveUser();
-                        refreshView();
-                    });
+                   addEpochContainer(importedEpoch);
                 } catch (IOException e) {
                     SceneUtils.displayOnPopupFXThread("File not found!");
                 } catch (Exception e) {
@@ -502,6 +496,16 @@ public class AnalyseScreenController implements Initializable {
                 }
             }
         }).start();
+    }
+
+    private void addEpochContainer(EpochContainer importedEpoch){
+        if(importedEpoch !=null)user.add(new DataCouple(importedEpoch));
+
+        Platform.runLater(()->{
+            process();
+            saveUser();
+            refreshView();
+        });
     }
 
     public void importEC(){
@@ -513,12 +517,7 @@ public class AnalyseScreenController implements Initializable {
                 try {
                     EpochContainer importedEpoch =
                         EpochContainer.loadContainerFromFile(importLocation);
-                    if(importedEpoch !=null)user.add(new DataCouple(importedEpoch));
-                    Platform.runLater(()->{
-                        process();
-                        saveUser();
-                        refreshView();
-                    });
+                    addEpochContainer(importedEpoch);
                 } catch (IOException e) {
                     SceneUtils.displayOnPopupFXThread("File not found!");
                 } catch (Exception e) {
