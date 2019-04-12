@@ -1,53 +1,67 @@
 package uk.ac.bath.csed_group_11.sleegp.gui.Controllers;
 
+import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.text.Text;
+import uk.ac.bath.csed_group_11.sleegp.logic.data.User;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
 public class StatsScreenController implements Initializable {
-
-    public static List<String> names = Arrays.asList("Soren", "Mathew", "Tom", "Sam", "Christophe", "Aethan", "Xander", "Gen");
-
-
-    List<Slider> sliders = new ArrayList<Slider>();
+    private User user;
 
     @FXML
     AnchorPane main;
 
+    @FXML
+    Text levelText;
+
+    @FXML
+    Text xpText;
+
+    @FXML
+    ProgressBar progress;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        try {
+            user = User.loadDefaultUser();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        addLevel();
+        addPoints();
+        addProgress();
     }
 
-  /*  public void genSliders(int id, String name){
-        HBox h= new HBox();
-        Slider s = new Slider();
-        s.setMax(100);
-        s.setMin(0);
-
-        s.valueProperty().addListener(new ChangeListener<ObservableValue>() {
-
-            @Override
-            public void changed(ObservableValue arg0, ObservableValue old,
-                                ObservableValue newValue) {
-               for(int i =0; i< sliders.size(); i++){
-                   if(i!=id){
-                       Slider s = sliders.get(i);
-                       s.setValue(s.getValue() - (newValue.));
-                   }
-               }
-
-            }
+    public void addLevel() {
+        Platform.runLater(() ->{
+            levelText.setText(user.returnLvl() + "");
         });
-    } */
+    }
 
+    public void addPoints() {
+        Platform.runLater(() ->{
+            xpText.setText(user.returnPoints() + "");
+        });
+    }
 
+    public void addProgress() {
+        Platform.runLater(() ->{
+            progress.setProgress(user.getPercentageProgress());
+        });
+    }
 }
