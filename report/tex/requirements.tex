@@ -388,66 +388,51 @@ The user has already opened the application.
   \deps{\ref{sreq:allow-GUIuser-connect-disconnect},\ref{sreq:allow-GUIuser-record-data},\ref{sreq:specifystart-time-record},\ref{sreq:specifystop-time-record},
   \ref{sreq:GUIallow-user-change-format},\ref{sreq:GUI-process-sleep-data},\ref{sreq:GUI-sort-display},
   \ref{sreq:GUI-viewGraph},\ref{sreq:GUI-ManageGoal}}
-  \source{Sleep Application questionnaire and Meeting minutes \#24}
+  \source{Sleep Application questionnaire and Meeting minutes \#23}
 
   \subrequirement{sreq:allow-GUIuser-connect-disconnect}
   {The Graphical User Interface should allow the user to connect and disconnect their neurosky headset.}
   \phigh
   \deps{\ref{sreq:connect-headset},\ref{sreq:disconnect-headset}}
-  \smin{24}
+  \smin{23}
 
 \subrequirement{sreq:allow-GUIuser-record-data}
-  {The Graphical User Interface should allow the user to record data from the headset and choose where
-    to store it.}
+  {The Graphical User Interface should allow the user start and stop recording brainwave data
+  from the headset and choose where to save it.}
   \phigh
   \deps{\ref{sreq:read-data-headset}, \ref{sreq:facilitate-saving}}
-  \smin{24}
-
-  \subrequirement{sreq:specifystart-time-record}
-  {The Graphical User Interface should allow the user to start recording their sleep cycle data.}
-  \phigh
-  \deps{\ref{sreq:allow-user-record-data}}
-  \smin{24}
-
-  \subrequirement{sreq:specifystop-time-record}
-  {The Graphical User Interface should allow the user to stop recording their sleep cycle data.}
-  \phigh
-  \deps{\ref{sreq:allow-user-record-data}}
-  \smin{24}
+  \smin{23}
 
   \subrequirement{sreq:GUIallow-user-change-format}
   {The Graphical User Interface should allow the user to convert a binary (.ec) file to CSV format,
     and choose where to save the converted file.}
   \phigh
   \deps{\ref{sreq:facilitate-conversion}}
-  \smin{24}
+  \smin{23}
+
+  \subrequirement{sreq:GUIallow-playback-Data}
+  {The Graphical User Interface should allow the user playback their brainwave data from a selected CSV file}
+  \phigh
+  \deps{\ref{sreq:allow-GUIuser-record-data}}
+  \smin{23}
 
   \subrequirement{sreq:GUI-process-sleep-data}
-  {The Graphical User Interface must allow the user to process sleep cycle data from a raw recorded
-    data file.}
+  {The Graphical User Interface must allow the user to process raw brainwave data stored in a user file.}
   \phigh
   \dnone
-  \smin{24}
+  \smin{23}
 
   \subrequirement{sreq:GUI-sort-display}
   {The Graphical User Interface must display the percentage slept and the time slept in the form of a table.}
   \phigh
   \deps{\ref{req:extract-data}}
-  \smin{24}
+  \smin{23}
 
   \subrequirement{sreq:GUI-viewGraph}
-  {The Graphical User Interface must allow the user to view the selected processed sleep cycle data in the form of a line graph.}
+  {The Graphical User Interface must allow the user to view the selected processed brainwave data in the form of a line graph.}
   \phigh
   \deps{\ref{sreq:present-hypnogram}}
-  \source{Sleep app questionnaire and Meeting Minutes \#24}
-
-
-    \subrequirement{sreq:GUI-ManageGoal}
-    {The Graphical User Interface must allow the user to set, change and manage a goal for the average time they want to sleep during the week.}
-    \phigh
-    \deps{\ref{req:allow-manage-goals}}
-    \source{Sleep app questionnaire and Coursework Specification}
-
+  \source{Sleep app questionnaire and Meeting Minutes \#23}
 
   % Identifying Trends in Data
 
