@@ -72,6 +72,7 @@ public class EpochContainerTests {
         // Load the contents of the `.csv` file.
         String expectedCSV;
         try {
+            //System.out.println(csvURL.getPath().substring(1));
             byte[] csvEncoded = Files.readAllBytes(Paths.get(csvURL.getPath()));
             expectedCSV = new String(csvEncoded, Charset.defaultCharset()).trim();
         } catch (IOException e) {
