@@ -2,6 +2,36 @@
     -fx-background-color: "#2B2B2B";
 }
 
+
+.progress-bar {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0, 1;
+    -fx-indeterminate-bar-length: 60;
+    -fx-indeterminate-bar-escape: true;
+    -fx-indeterminate-bar-flip: true;
+    -fx-indeterminate-bar-animation-time: 2;
+}
+
+.progress-bar .bar {
+    -fx-background-color: white;
+    -fx-background-insets: 0, 1, 2;
+    -fx-padding: 0.416667em; /* 5 */
+}
+
+.progress-bar:indeterminate .bar {
+    -fx-background-color: red;
+}
+
+.progress-bar .track {
+    -fx-background-color:"#222427";
+    -fx-background-insets:  0, 1;
+}
+
+.progress-bar:disabled {
+    -fx-opacity: -fx-disabled-opacity;
+}
+
+
 .chat-room-list {
     -fx-fill: "#BBBBBB";
     -fx-background-color: "#2F3136";
