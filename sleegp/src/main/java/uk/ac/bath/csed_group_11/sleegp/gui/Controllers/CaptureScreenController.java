@@ -64,6 +64,7 @@ public class CaptureScreenController implements Initializable {
     private boolean connected = false;
 
     private boolean saveLocChosen = false;
+    private boolean dataActuallyRecieved = false;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -111,6 +112,7 @@ public class CaptureScreenController implements Initializable {
         this.headset = new Headset() {
             @Override
             public void update(Epoch data) {
+                if(!dataActuallyRecieved) dataActuallyRecieved = true;
                 epochContainer.addEpoch(data);
                 controller.updateChart(data);
             }
@@ -199,17 +201,25 @@ public class CaptureScreenController implements Initializable {
         try {
             this.headset.stopRecording();
 
-            if (this.isSaveLocChosen()) {
-                this.epochContainer.saveToFile(this.outputFile);
+            if(dataActuallyRecieved) {
+                if (this.isSaveLocChosen()) {
+                    this.epochContainer.saveToFile(this.outputFile);
+                }
+
+                try {
+                    var user = User.loadDefaultUser();
+                    user.add(new DataCouple(this.epochContainer));
+                    user.saveToFile(new File(SleegpConstants.RELATIVE_USER_FILE));
+
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+            else{
+                SceneUtils.displayOnPopupFXThread("No data was captured.");
             }
 
-            try {
-                var user = User.loadDefaultUser();
-                user.add(new DataCouple(this.epochContainer));
-                user.saveToFile(new File(SleegpConstants.RELATIVE_USER_FILE));
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
+
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -218,6 +228,8 @@ public class CaptureScreenController implements Initializable {
             this.startRecordingButton.setDisable(false);
             this.stopRecordingButton.setDisable(true);
         }
+
+
     }
 
     private void updateChart(Epoch data) {

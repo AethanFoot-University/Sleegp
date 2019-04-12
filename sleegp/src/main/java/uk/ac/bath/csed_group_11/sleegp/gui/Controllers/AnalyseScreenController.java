@@ -126,11 +126,10 @@ public class AnalyseScreenController implements Initializable {
     public void deleteSelected() {
         try {
             int selected = processedTable.getSelectionModel().getSelectedIndex();
-            System.out.println("Deleting row number: " + selected);
-            if(user.size()>1 )user.remove(selected); else SceneUtils.displayOnPopupFXThread("You " +
-                "cannot delete your only piece of data!");
+
+            if(selected>=0) if(user.size()>1 ) user.remove(selected); else user.clear();
             saveUser();
-            Platform.runLater(()->refreshView());
+             Platform.runLater(()->refreshView());
        } catch (Exception e) {
             SceneUtils.displayOnPopupFXThread("Please select the row you would like to delete.");
         }
@@ -204,26 +203,29 @@ public class AnalyseScreenController implements Initializable {
     }
 
     public void setupGoalChart() {
-
-        XYChart.Series<String, Number> series = new XYChart.Series<>();
-        XYChart.Series<String, Number> seriesGoal = new XYChart.Series<>();
-        double totalTime = 0;
-        for (DataCouple couple : user) {
-            if (couple.getProcessedData() != null) {
-                double percentage = calculatePercentageSlept(couple.getProcessedData());
-                double timeSlept = calculateTimeSlept(percentage,
-                    couple.getProcessedData().get(couple.getProcessedData().size() - 1).getTimeElapsed());
-                totalTime += timeSlept;
-                series.getData().add(new XYChart.Data<>(couple.getRawData().getEpoch(0).getTimeStamp(),
-                    totalTime));
-            }
-        }
-        seriesGoal.getData().add(new XYChart.Data<>(user.get(0).getRawData().getEpoch(0).getTimeStamp(), user.getCurrentGoal()));
-        seriesGoal.getData().add(new XYChart.Data<>(user.get(user.size() - 1).getRawData().getEpoch(0).getTimeStamp(), user.getCurrentGoal()));
-
         if(goalChart.getData().size()>0) goalChart.getData().clear();
 
-        goalChart.getData().addAll(series, seriesGoal);
+        if(user.size()>0) {
+            XYChart.Series<String, Number> series = new XYChart.Series<>();
+            XYChart.Series<String, Number> seriesGoal = new XYChart.Series<>();
+            double totalTime = 0;
+            for (DataCouple couple : user) {
+                if (couple.getProcessedData() != null) {
+                    double percentage = calculatePercentageSlept(couple.getProcessedData());
+                    double timeSlept = calculateTimeSlept(percentage,
+                        couple.getProcessedData().get(couple.getProcessedData().size() - 1).getTimeElapsed());
+                    totalTime += timeSlept;
+                    series.getData().add(new XYChart.Data<>(couple.getRawData().getEpoch(0).getTimeStamp(),
+                        totalTime));
+                }
+            }
+            seriesGoal.getData().add(new XYChart.Data<>(user.get(0).getRawData().getEpoch(0).getTimeStamp(), user.getCurrentGoal()));
+            seriesGoal.getData().add(new XYChart.Data<>(user.get(user.size() - 1).getRawData().getEpoch(0).getTimeStamp(), user.getCurrentGoal()));
+            goalChart.getData().addAll(series, seriesGoal);
+        }
+
+
+
     }
 
     public void setupTable() {
@@ -388,6 +390,7 @@ public class AnalyseScreenController implements Initializable {
 
     public void listenForComboAction() {
         processedCombo.setOnAction((event) -> {
+
             String selected = processedCombo.getSelectionModel().getSelectedItem();
             System.out.println("ComboBox Action (selected: " + selected + ")");
             XYChart.Series<Number, Number> series = new XYChart.Series<>();
@@ -399,7 +402,7 @@ public class AnalyseScreenController implements Initializable {
                     couple = user.get(i);
                 }
             }
-            if (couple.getProcessedData() != null) {
+            if (couple !=null &&couple.getProcessedData() != null) {
                 for (int i = 0; i < user.get(0).getProcessedData().size(); i += 10) {
                     Plot plot = couple.getProcessedData().get(i);
                     series.getData().add(new XYChart.Data<>(plot.getTimeElapsed(),
