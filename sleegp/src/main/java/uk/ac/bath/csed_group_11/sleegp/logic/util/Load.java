@@ -1,5 +1,6 @@
 package uk.ac.bath.csed_group_11.sleegp.logic.util;
 
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -27,7 +28,7 @@ public class Load {
      *
      * @return
      */
-    public Object load() throws IOException, ClassNotFoundException {
+    public Object load() throws IOException, ClassNotFoundException{
         byte[] array = Files.readAllBytes(file.toPath());
         return ObjectConverter.deserialize(array);
     }

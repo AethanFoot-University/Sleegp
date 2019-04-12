@@ -18,6 +18,8 @@ import uk.ac.bath.csed_group_11.sleegp.gui.Utilities.StageLoader;
 import uk.ac.bath.csed_group_11.sleegp.gui.Utilities.StageRunnable;
 import uk.ac.bath.csed_group_11.sleegp.gui.Windows.LoadingWindow;
 
+import java.util.Arrays;
+
 public class GUIMain {
     public static final int DEFAULT_WAIT = 3000;
 
@@ -55,6 +57,7 @@ public class GUIMain {
                 return resource;
             }
         };
+
 
         //Getting access to the home screen controller
         HomeScreenController homeScreenController = homeStage.open(args, setup);

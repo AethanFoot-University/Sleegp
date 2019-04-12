@@ -4,7 +4,8 @@
 <?import javafx.scene.layout.AnchorPane?>
 
 
-<AnchorPane prefHeight="500.0" prefWidth="900.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="uk.ac.bath.csed_group_11.sleegp.gui.Controllers.StatsScreenController">
+<AnchorPane fx:id="main" prefHeight="500.0" prefWidth="900.0" stylesheets="@style.css"
+             xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="uk.ac.bath.csed_group_11.sleegp.gui.Controllers.StatsScreenController">
    <children>
       <ProgressBar prefWidth="500.0" progress="0.5" />
    </children>

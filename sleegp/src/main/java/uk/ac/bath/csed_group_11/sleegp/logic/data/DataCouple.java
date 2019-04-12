@@ -9,6 +9,8 @@ public class DataCouple implements Serializable {
     /**
      * This is serializable ID, set to static so that there is not an ID mis-match error when saving files
      */
+
+    private boolean pointsAwarded = false;
     static final long serialVersionUID = -6209602756558504168L;
 
     private EpochContainer rawData = null;
@@ -41,5 +43,13 @@ public class DataCouple implements Serializable {
 
     public void setProcessedData(ProcessedDataContainer processedData) {
         this.processedData = processedData;
+    }
+
+    public boolean isPointsAwarded() {
+        return pointsAwarded;
+    }
+
+    public void setPointsAwarded(boolean pointsAwarded) {
+        this.pointsAwarded = pointsAwarded;
     }
 }

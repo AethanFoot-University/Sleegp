@@ -274,11 +274,12 @@ NumberAxis {
 }
 
 .tab:selected .tab-label {
-    -fx-border-radius: 10;
-    -fx-background-radius: 10;
+    /*-fx-border-radius: 10;
+    -fx-background-radius: 10; */
     -fx-padding: 2 5 2 5;
     -fx-border-color: white;
 }
+
 
 
 

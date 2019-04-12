@@ -10,10 +10,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import uk.ac.bath.csed_group_11.sleegp.cli.SleegpConstants;
 import uk.ac.bath.csed_group_11.sleegp.gui.Utilities.FilePicker;
 import uk.ac.bath.csed_group_11.sleegp.gui.Utilities.SceneUtils;
+import uk.ac.bath.csed_group_11.sleegp.logic.data.DataCouple;
 import uk.ac.bath.csed_group_11.sleegp.logic.data.Epoch;
 import uk.ac.bath.csed_group_11.sleegp.logic.data.EpochContainer;
+import uk.ac.bath.csed_group_11.sleegp.logic.data.User;
 import uk.ac.bath.csed_group_11.sleegp.logic.hardware.Headset;
 
 import java.io.File;
@@ -61,6 +64,7 @@ public class CaptureScreenController implements Initializable {
     private boolean connected = false;
 
     private boolean saveLocChosen = false;
+    private boolean dataActuallyRecieved = false;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -108,6 +112,7 @@ public class CaptureScreenController implements Initializable {
         this.headset = new Headset() {
             @Override
             public void update(Epoch data) {
+                if(!dataActuallyRecieved) dataActuallyRecieved = true;
                 epochContainer.addEpoch(data);
                 controller.updateChart(data);
             }
@@ -129,12 +134,7 @@ public class CaptureScreenController implements Initializable {
     public void setConnected(boolean connected) {
         this.disconnectButton.setDisable(!connected);
         this.connectButton.setDisable(connected);
-
-        if (connected && this.isSaveLocChosen()) {
-            this.startRecordingButton.setDisable(false);
-        } else {
-            this.startRecordingButton.setDisable(true);
-        }
+        this.startRecordingButton.setDisable(!connected);
 
         this.connected = connected;
     }
@@ -144,12 +144,6 @@ public class CaptureScreenController implements Initializable {
     }
 
     public void setSaveLocChosen(boolean saveLocChosen) {
-        if (saveLocChosen && this.isConnected()) {
-            this.startRecordingButton.setDisable(false);
-        } else {
-            this.startRecordingButton.setDisable(true);
-        }
-
         this.saveLocChosen = saveLocChosen;
     }
 
@@ -195,6 +189,7 @@ public class CaptureScreenController implements Initializable {
 
     public void startRecording() {
         // TODO: Check whether the capture was successful
+        dataActuallyRecieved = false;
         this.headset.capture();
 
         this.disconnectButton.setDisable(true);
@@ -206,7 +201,26 @@ public class CaptureScreenController implements Initializable {
     public void stopRecording() {
         try {
             this.headset.stopRecording();
-            this.epochContainer.saveToFile(this.outputFile);
+
+            if(dataActuallyRecieved) {
+                if (this.isSaveLocChosen()) {
+                    this.epochContainer.saveToFile(this.outputFile);
+                }
+
+                try {
+                    var user = User.loadDefaultUser();
+                    user.add(new DataCouple(this.epochContainer));
+                    user.saveToFile(new File(SleegpConstants.RELATIVE_USER_FILE));
+
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+            else{
+                SceneUtils.displayOnPopupFXThread("No data was captured.");
+            }
+
+
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -215,6 +229,8 @@ public class CaptureScreenController implements Initializable {
             this.startRecordingButton.setDisable(false);
             this.stopRecordingButton.setDisable(true);
         }
+
+
     }
 
     private void updateChart(Epoch data) {
