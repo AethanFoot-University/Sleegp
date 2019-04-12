@@ -18,12 +18,17 @@ import org.controlsfx.dialog.Dialogs;
 import uk.ac.bath.csed_group_11.sleegp.gui.Experiment.ExperimentManager;
 import uk.ac.bath.csed_group_11.sleegp.gui.Utilities.FilePicker;
 import uk.ac.bath.csed_group_11.sleegp.gui.Utilities.SceneUtils;
+import uk.ac.bath.csed_group_11.sleegp.logic.data.DataCouple;
 import uk.ac.bath.csed_group_11.sleegp.logic.data.EpochContainer;
+import uk.ac.bath.csed_group_11.sleegp.logic.data.User;
 import uk.ac.bath.csed_group_11.sleegp.logic.util.FileTools;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
 
 /**
@@ -133,10 +138,8 @@ public class ViewScreenController implements Initializable {
                     Platform.runLater(() -> {
 
                         try {
-                            epochContainer = EpochContainer.loadContainerFromFile(epLocation);
 
-                            prepareECView();
-                            setupPlayBack();
+                            loadEpochContainer(EpochContainer.loadContainerFromFile(epLocation));
 
                         } catch (IOException e) {
                             System.out.println("Epoch Container Load Failed");
@@ -149,9 +152,34 @@ public class ViewScreenController implements Initializable {
                 }).start();
             }
     }
+    private void loadEpochContainer(EpochContainer epoch){
+        epochContainer = epoch;
+        prepareECView();
+        setupPlayBack();
+    }
 
     public void openUserFile(){
+
         System.out.println("Loading file from user");
+        new Thread(()->{
+
+            try {
+                User u = User.loadDefaultUser();
+
+                List<String> options = new ArrayList<String>();
+
+                if(u!=null &&u.size()>0) for(DataCouple coup :
+                    u) options.add(coup.getRawData().toString());
+                int selected = SceneUtils.comboBoxPopup("Please select a container to playback",
+                    options);
+
+                Platform.runLater(()->{if(selected>=0)loadEpochContainer(u.get(selected).getRawData());});
+
+                System.out.println(selected);
+            } catch (IOException e) {} catch (ClassNotFoundException e) {}
+
+
+        }).start();
     }
 
     public void exportToCSV(){
@@ -207,6 +235,9 @@ public class ViewScreenController implements Initializable {
 
     private void setupPlayBack(){
         if(epochContainer !=null && epochContainer.size() >0){
+
+            if(graphPlayer !=null) graphPlayer.dispose();
+
             graphPlayer = new GraphPlayer(mainChart, epochContainer, "lowAlpha") {
                 @Override
                 public void sendUpdate(long timeProgressed) {

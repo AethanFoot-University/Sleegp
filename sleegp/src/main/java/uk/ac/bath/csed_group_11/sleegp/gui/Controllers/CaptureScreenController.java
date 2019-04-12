@@ -189,6 +189,7 @@ public class CaptureScreenController implements Initializable {
 
     public void startRecording() {
         // TODO: Check whether the capture was successful
+        dataActuallyRecieved = false;
         this.headset.capture();
 
         this.disconnectButton.setDisable(true);
