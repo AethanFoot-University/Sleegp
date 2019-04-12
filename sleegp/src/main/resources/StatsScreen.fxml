@@ -55,7 +55,7 @@
             </HBox>
             <HBox alignment="CENTER" VBox.vgrow="NEVER">
                <children>
-                  <ProgressBar fx:id="progressBar" prefHeight="20.0" prefWidth="723.0" progress="0.51" HBox.hgrow="ALWAYS" />
+                  <ProgressBar fx:id="progress" prefHeight="20.0" prefWidth="723.0" progress="0.51" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
          </children>

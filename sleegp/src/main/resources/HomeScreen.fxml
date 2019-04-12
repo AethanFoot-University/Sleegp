@@ -19,7 +19,7 @@
          <top>
             <HBox alignment="TOP_RIGHT" prefHeight="16.0" prefWidth="670.0" styleClass="top-bar" BorderPane.alignment="CENTER">
                <children>
-                  <Button alignment="CENTER" contentDisplay="CENTER" defaultButton="true" mnemonicParsing="false" onAction="#switchUser" styleClass="basic-button" text="Switch User">
+                  <Button alignment="CENTER" contentDisplay="CENTER" defaultButton="true" disable="true" mnemonicParsing="false" onAction="#switchUser" opacity="0.0" styleClass="basic-button" text="Switch User">
                      <font>
                         <Font name="Georgia" size="13.0" />
                      </font>

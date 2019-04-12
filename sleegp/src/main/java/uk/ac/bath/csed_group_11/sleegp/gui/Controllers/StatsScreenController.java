@@ -63,7 +63,9 @@ public class StatsScreenController implements Initializable {
 
     public void addProgress() {
         Platform.runLater(() ->{
-            progress.setProgress(user.getPercentageProgress());
+            try {
+                progress.setProgress(user.getPercentageProgress());
+            }catch (Exception e){}
         });
     }
 
