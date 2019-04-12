@@ -294,6 +294,12 @@ The user has already opened the application.
   \deps{\ref{sreq:calculate-moving-average}}
   \smin{16}
 
+  \subrequirement{sreq:extract-sleep-time}
+  {The system must calculate the time slept}
+  \phigh
+  \deps{\ref{sreq:calculate-moving-average}}
+  \source{Sleep application questionnaire, meeting minutes \#16}
+
   \requirement{req:present-data}
   {The system should be able to present sleep cycle data to the user.}
   \phigh
@@ -301,13 +307,13 @@ The user has already opened the application.
   \source{Coursework specification, meeting minutes \#7, sleep app questionnaire}
 
   \subrequirement{sreq:present-data-table}
-  {The system should be able to present sleep cycle data in the form of a data table.}
+  {The system should be able to present the percentage slept and the time slept in the form of a data table.}
   \phigh
   \deps{\ref{req:extract-data}}
   \smin{17}
 
   \subrequirement{sreq:present-hypnogram}
-  {The system should be able to present sleep cycle data in the form of a line graph.}
+  {The system should be able to present processed data in the form of a line graph.}
   \phigh
   \deps{\ref{req:extract-data}}
   \source{Sleep app questionnaire}
@@ -375,6 +381,73 @@ The user has already opened the application.
   \phigh
   \deps{\ref{req:apply-sorting-algorithm}}
   \smin{13}
+
+  \requirement{reqs: GUI-requiremnt}
+  {The system should accomodate the use of a Graphical User Interface}
+  \phigh
+  \deps{\ref{sreq:allow-GUIuser-connect-disconnect},\ref{sreq:allow-GUIuser-record-data},\ref{sreq:specifystart-time-record},\ref{sreq:specifystop-time-record},
+  \ref{sreq:GUIallow-user-change-format},\ref{sreq:GUI-process-sleep-data},\ref{sreq:GUI-sort-display},
+  \ref{sreq:GUI-viewGraph},\ref{sreq:GUI-ManageGoal}}
+  \source{Sleep Application questionnaire and Meeting minutes \#24}
+
+  \subrequirement{sreq:allow-GUIuser-connect-disconnect}
+  {The Graphical User Interface should allow the user to connect and disconnect their neurosky headset.}
+  \phigh
+  \deps{\ref{sreq:connect-headset},\ref{sreq:disconnect-headset}}
+  \smin{24}
+
+\subrequirement{sreq:allow-GUIuser-record-data}
+  {The Graphical User Interface should allow the user to record data from the headset and choose where
+    to store it.}
+  \phigh
+  \deps{\ref{sreq:read-data-headset}, \ref{sreq:facilitate-saving}}
+  \smin{24}
+
+  \subrequirement{sreq:specifystart-time-record}
+  {The Graphical User Interface should allow the user to start recording their sleep cycle data.}
+  \phigh
+  \deps{\ref{sreq:allow-user-record-data}}
+  \smin{24}
+
+  \subrequirement{sreq:specifystop-time-record}
+  {The Graphical User Interface should allow the user to stop recording their sleep cycle data.}
+  \phigh
+  \deps{\ref{sreq:allow-user-record-data}}
+  \smin{24}
+
+  \subrequirement{sreq:GUIallow-user-change-format}
+  {The Graphical User Interface should allow the user to convert a binary (.ec) file to CSV format,
+    and choose where to save the converted file.}
+  \phigh
+  \deps{\ref{sreq:facilitate-conversion}}
+  \smin{24}
+
+  \subrequirement{sreq:GUI-process-sleep-data}
+  {The Graphical User Interface must allow the user to process sleep cycle data from a raw recorded
+    data file.}
+  \phigh
+  \dnone
+  \smin{24}
+
+  \subrequirement{sreq:GUI-sort-display}
+  {The Graphical User Interface must display the percentage slept and the time slept in the form of a table.}
+  \phigh
+  \deps{\ref{req:extract-data}}
+  \smin{24}
+
+  \subrequirement{sreq:GUI-viewGraph}
+  {The Graphical User Interface must allow the user to view the selected processed sleep cycle data in the form of a line graph.}
+  \phigh
+  \deps{\ref{sreq:present-hypnogram}}
+  \source{Sleep app questionnaire and Meeting Minutes \#24}
+
+
+    \subrequirement{sreq:GUI-ManageGoal}
+    {The Graphical User Interface must allow the user to set, change and manage a goal for the average time they want to sleep during the week.}
+    \phigh
+    \deps{\ref{req:allow-manage-goals}}
+    \source{Sleep app questionnaire and Coursework Specification}
+
 
   % Identifying Trends in Data
 
