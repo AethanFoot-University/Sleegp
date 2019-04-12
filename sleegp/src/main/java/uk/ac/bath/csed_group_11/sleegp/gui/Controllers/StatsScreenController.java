@@ -12,6 +12,8 @@ import javafx.scene.control.Slider;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
+import uk.ac.bath.csed_group_11.sleegp.gui.Utilities.SceneUtils;
 import uk.ac.bath.csed_group_11.sleegp.logic.data.User;
 
 import java.io.IOException;
@@ -63,5 +65,9 @@ public class StatsScreenController implements Initializable {
         Platform.runLater(() ->{
             progress.setProgress(user.getPercentageProgress());
         });
+    }
+
+    public void back() {
+        SceneUtils.setView((Stage) main.getScene().getWindow(), "HomeScreen.fxml");
     }
 }
