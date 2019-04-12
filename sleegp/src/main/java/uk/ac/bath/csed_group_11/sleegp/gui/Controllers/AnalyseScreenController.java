@@ -349,6 +349,9 @@ public class AnalyseScreenController implements Initializable {
                         double timeSlept1 = calculateTimeSlept(percentage1,
                             couple.getProcessedData().get(couple.getProcessedData().size() - 1).getTimeElapsed());
 
+                        refreshPoints(couple, timeSlept1);
+
+
                         TableData data =
                             new TableData(couple.getRawData().getEpoch(0).getTimeStamp().replace('.', ' '), percentage1, timeSlept1);
 
@@ -360,6 +363,17 @@ public class AnalyseScreenController implements Initializable {
                 processedTable.refresh();
             });
         }
+    }
+
+    public void refreshPoints(DataCouple couple, double timeSlept1){
+        if(!couple.isPointsAwarded()) {
+            user.appendHourlyPoints(timeSlept1);
+            couple.setPointsAwarded(true);
+        }
+        saveUser();
+
+
+        System.out.println("User points: "+user.returnPoints()+", "+user.returnLvl()+", "+user.getPercentageProgress());
     }
 
     public void listenForTableWidthChange() {
@@ -390,7 +404,7 @@ public class AnalyseScreenController implements Initializable {
 
     public void listenForComboAction() {
         processedCombo.setOnAction((event) -> {
-
+            if(lineChart.getData().size()>0)lineChart.getData().clear();
             String selected = processedCombo.getSelectionModel().getSelectedItem();
             System.out.println("ComboBox Action (selected: " + selected + ")");
             XYChart.Series<Number, Number> series = new XYChart.Series<>();
