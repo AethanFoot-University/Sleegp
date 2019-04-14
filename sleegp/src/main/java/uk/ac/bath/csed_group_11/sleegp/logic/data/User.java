@@ -95,15 +95,45 @@ public class User extends ArrayList<DataCouple> implements Serializable {
         this.currentGoal = currentGoal;
     }
 
+
+
     //Temporary script for populating the User with new sleep data
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         User u = User.loadDefaultUser();
-        EpochContainer ec = EpochContainer.loadContainerFromFile(new File("/Users/mathew" +
-            "/Documents/GitHub/project/resources/test-data/3 Hour (Fixed).ec"));
+        u.points =0;
+        for(DataCouple c : u){
+            System.out.println(c.getRawData());
+            c.setPointsAwarded(false);
+        }
+        //EpochContainer ec = EpochContainer.loadContainerFromFile(new File("/Users/mathew" +
+          //  "/Documents/GitHub/project/resources/test-data/3 Hour (Fixed).ec"));
 
-        u.add(new DataCouple(ec));
+
+        EpochContainer epochContainer = u.get(0).getRawData();
+
+        EpochContainer newEpoch = new EpochContainer();
+
+        for(Epoch oe: epochContainer.getEpochList()){
+            Epoch e = new Epoch(oe.getTimeElapsed());
+
+            int sign = (Math.random()>0.5)? 1 : -1;
+
+            e.setLowAlpha((int)(1.0+sign*Math.random()*0.2)*oe.getLowAlpha());
+            e.setTimeStamp("2019.02.26.20.07.58.397");
+
+            newEpoch.addEpoch(e);
+        }
+
+
+
+
+
+
+        u.add(new DataCouple(newEpoch));
 
         u.saveToFile(new File(SleegpConstants.RELATIVE_USER_FILE));
+
+
 
         System.out.println("[Process Complete]");
 

@@ -31,6 +31,7 @@ public class ClassificationUtils {
             proc.mapLevel(0, 100);
             return proc;
         }catch (Exception e){
+            e.printStackTrace();
             System.out.println("Not enough data to process");
             return null;
         }

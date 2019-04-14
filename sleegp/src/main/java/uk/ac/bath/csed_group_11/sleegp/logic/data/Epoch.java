@@ -82,6 +82,9 @@ public class Epoch implements Serializable, Comparable<Epoch>{
     public Epoch(int timeElapsed){
         this.timeElapsed = timeElapsed;
     }
+    public Epoch(long timeElapsed){
+        this.timeElapsed = timeElapsed;
+    }
 
     public Epoch(String csvRow){
         String[] attributes = csvRow.split(",");
@@ -379,6 +382,12 @@ public class Epoch implements Serializable, Comparable<Epoch>{
     public void setPoorSignalLevel(int poorSignalLevel) {
         this.poorSignalLevel = poorSignalLevel;
     }
+
+    public long getTimeElapsed() {
+        return timeElapsed;
+    }
+
+
 
     @Override
     public int compareTo(Epoch o) {

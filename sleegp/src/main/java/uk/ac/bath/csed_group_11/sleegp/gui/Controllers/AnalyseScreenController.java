@@ -103,7 +103,7 @@ public class AnalyseScreenController implements Initializable {
 //        }
 
         Platform.runLater(() -> {
-            goalLabel.setText(user.getCurrentGoal() + "");
+            goalLabel.setText(user.getCurrentGoal()/7.0 + "");
         });
         if (user.size() > 0) {
 
@@ -491,10 +491,10 @@ public class AnalyseScreenController implements Initializable {
 
     public void setGoal() {
         try {
-            user.setCurrentGoal(Double.parseDouble(goalTextField.getText()));
+            user.setCurrentGoal(Double.parseDouble(goalTextField.getText())*7.0);
             goalTextField.clear();
             Platform.runLater(() -> {
-                goalLabel.setText(user.getCurrentGoal() + "");
+                goalLabel.setText(user.getCurrentGoal()/7.0 + "");
             });
             saveUser();
         } catch (NumberFormatException e) {
