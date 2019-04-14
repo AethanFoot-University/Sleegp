@@ -78,6 +78,7 @@ The user has already opened the application.
 \subsection{Non-Functional Requirements}\label{ssec:non-functional-requirements}
 
 \renewcommand*{\arraystretch}{1.4}
+
 \begin{reqtable}
   % Software Development Process
 
@@ -145,16 +146,18 @@ The user has already opened the application.
   \reqheader
 
   \requirement{req:4-articles}
-  {Must read and cite 4 articles in the field of personal informatics.}
-  \phigh
-  \dnone
-  \sspec
+  {Must read and cite 4 articles in the field of personal informatics.}{
+    \phigh
+    \dnone
+    \sspec
+  }
 
   \requirement{req:8-articles}
-  {Should read and cite at least eight articles.}
-  \pmed
-  \dnone
-  \sspec
+  {Should read and cite at least eight articles.}{
+    \pmed
+    \dnone
+    \sspec
+  }
 
   \requirement{req:core-peer-reviewed}
   {Citations of core article must be peer-reviewed articles.}
