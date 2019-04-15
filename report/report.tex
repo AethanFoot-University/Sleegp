@@ -15,7 +15,7 @@
 % Language and date format for UK english
 \usepackage[british]{babel}
 \usepackage[british]{isodate}
-\cleanlookdateon
+\cleanlookdateon{}
 
 % Customise margin size
 \usepackage[margin=1.4in]{geometry}
@@ -26,6 +26,9 @@
 
 % Advanced tables
 \usepackage{tabularx}
+
+% Key-value storage
+\usepackage{pgfkeys}
 
 % Automatic commands at the beginning of tabular rows (?)
 \usepackage{array,etoolbox}
@@ -48,9 +51,166 @@
 % Allow insertion and numbering of appendices
 \usepackage{appendix}
 
+% Better command definitions
+\usepackage{xparse}
+
 % Make links, section names, etc. clickable
-\usepackage{hyperref}
+\usepackage[hidelinks]{hyperref}
 % This must be the last package that is loaded!
+
+% Requirements section counter
+\newcounter{reqsec}
+\renewcommand{\thereqsec}{\arabic{reqsec}}
+
+% Set a requirements section into the key-value store.
+% 
+% Arguments:
+% 1: ID of the section
+% 2: Title of the section
+\DeclareDocumentCommand\setreqsec{m m}{%
+  \refstepcounter{reqsec}%
+  \expandafter\edef\csname reqsec-#1-number\endcsname{\thereqsec}
+  \pgfkeys{/reqsec/#1/number/.initial=\csname reqsec-#1-number\endcsname}%
+  \pgfkeys{/reqsec/#1/title/.initial=#2}%
+}
+
+% Requirements counter (resets when reqsec is incremented)
+\newcounter{req}[reqsec]
+\renewcommand{\thereq}{\thereqsec.\arabic{req}}
+
+% Set a requirement into the key-value store, without displaying the requirement in a table row.
+% 
+% Arguments:
+% 1: ID of the requirement
+% 2: Body of the requirement
+% 3: Priority of the requirement
+% 4: This requirement's dependencies
+% 5: Source of the requirement
+\DeclareDocumentCommand\setreq{m m m m m}{%
+  \refstepcounter{req}%
+  \expandafter\edef\csname req-#1-number\endcsname{\thereq}
+  \pgfkeys{/req/#1/number/.initial=\csname req-#1-number\endcsname}%
+  \pgfkeys{/req/#1/body/.initial={#2}}%
+  \pgfkeys{/req/#1/priority/.initial={#3}}%
+  \pgfkeys{/req/#1/dependencies/.initial={\noexpand{#4}}}%
+  \pgfkeys{/req/#1/source/.initial={#5}}%
+}
+
+% Sub-requirements counter (resets when req is incremented)
+\newcounter{subreq}[req]
+\renewcommand{\thesubreq}{\thereq.\arabic{subreq}}
+
+% Set a sub-requirement into the key-value store.
+% 
+% Arguments:
+% 1: ID of the sub-requirement
+% 2: Body of the sub-requirement
+% 3: Priority of the sub-requirement
+% 4: This sub-requirement's dependencies
+% 5: Source of the sub-requirement
+\DeclareDocumentCommand\setsubreq{m m m m m}{%
+  \refstepcounter{subreq}%
+  \expandafter\edef\csname subreq-#1-number\endcsname{\thesubreq}
+  \pgfkeys{/subreq/#1/number/.initial=\csname subreq-#1-number\endcsname}%
+  \pgfkeys{/subreq/#1/body/.initial={#2}}%
+  \pgfkeys{/subreq/#1/priority/.initial={#3}}%
+  \pgfkeys{/subreq/#1/dependencies/.initial={\noexpand{#4}}}%
+  \pgfkeys{/subreq/#1/source/.initial={#5}}%
+}
+
+\makeatletter
+\newcommand{\manuallabel}[2]{\def\@currentlabel{#2}\label{#1}}
+\makeatother
+
+\DeclareDocumentCommand\reqsectiondecls{}{%
+  % Display the requirement identified by the given ID as a table row.
+  \DeclareExpandableDocumentCommand\req{s m}{%
+    \pgfkeysvalueof{/req/##2/number}%
+    % Insert a label if there was no star on the command
+    \IfBooleanTF{##1}{}{\phantomsection\manuallabel{req:##2}{\pgfkeysvalueof{/req/##2/number}}} &
+    \pgfkeysvalueof{/req/##2/body} &
+    \emph{Priority:} \pgfkeysvalueof{/req/##2/priority} \newline
+    \emph{Dependencies:} \pgfkeysvalueof{/req/##2/dependencies} \newline
+    \emph{Source:} \pgfkeysvalueof{/req/##2/source} \\
+  }
+
+  % Display the sub-requirement identified by the given ID as a table row.
+  \DeclareExpandableDocumentCommand\subreq{s m}{%
+    \pgfkeysvalueof{/subreq/##2/number}%
+    % Insert a label if there was no star on the command
+    \IfBooleanTF{##1}{}{\phantomsection\manuallabel{subreq:##2}{\pgfkeysvalueof{/subreq/##2/number}}} &
+    \pgfkeysvalueof{/subreq/##2/body} &
+    \emph{Priority:} \pgfkeysvalueof{/subreq/##2/priority} \newline
+    \emph{Dependencies:} \pgfkeysvalueof{/subreq/##2/dependencies} \newline
+    \emph{Source:} \pgfkeysvalueof{/subreq/##2/source} \\
+  }
+}
+
+% Display a requirements section as a table, with a list of requirements formatted as rows.
+%
+% The body should contain calls to \req, \req*, \subreq, and/or \subreq*, to format specific
+% requirements as rows.
+%
+% Arguments:
+% 1: The ID of the requirements section
+\DeclareDocumentEnvironment{reqsection}{m}{%
+  % Command definitions
+	\reqsectiondecls{}
+  
+  % Header
+  \begin{longtable}{p{.07\textwidth} p{.43\textwidth} p{.40\textwidth}}
+    % Display the section identified by the given ID as a table row.
+    \toprule
+    \multicolumn{3}{l}{%
+      \textbf{\pgfkeysvalueof{/reqsec/#1/number}%
+        % Insert a label, for this non-starred version of the command
+        \phantomsection\manuallabel{reqsec:#1}{\pgfkeysvalueof{/reqsec/#1/number}}%
+        : \pgfkeysvalueof{/reqsec/#1/title}}} \\
+    \midrule
+    % Display a header row.
+    \textbf{ID} & \textbf{Requirement} & \textbf{Details} \\
+    \midrule
+}{% Footer
+    \bottomrule
+  \end{longtable}
+}
+
+% Display a requirements section as a table, with a list of requirements formatted as rows, without
+% inserting a label for the requirements section itself.
+%
+% The body should contain calls to \req, \req*, \subreq, and/or \subreq*, to format specific
+% requirements as rows.
+%
+% Arguments:
+% 1: The ID of the requirements section
+\DeclareDocumentEnvironment{reqsection*}{m}{%
+  % Command definitions
+  \reqsectiondecls
+  
+  % Header
+  \begin{longtable}{p{.07\textwidth} p{.43\textwidth} p{.40\textwidth}}
+    % Display the section identified by the given ID as a table row.
+    \toprule
+    \multicolumn{3}{l}{%
+      \textbf{\pgfkeysvalueof{/reqsec/#1/number}: \pgfkeysvalueof{/reqsec/#1/title}}} \\
+    \midrule
+    % Display a header row.
+    \textbf{ID} & \textbf{Requirement} & \textbf{Details} \\
+    \midrule
+}{% Footer
+    \bottomrule
+  \end{longtable}
+}
+
+\def\phigh{High}
+\def\pmed{Medium}
+\def\plow{Low}
+
+\def\dnone{None}
+
+\def\sspec{Coursework specification}
+
+\newcommand\smin[1]{Meeting minutes \##1}
 
 \title{%
   CSED Group 11 Semester 2 Report \\
@@ -110,6 +270,7 @@
 \newpage
 \include{tex/introduction}
 \include{tex/requirements}
+\include{tex/srs}
 % \include{tex/design}
 % \include{tex/conclusions}
 
