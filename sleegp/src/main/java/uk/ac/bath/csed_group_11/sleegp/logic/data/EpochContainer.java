@@ -1,14 +1,12 @@
 package uk.ac.bath.csed_group_11.sleegp.logic.data;
 
-import uk.ac.bath.csed_group_11.sleegp.logic.util.Load;
-import uk.ac.bath.csed_group_11.sleegp.logic.util.MathUtils;
-import uk.ac.bath.csed_group_11.sleegp.logic.util.Save;
-import uk.ac.bath.csed_group_11.sleegp.logic.util.Transformation;
+import uk.ac.bath.csed_group_11.sleegp.logic.util.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
+import java.sql.SQLOutput;
 import java.util.*;
 
 /**
@@ -62,6 +60,20 @@ public class EpochContainer implements Serializable {
         Object loaded = loader.load();
 
         return (EpochContainer)loaded;
+    }
+
+    public EpochContainer(List<String> CSVRows){
+        data = new ArrayList<Epoch>();
+        boolean first = true;
+        for(String row : CSVRows){
+            if (!first) {
+                Epoch e = new Epoch(row);
+                data.add(e);
+            }
+            first = false;
+        }
+
+
     }
 
     /**
@@ -141,13 +153,7 @@ public class EpochContainer implements Serializable {
      * @return Whether or not the save was successful
      */
     public boolean saveToFile(File firectory) throws FileNotFoundException {
-        if (firectory.toString().contains(EXTENSION)) {
-            Save saver = new Save(firectory);
-            saver.write(this);
-        } else {
-            System.out.println("Cannot save without proper extenson: " + EXTENSION);
-        }
-        return false;
+        return FileTools.saveObject(this, firectory, EXTENSION);
     }
 
 
@@ -167,25 +173,56 @@ public class EpochContainer implements Serializable {
         return newList;
     }
 
+    /**
+     * Converts the current data
+     *
+     * @param transform the transformation to be done on the data set
+     * @return the transformed data
+     */
+    public void transformCurrentData(Transformation<Epoch, Epoch> transform){
+       for(int i=0; i< data.size(); i++){
+            transform.transform(data, i, data);
+        }
+    }
+
+
+    /**
+     * Not a copy!
+     *
+     * @return the list
+     */
+    public List<Epoch> getEpochList(){
+
+
+
+        return data;
+    }
+    @Override
+    public String toString(){
+        if(data.size()>0){
+            return "Container Date: "+data.get(0).getTimeStamp();
+        }
+        return "Empty Container";
+    }
+
+    public void reset() {
+        this.data = new ArrayList<>();
+
+        this.autoSaveLocation = null;
+        this.lastSave = 0;
+        this.savePeriod = 5000;
+    }
+
     public static void main(String[] args){
 
+        try {
+            EpochContainer ec = new EpochContainer(FileUtils.extractCSV("/home/aethan/Desktop/3hoursleep (Original) Export.csv"));
 
-        //Example implementation of calculating a moving average for a specific attribute
-
-        EpochContainer ec = new EpochContainer();
-
-        for(int i=0; i< 30; i++){
-            Epoch e = new Epoch(null, 0);
-            e.setAttention((int)(Math.random()*500));
-            e.setMeditation((int)(Math.random()*500));
-            ec.addEpoch(e);
+            ec.saveToFile(new File("/home/aethan/CSED/testData/3 Hour (Fixed).ec"));
+            System.out.println(ec.genCSV());
+        } catch (FileNotFoundException e) {
+            System.out.println("No such file");
         }
-
-
-        int avgWindow = 10;
-        List<Double> attention = ec.getTransformedData(MathUtils.movingAverage("attention", avgWindow));
-        List<Double> meditation = ec.getTransformedData(MathUtils.movingAverage("meditation", avgWindow));
-
 
     }
 

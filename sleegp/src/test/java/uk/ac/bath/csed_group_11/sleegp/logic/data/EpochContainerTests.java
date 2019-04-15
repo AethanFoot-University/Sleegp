@@ -23,18 +23,23 @@ public class EpochContainerTests {
     /**
      * Test that a {@code .ec} file can be deserialised into an {@code EpochContainer} instance,
      * and then serialised correctly as a {@code .csv} file.
-     *
+     * Requirements 6.7.2, 6.7.5
      * @author Mortensen, Soren
      */
     @Test
     public void convertECToCSV() {
         // Create a ClassLoader so we can get test resource files.
         var classLoader = Thread.currentThread().getContextClassLoader();
+
         var baseName = "2019-03-08-1457";
 
         // Load the URLs for the `.ec` and `.csv` files.
+
+
         var ecURL = classLoader.getResource( baseName + ".ec");
         var csvURL = classLoader.getResource(baseName + ".csv");
+
+
 
         if (ecURL == null || ecURL.getPath() == null) {
             fail("Unable to find resource \"" + baseName + ".ec\"");
@@ -67,6 +72,7 @@ public class EpochContainerTests {
         // Load the contents of the `.csv` file.
         String expectedCSV;
         try {
+            //System.out.println(csvURL.getPath().substring(1));
             byte[] csvEncoded = Files.readAllBytes(Paths.get(csvURL.getPath()));
             expectedCSV = new String(csvEncoded, Charset.defaultCharset()).trim();
         } catch (IOException e) {

@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 
@@ -14,7 +15,7 @@ import java.util.Iterator;
  *
  * @author Mathew Allington
  */
-public class Epoch implements Serializable {
+public class Epoch implements Serializable, Comparable<Epoch>{
     /**
      * This is serializable ID, set to static so that there is not an ID mis-match error when saving files
      */
@@ -78,6 +79,36 @@ public class Epoch implements Serializable {
 
     }
 
+    public Epoch(int timeElapsed){
+        this.timeElapsed = timeElapsed;
+    }
+    public Epoch(long timeElapsed){
+        this.timeElapsed = timeElapsed;
+    }
+
+    public Epoch(String csvRow){
+        String[] attributes = csvRow.split(",");
+        Field[] fields = getClass().getDeclaredFields();
+
+
+        //for(String att : attributes) System.out.println(att);
+        int d =0;
+        for (int i =3; i<fields.length ;i++)
+            try {
+
+
+                setIntField(fields[i].getName(), Integer.parseInt(attributes[i-3]));
+               // System.out.println("i: "+(i-d)+", "+attributes[i]);
+
+            } catch (Exception ex) {
+               // System.out.println(ex);
+                System.out.println("fail");
+            }
+
+        timeElapsed = Long.parseLong(attributes[attributes.length - 2]);
+        timeStamp = attributes[attributes.length - 1];
+    }
+
     /**
      * Processes JSON frame and extracts its values
      * @param obj Object to be processed
@@ -103,7 +134,7 @@ public class Epoch implements Serializable {
      * @throws IllegalAccessException
      * @throws NoSuchFieldException
      */
-    private void setIntField(String reference, int data) throws IllegalAccessException, NoSuchFieldException {
+    public void setIntField(String reference, int data) throws IllegalAccessException, NoSuchFieldException {
         Field field = getClass().getDeclaredField(reference);
         field.setInt(this, data);
     }
@@ -296,6 +327,7 @@ public class Epoch implements Serializable {
     }
 
 
+
     //Complete bodge
 
 
@@ -349,5 +381,16 @@ public class Epoch implements Serializable {
 
     public void setPoorSignalLevel(int poorSignalLevel) {
         this.poorSignalLevel = poorSignalLevel;
+    }
+
+    public long getTimeElapsed() {
+        return timeElapsed;
+    }
+
+
+
+    @Override
+    public int compareTo(Epoch o) {
+        return 0;
     }
 }
