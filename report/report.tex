@@ -123,6 +123,21 @@
 \makeatother
 
 \DeclareDocumentCommand\reqsectiondecls{}{%
+  % Display a requirements section title and header row, for the section with the given ID.
+  \DeclareExpandableDocumentCommand\reqsec{s m}{%
+    % Display the section identified by the given ID as a table row.
+    \toprule
+    \multicolumn{3}{l}{%
+      \textbf{\pgfkeysvalueof{/reqsec/##2/number}%
+        % Insert a label if there was no star on the command
+        \IfBooleanTF{##1}{}{\phantomsection\manuallabel{reqsec:##2}{\pgfkeysvalueof{/reqsec/##2/number}}}%
+        : \pgfkeysvalueof{/reqsec/##2/title}}} \\
+    \midrule
+    % Display a header row.
+    \textbf{ID} & \textbf{Requirement} & \textbf{Details} \\
+    \midrule
+  }
+
   % Display the requirement identified by the given ID as a table row.
   \DeclareExpandableDocumentCommand\req{s m}{%
     \pgfkeysvalueof{/req/##2/number}%
@@ -146,60 +161,24 @@
   }
 }
 
-% Display a requirements section as a table, with a list of requirements formatted as rows.
-%
-% The body should contain calls to \req, \req*, \subreq, and/or \subreq*, to format specific
-% requirements as rows.
-%
-% Arguments:
-% 1: The ID of the requirements section
-\DeclareDocumentEnvironment{reqsection}{m}{%
+\DeclareDocumentEnvironment{requirements}{}{%
   % Command definitions
-	\reqsectiondecls{}
-  
+  \reqsectiondecls{}
+    
   % Header
   \begin{longtable}{p{.07\textwidth} p{.43\textwidth} p{.40\textwidth}}
-    % Display the section identified by the given ID as a table row.
-    \toprule
-    \multicolumn{3}{l}{%
-      \textbf{\pgfkeysvalueof{/reqsec/#1/number}%
-        % Insert a label, for this non-starred version of the command
-        \phantomsection\manuallabel{reqsec:#1}{\pgfkeysvalueof{/reqsec/#1/number}}%
-        : \pgfkeysvalueof{/reqsec/#1/title}}} \\
-    \midrule
-    % Display a header row.
-    \textbf{ID} & \textbf{Requirement} & \textbf{Details} \\
-    \midrule
 }{% Footer
     \bottomrule
   \end{longtable}
 }
 
-% Display a requirements section as a table, with a list of requirements formatted as rows, without
-% inserting a label for the requirements section itself.
-%
-% The body should contain calls to \req, \req*, \subreq, and/or \subreq*, to format specific
-% requirements as rows.
-%
-% Arguments:
-% 1: The ID of the requirements section
-\DeclareDocumentEnvironment{reqsection*}{m}{%
-  % Command definitions
-  \reqsectiondecls
-  
+\DeclareDocumentEnvironment{requirements*}{}{%
   % Header
-  \begin{longtable}{p{.07\textwidth} p{.43\textwidth} p{.40\textwidth}}
-    % Display the section identified by the given ID as a table row.
-    \toprule
-    \multicolumn{3}{l}{%
-      \textbf{\pgfkeysvalueof{/reqsec/#1/number}: \pgfkeysvalueof{/reqsec/#1/title}}} \\
-    \midrule
-    % Display a header row.
-    \textbf{ID} & \textbf{Requirement} & \textbf{Details} \\
-    \midrule
+  \begin{NoHyper}
+    \begin{requirements}
 }{% Footer
-    \bottomrule
-  \end{longtable}
+    \end{requirements}
+  \end{NoHyper}
 }
 
 \def\phigh{High}
@@ -280,10 +259,11 @@
 
 % \include{tex/group-contribution-form}
 
-% \begin{appendices}
+\begin{appendices}
+  \include{tex/sprint-backlogs}
 %   \include{tex/draft-hlas}
 %   \include{tex/state-machine}
 %   \include{tex/meeting-minutes}
-% \end{appendices}
+\end{appendices}
 
 \end{document}
